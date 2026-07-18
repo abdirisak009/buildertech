@@ -1,0 +1,208 @@
+@import "tailwindcss";
+
+/* Bind the `dark:` variant to the .dark class that next-themes toggles,
+   instead of Tailwind's default prefers-color-scheme media query. Without
+   this, `dark:` utilities and the token block below drift out of sync. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ============================================================
+   BUILDERS TECH — Architecture Solutions
+   Design system: editorial / exaggerated minimalism
+   Brand: navy #0a2472 · gold #ffba08
+   ============================================================ */
+
+@theme {
+  /* ---- Brand: navy ---- */
+  --color-navy-50: #eef1fa;
+  --color-navy-100: #d7ddf4;
+  --color-navy-200: #b0bce9;
+  --color-navy-300: #8195da;
+  --color-navy-400: #4f66c2;
+  --color-navy-500: #2b45a3;
+  --color-navy-600: #17318a;
+  --color-navy-700: #0a2472; /* brand primary */
+  --color-navy-800: #071a56;
+  --color-navy-900: #05123c;
+  --color-navy-950: #030b26;
+
+  /* ---- Brand: gold ---- */
+  --color-gold-50: #fff9e8;
+  --color-gold-100: #fff0c2;
+  --color-gold-200: #ffe287;
+  --color-gold-300: #ffd254;
+  --color-gold-400: #ffc42b;
+  --color-gold-500: #ffba08; /* brand accent */
+  --color-gold-600: #d99700;
+  --color-gold-700: #a87400;
+  --color-gold-800: #7a5400;
+  --color-gold-900: #4d3500;
+
+  /* ---- Neutrals tuned to the navy ---- */
+  --color-ink-50: #f7f8fb;
+  --color-ink-100: #eef0f6;
+  --color-ink-200: #dfe3ee;
+  --color-ink-300: #c3cadd;
+  --color-ink-400: #939dba;
+  --color-ink-500: #6b7695;
+  --color-ink-600: #4d5675;
+  --color-ink-700: #363e59;
+  --color-ink-800: #212840;
+  --color-ink-900: #131829;
+
+  /* ---- Typography ---- */
+  --font-display: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  /* ---- Motion ---- */
+  --ease-brand: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+/* ------------------------------------------------------------
+   Semantic tokens (light + dark)
+   ------------------------------------------------------------ */
+:root {
+  --background: #ffffff;
+  --surface: #ffffff;
+  --surface-muted: #f7f8fb;
+  --foreground: #0d1226;
+  --muted-foreground: #4d5675;
+  --subtle-foreground: #6b7695;
+  --border: #e3e7f1;
+  --border-strong: #c9d0e2;
+  --ring: #ffba08;
+}
+
+.dark {
+  --background: #050b1c;
+  --surface: #0a1230;
+  --surface-muted: #081027;
+  --foreground: #f2f4fb;
+  --muted-foreground: #b8c1da;
+  --subtle-foreground: #939dbc;
+  --border: #1c2750;
+  --border-strong: #2b3866;
+  --ring: #ffba08;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-foreground: var(--foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-subtle-foreground: var(--subtle-foreground);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-ring: var(--ring);
+}
+
+/* ------------------------------------------------------------
+   Base
+   ------------------------------------------------------------ */
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    font-size: 1.0625rem;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: -0.035em;
+    line-height: 1.05;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background-color: var(--color-gold-500);
+    color: #1a1200;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-gold-500);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+}
+
+/* ------------------------------------------------------------
+   Utilities
+   ------------------------------------------------------------ */
+
+/* Tabular figures for statistics */
+@utility tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Blueprint grid used behind dark sections */
+@utility bg-blueprint {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.055) 1px, transparent 1px);
+  background-size: 72px 72px;
+}
+
+@utility bg-blueprint-fine {
+  background-image:
+    linear-gradient(rgba(10, 36, 114, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(10, 36, 114, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Fluid display sizes */
+@utility text-display-xl {
+  font-size: clamp(2.75rem, 7.2vw, 6.5rem);
+}
+
+@utility text-display-lg {
+  font-size: clamp(2.25rem, 5.2vw, 4.25rem);
+}
+
+@utility text-display-md {
+  font-size: clamp(1.875rem, 3.6vw, 3rem);
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* ------------------------------------------------------------
+   Reduced motion
+   ------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
