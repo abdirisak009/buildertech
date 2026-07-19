@@ -7,9 +7,20 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { ChevronDown, ArrowRight } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import { NAV, type NavItem } from "@/content/site";
+import type { NavItem } from "@/content";
+import type { Locale } from "@/i18n/config";
 
-export function DesktopNav({ onDark }: { onDark: boolean }) {
+export function DesktopNav({
+  nav,
+  locale,
+  ariaLabel,
+  onDark,
+}: {
+  nav: readonly NavItem[];
+  locale: Locale;
+  ariaLabel: string;
+  onDark: boolean;
+}) {
   const pathname = usePathname();
   // Keyed to the route it was opened on, so a navigation closes the panel
   // without needing a route-change effect that setStates synchronously.
@@ -38,16 +49,19 @@ export function DesktopNav({ onDark }: { onDark: boolean }) {
     closeTimer.current = setTimeout(() => setOpenKey(null), 140);
   };
 
+  const href = (path: string) => `/${locale}${path === "/" ? "" : path}`;
+
   const isActive = (item: NavItem) => {
-    if (item.href === "/") return pathname === "/";
-    if (pathname.startsWith(item.href)) return true;
-    return item.children?.some((c) => pathname.startsWith(c.href)) ?? false;
+    const full = href(item.href);
+    if (item.href === "/") return pathname === full;
+    if (pathname.startsWith(full)) return true;
+    return item.children?.some((c) => pathname.startsWith(href(c.href))) ?? false;
   };
 
   return (
-    <nav aria-label="Main" className="hidden lg:block">
+    <nav aria-label={ariaLabel} className="hidden lg:block">
       <ul className="flex items-center gap-1">
-        {NAV.map((item) => {
+        {nav.map((item) => {
           const active = isActive(item);
           const hasChildren = !!item.children?.length;
           const open = openKey === item.label;
@@ -64,12 +78,12 @@ export function DesktopNav({ onDark }: { onDark: boolean }) {
               onMouseLeave={scheduleClose}
             >
               <Link
-                href={item.href}
+                href={href(item.href)}
                 aria-current={active ? "page" : undefined}
                 aria-expanded={hasChildren ? open : undefined}
                 onFocus={() => hasChildren && setOpenKey(item.label)}
                 className={cn(
-                  "relative flex items-center gap-1.5 rounded-full px-3 py-2.5 text-sm font-medium",
+                  "group relative flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-2.5 text-sm font-medium",
                   "transition-colors duration-200",
                   onDark
                     ? active
@@ -106,7 +120,7 @@ export function DesktopNav({ onDark }: { onDark: boolean }) {
                 <span
                   aria-hidden
                   className={cn(
-                    "absolute inset-x-3.5 bottom-1 h-0.5 origin-left rounded-full bg-gold-500",
+                    "absolute inset-x-3 bottom-1 h-0.5 origin-left rounded-full bg-gold-500",
                     "transition-transform duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)]",
                     active ? "scale-x-100" : "scale-x-0",
                   )}
@@ -140,12 +154,13 @@ export function DesktopNav({ onDark }: { onDark: boolean }) {
                           )}
                         >
                           {item.children!.map((child) => {
-                            const childActive = pathname.startsWith(child.href);
+                            const childHref = href(child.href);
+                            const childActive = pathname.startsWith(childHref);
                             const ChildIcon = child.icon;
                             return (
                               <li key={child.href}>
                                 <Link
-                                  href={child.href}
+                                  href={childHref}
                                   className={cn(
                                     "group/link flex gap-3.5 rounded-xl p-3.5 transition-colors duration-200",
                                     childActive

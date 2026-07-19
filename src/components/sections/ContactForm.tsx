@@ -6,6 +6,8 @@ import { AlertCircle, CheckCircle2, Loader2, Send } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
+import { getUi, type UiDict } from "@/i18n/ui";
+import type { Locale } from "@/i18n/config";
 
 type FieldName =
   | "name"
@@ -20,57 +22,36 @@ type FieldName =
 
 type Errors = Partial<Record<FieldName, string>>;
 
-const PROJECT_TYPES = [
-  "Residential",
-  "Commercial",
-  "Healthcare",
-  "Public",
-  "Industrial",
-  "Other",
-];
-
-const SERVICES = [
-  "Full lifecycle",
-  "Design only",
-  "Supervision only",
-  "Advisory / audit",
-];
-
-const BUDGETS = [
-  "Under $100k",
-  "$100k – $500k",
-  "$500k – $2M",
-  "$2M – $10M",
-  "Over $10M",
-  "Not yet defined",
-];
-
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
-function validateField(name: FieldName, value: string): string | undefined {
-  const v = value.trim();
-  switch (name) {
-    case "name":
-      if (!v) return "Please tell us your name.";
-      return;
-    case "email":
-      if (!v) return "We need an email address to reply to.";
-      if (!EMAIL_RE.test(v)) return "Enter a valid email, e.g. name@company.com.";
-      return;
-    case "projectType":
-      if (!v) return "Select the type of project.";
-      return;
-    case "service":
-      if (!v) return "Select the scope you are looking for.";
-      return;
-    case "message":
-      if (!v) return "Tell us a little about the project.";
-      if (v.length < 20)
-        return "Please give us a bit more detail (at least 20 characters).";
-      return;
-    default:
-      return;
-  }
+function makeValidator(t: UiDict["form"]) {
+  return function validateField(
+    name: FieldName,
+    value: string,
+  ): string | undefined {
+    const v = value.trim();
+    switch (name) {
+      case "name":
+        if (!v) return t.errors.name;
+        return;
+      case "email":
+        if (!v) return t.errors.emailRequired;
+        if (!EMAIL_RE.test(v)) return t.errors.emailInvalid;
+        return;
+      case "projectType":
+        if (!v) return t.errors.projectType;
+        return;
+      case "service":
+        if (!v) return t.errors.service;
+        return;
+      case "message":
+        if (!v) return t.errors.messageRequired;
+        if (v.length < 20) return t.errors.messageShort;
+        return;
+      default:
+        return;
+    }
+  };
 }
 
 function Field({
@@ -78,6 +59,7 @@ function Field({
   name,
   error,
   required,
+  requiredLabel,
   hint,
   children,
 }: {
@@ -85,27 +67,23 @@ function Field({
   name: FieldName;
   error?: string;
   required?: boolean;
+  requiredLabel: string;
   hint?: string;
   children: React.ReactNode;
 }) {
   return (
     <div className="flex flex-col gap-2">
-      <label
-        htmlFor={name}
-        className="text-sm font-semibold text-foreground"
-      >
+      <label htmlFor={name} className="text-sm font-semibold text-foreground">
         {label}
         {required && (
           <span aria-hidden className="ml-1 text-red-600 dark:text-red-400">
             *
           </span>
         )}
-        {required && <span className="sr-only"> (required)</span>}
+        {required && <span className="sr-only"> {requiredLabel}</span>}
       </label>
       {children}
-      {hint && !error && (
-        <p className="text-xs text-subtle-foreground">{hint}</p>
-      )}
+      {hint && !error && <p className="text-xs text-subtle-foreground">{hint}</p>}
       {error && (
         <p
           id={`${name}-error`}
@@ -131,7 +109,13 @@ const inputClass = (invalid?: boolean) =>
       : "border-border-strong focus:border-gold-500 focus:ring-gold-500/30",
   );
 
-export function ContactForm() {
+// The UI dictionary contains functions, which cannot be passed from a server
+// component, so the form looks it up from the locale itself.
+export function ContactForm({ locale }: { locale: Locale }) {
+  const ui = getUi(locale);
+  const t = ui.form;
+  const validateField = makeValidator(t);
+
   const formRef = useRef<HTMLFormElement>(null);
   const [errors, setErrors] = useState<Errors>({});
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "failed">(
@@ -142,8 +126,7 @@ export function ContactForm() {
     const target = e.target as HTMLInputElement;
     const name = target.name as FieldName;
     if (!name) return;
-    const error = validateField(name, target.value);
-    setErrors((prev) => ({ ...prev, [name]: error }));
+    setErrors((prev) => ({ ...prev, [name]: validateField(name, target.value) }));
   };
 
   const handleInput = (e: React.FormEvent<HTMLElement>) => {
@@ -151,8 +134,7 @@ export function ContactForm() {
     const name = target.name as FieldName;
     // Only re-validate a field that is already showing an error
     if (!name || !errors[name]) return;
-    const error = validateField(name, target.value);
-    setErrors((prev) => ({ ...prev, [name]: error }));
+    setErrors((prev) => ({ ...prev, [name]: validateField(name, target.value) }));
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -161,12 +143,12 @@ export function ContactForm() {
     const data = new FormData(form);
 
     const next: Errors = {};
-    (
-      ["name", "email", "projectType", "service", "message"] as FieldName[]
-    ).forEach((name) => {
-      const error = validateField(name, String(data.get(name) ?? ""));
-      if (error) next[name] = error;
-    });
+    (["name", "email", "projectType", "service", "message"] as FieldName[]).forEach(
+      (name) => {
+        const error = validateField(name, String(data.get(name) ?? ""));
+        if (error) next[name] = error;
+      },
+    );
 
     setErrors(next);
 
@@ -202,17 +184,12 @@ export function ContactForm() {
           className="mx-auto size-10 text-green-700 dark:text-green-400"
           strokeWidth={1.75}
         />
-        <h3 className="mt-5 text-2xl">Brief received.</h3>
+        <h3 className="mt-5 text-2xl">{t.successTitle}</h3>
         <p className="mx-auto mt-4 max-w-md leading-relaxed text-muted-foreground">
-          Thank you — your brief has been received. A Builders Tech lead will
-          reply within one business day.
+          {t.successBody}
         </p>
-        <Button
-          variant="outline"
-          className="mt-8"
-          onClick={() => setStatus("idle")}
-        >
-          Send another brief
+        <Button variant="outline" className="mt-8" onClick={() => setStatus("idle")}>
+          {t.sendAnother}
         </Button>
       </motion.div>
     );
@@ -228,7 +205,13 @@ export function ContactForm() {
       className="grid gap-6"
     >
       <div className="grid gap-6 sm:grid-cols-2">
-        <Field label="Full name" name="name" error={errors.name} required>
+        <Field
+          label={t.labels.name}
+          name="name"
+          error={errors.name}
+          required
+          requiredLabel={t.required}
+        >
           <input
             id="name"
             name="name"
@@ -238,11 +221,17 @@ export function ContactForm() {
             aria-invalid={!!errors.name}
             aria-describedby={errors.name ? "name-error" : undefined}
             className={inputClass(!!errors.name)}
-            placeholder="Amina Yusuf"
+            placeholder={t.placeholders.name}
           />
         </Field>
 
-        <Field label="Email" name="email" error={errors.email} required>
+        <Field
+          label={t.labels.email}
+          name="email"
+          error={errors.email}
+          required
+          requiredLabel={t.required}
+        >
           <input
             id="email"
             name="email"
@@ -253,11 +242,11 @@ export function ContactForm() {
             aria-invalid={!!errors.email}
             aria-describedby={errors.email ? "email-error" : undefined}
             className={inputClass(!!errors.email)}
-            placeholder="you@company.com"
+            placeholder={t.placeholders.email}
           />
         </Field>
 
-        <Field label="Phone" name="phone">
+        <Field label={t.labels.phone} name="phone" requiredLabel={t.required}>
           <input
             id="phone"
             name="phone"
@@ -265,26 +254,27 @@ export function ContactForm() {
             autoComplete="tel"
             inputMode="tel"
             className={inputClass()}
-            placeholder="+252 61 000 0000"
+            placeholder={t.placeholders.phone}
           />
         </Field>
 
-        <Field label="Company / organisation" name="company">
+        <Field label={t.labels.company} name="company" requiredLabel={t.required}>
           <input
             id="company"
             name="company"
             type="text"
             autoComplete="organization"
             className={inputClass()}
-            placeholder="Optional"
+            placeholder={t.placeholders.company}
           />
         </Field>
 
         <Field
-          label="Project type"
+          label={t.labels.projectType}
           name="projectType"
           error={errors.projectType}
           required
+          requiredLabel={t.required}
         >
           <select
             id="projectType"
@@ -296,21 +286,22 @@ export function ContactForm() {
             className={inputClass(!!errors.projectType)}
           >
             <option value="" disabled>
-              Select a type
+              {t.placeholders.selectType}
             </option>
-            {PROJECT_TYPES.map((t) => (
-              <option key={t} value={t}>
-                {t}
+            {t.projectTypes.map((option) => (
+              <option key={option} value={option}>
+                {option}
               </option>
             ))}
           </select>
         </Field>
 
         <Field
-          label="Service needed"
+          label={t.labels.service}
           name="service"
           error={errors.service}
           required
+          requiredLabel={t.required}
         >
           <select
             id="service"
@@ -322,53 +313,50 @@ export function ContactForm() {
             className={inputClass(!!errors.service)}
           >
             <option value="" disabled>
-              Select a scope
+              {t.placeholders.selectScope}
             </option>
-            {SERVICES.map((s) => (
-              <option key={s} value={s}>
-                {s}
+            {t.services.map((option) => (
+              <option key={option} value={option}>
+                {option}
               </option>
             ))}
           </select>
         </Field>
 
         <Field
-          label="Estimated budget"
+          label={t.labels.budget}
           name="budget"
-          hint="A range is fine — it helps us answer usefully."
+          hint={t.hints.budget}
+          requiredLabel={t.required}
         >
-          <select
-            id="budget"
-            name="budget"
-            defaultValue=""
-            className={inputClass()}
-          >
-            <option value="">Prefer not to say</option>
-            {BUDGETS.map((b) => (
-              <option key={b} value={b}>
-                {b}
+          <select id="budget" name="budget" defaultValue="" className={inputClass()}>
+            <option value="">{t.placeholders.preferNotToSay}</option>
+            {t.budgets.map((option) => (
+              <option key={option} value={option}>
+                {option}
               </option>
             ))}
           </select>
         </Field>
 
-        <Field label="Project location" name="location">
+        <Field label={t.labels.location} name="location" requiredLabel={t.required}>
           <input
             id="location"
             name="location"
             type="text"
             className={inputClass()}
-            placeholder="City or district"
+            placeholder={t.placeholders.location}
           />
         </Field>
       </div>
 
       <Field
-        label="Tell us about the project"
+        label={t.labels.message}
         name="message"
         error={errors.message}
         required
-        hint="Plot dimensions, intended use, and anything you already know about the budget or programme."
+        requiredLabel={t.required}
+        hint={t.hints.message}
       >
         <textarea
           id="message"
@@ -378,7 +366,7 @@ export function ContactForm() {
           aria-invalid={!!errors.message}
           aria-describedby={errors.message ? "message-error" : undefined}
           className={cn(inputClass(!!errors.message), "min-h-40 resize-y")}
-          placeholder="We own a 900 m² corner plot and want a four-storey mixed-use building — retail at ground level, apartments above…"
+          placeholder={t.placeholders.message}
         />
       </Field>
 
@@ -392,7 +380,7 @@ export function ContactForm() {
             className="flex items-center gap-2 rounded-xl border border-red-500/40 bg-red-500/8 px-4 py-3 text-sm text-red-700 dark:text-red-400"
           >
             <AlertCircle aria-hidden className="size-4 shrink-0" />
-            Please fix the highlighted fields and submit again.
+            {t.errors.summary}
           </motion.p>
         )}
       </AnimatePresence>
@@ -402,18 +390,17 @@ export function ContactForm() {
           {status === "sending" ? (
             <>
               <Loader2 aria-hidden className="size-4 animate-spin" />
-              Sending…
+              {t.sending}
             </>
           ) : (
             <>
-              Send project brief
+              {t.submit}
               <Send aria-hidden className="size-4" />
             </>
           )}
         </Button>
         <p className="max-w-xs text-xs leading-relaxed text-subtle-foreground">
-          We use your details only to respond to this enquiry. We do not share
-          them with contractors or third parties.
+          {t.privacy}
         </p>
       </div>
     </form>

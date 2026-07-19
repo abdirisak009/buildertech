@@ -2,8 +2,8 @@
  * Photography library.
  *
  * Images are served from /public/images so the site has no runtime dependency
- * on an external image host — next/image optimises them locally. (Fetching
- * from a remote host made the optimiser time out on a cold cache.)
+ * on an external image host — next/image optimizes them locally. (Fetching
+ * from a remote host made the optimizer time out on a cold cache.)
  *
  * Sources are Pexels (free to use, no attribution required). Replace the files
  * in public/images with Builders Tech's own project photography when it is

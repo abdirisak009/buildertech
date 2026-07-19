@@ -4,8 +4,11 @@ import { ChevronRight } from "lucide-react";
 import { Container } from "./Container";
 import { Eyebrow } from "./Section";
 import { Reveal } from "@/components/motion/Reveal";
+import { getUi } from "@/i18n/ui";
+import type { Locale } from "@/i18n/config";
 
 export function PageHero({
+  locale,
   eyebrow,
   title,
   lead,
@@ -14,14 +17,20 @@ export function PageHero({
   breadcrumb,
   children,
 }: {
+  locale: Locale;
   eyebrow: string;
   title: React.ReactNode;
   lead: string;
   image: string;
   imageAlt: string;
-  breadcrumb: string;
+  /** Trail after Home. A string is treated as a single final crumb. */
+  breadcrumb: string | { label: string; href?: string }[];
   children?: React.ReactNode;
 }) {
+  const ui = getUi(locale);
+  const trail =
+    typeof breadcrumb === "string" ? [{ label: breadcrumb }] : breadcrumb;
+
   return (
     <section className="relative isolate overflow-hidden bg-navy-950 text-white">
       <Image
@@ -44,17 +53,39 @@ export function PageHero({
 
       <Container className="relative pb-20 pt-32 sm:pb-24 sm:pt-40">
         <Reveal>
-          <nav aria-label="Breadcrumb">
-            <ol className="flex items-center gap-2 text-xs text-navy-200">
+          <nav aria-label={ui.a11y.breadcrumb}>
+            <ol className="flex flex-wrap items-center gap-2 text-xs text-navy-200">
               <li>
-                <Link href="/" className="transition-colors hover:text-gold-400">
-                  Home
+                <Link
+                  href={`/${locale}`}
+                  className="transition-colors hover:text-gold-400"
+                >
+                  {ui.breadcrumb.home}
                 </Link>
               </li>
-              <ChevronRight aria-hidden className="size-3.5 text-navy-300" />
-              <li aria-current="page" className="text-gold-400">
-                {breadcrumb}
-              </li>
+              {trail.map((crumb, i) => {
+                const last = i === trail.length - 1;
+                return (
+                  <li key={crumb.label} className="flex items-center gap-2">
+                    <ChevronRight aria-hidden className="size-3.5 text-navy-300" />
+                    {last || !crumb.href ? (
+                      <span
+                        aria-current={last ? "page" : undefined}
+                        className={last ? "text-gold-400" : undefined}
+                      >
+                        {crumb.label}
+                      </span>
+                    ) : (
+                      <Link
+                        href={`/${locale}${crumb.href}`}
+                        className="transition-colors hover:text-gold-400"
+                      >
+                        {crumb.label}
+                      </Link>
+                    )}
+                  </li>
+                );
+              })}
             </ol>
           </nav>
         </Reveal>

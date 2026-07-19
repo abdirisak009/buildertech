@@ -5,11 +5,19 @@ import { useTheme } from "next-themes";
 import { Moon, Sun } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export function ThemeToggle({ className }: { className?: string }) {
+export function ThemeToggle({
+  lightLabel,
+  darkLabel,
+  className,
+}: {
+  lightLabel: string;
+  darkLabel: string;
+  className?: string;
+}) {
   const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
-  // Deferred to a microtask so the mount flag is not set synchronously in the
+  // Deferred to a frame so the mount flag is not set synchronously in the
   // effect body (which would cascade an extra render).
   useEffect(() => {
     const id = requestAnimationFrame(() => setMounted(true));
@@ -22,7 +30,7 @@ export function ThemeToggle({ className }: { className?: string }) {
     <button
       type="button"
       onClick={() => setTheme(isDark ? "light" : "dark")}
-      aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+      aria-label={isDark ? lightLabel : darkLabel}
       className={cn(
         "inline-grid size-11 shrink-0 cursor-pointer place-items-center rounded-full",
         "border border-border-strong text-foreground",

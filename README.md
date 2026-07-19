@@ -19,7 +19,7 @@ at [builderstechnologysource.com](https://www.builderstechnologysource.com).
 ```bash
 npm install
 npm run dev      # http://localhost:3000
-npm run build    # production build — 25 routes, all static
+npm run build    # production build — 50 pages (25 routes × 2 locales), all static
 npm run lint
 ```
 
@@ -38,7 +38,8 @@ Full navy/gold ramps (50–950), semantic tokens and the light/dark blocks live 
 ## Site map
 
 ```
-/                              Home
+/en, /es                       locale root (auto-detected)
+/<locale>/                     Home
 /how-it-works                  4-step process
 /services                      Overview
   /services/renderings
@@ -64,9 +65,56 @@ Full navy/gold ramps (50–950), semantic tokens and the light/dark blocks live 
 /privacy-policy  /terms-of-use
 ```
 
+## Languages
+
+The site is bilingual: **English (`/en`) and Spanish (`/es`)**, with automatic
+detection.
+
+- `src/middleware.ts` redirects any un-prefixed URL to a locale. An explicit
+  choice stored in the `bt-locale` cookie wins; otherwise the browser's
+  `Accept-Language` header decides. Anything unrecognised falls back to English.
+- A language switcher in the header changes locale **without leaving the page**
+  — `/en/services/civil-plans` → `/es/services/civil-plans` — and writes the
+  cookie so the choice sticks.
+- URL slugs are identical across locales, so a page's address is stable and
+  `hreflang` alternates in the sitemap line up one-to-one.
+- `<html lang>` is set per locale; dates and currency use `Intl` with the right
+  locale.
+
+### How translations are organised
+
+```
+src/i18n/
+├── config.ts               locales, cookie name, Accept-Language matching
+└── ui/{en,es}.ts           shared chrome: header, footer, form, a11y labels
+src/content/
+├── {en,es}/*.ts            services, products, blog, careers, resources, FAQ, about
+├── {en,es}/pages/*.ts      per-page copy (headings, leads, section titles)
+├── index.ts                getContent(locale) — one bundle per language
+└── nav.ts                  getNav(locale) — imported directly by the client header
+```
+
+English defines the shape (`export type XCopy = typeof x`); Spanish imports that
+type and annotates its export. **A missing or misnamed key is a compile error**,
+so the two locales cannot drift.
+
+Filter keys stay in English where they are used for matching (product categories,
+blog categories) with a separate translated `label` for display — so filtering
+keeps working in Spanish.
+
+### Adding a third language
+
+1. Add the code to `LOCALES` and `LOCALE_LABELS` in `src/i18n/config.ts`
+2. Copy `src/i18n/ui/en.ts` → `xx.ts` and translate; register it in `ui/index.ts`
+3. Copy `src/content/en/` → `src/content/xx/` and translate; register it in
+   `src/content/index.ts` and `src/content/nav.ts`
+
+No component changes are needed.
+
 ## Navigation
 
-Mirrors the live site exactly, including submenus:
+Mirrors the live site exactly, including submenus. Every item and sub-item has
+its own icon.
 
 | Menu | Submenu |
 |---|---|
@@ -77,8 +125,9 @@ Mirrors the live site exactly, including submenus:
 | Careers | Current Open Positions · Internships |
 | More | Building Resources · FAQ · About Us · Contact Us |
 
-- **Desktop** — hover/focus dropdown panels with descriptions, gold top rule,
-  keyboard accessible, Escape to close ([`DesktopNav.tsx`](src/components/layout/DesktopNav.tsx))
+- **Desktop** — hover/focus dropdown panels with an icon tile and description per
+  item, gold top rule, keyboard accessible, Escape to close
+  ([`DesktopNav.tsx`](src/components/layout/DesktopNav.tsx))
 - **Mobile** — full-screen drawer with expanding accordion submenus
   ([`MobileNav.tsx`](src/components/layout/MobileNav.tsx))
 - A utility bar above the header carries the phone number and office address.
@@ -134,15 +183,23 @@ Tech's own project photography** — keep the filenames and nothing else changes
 - [ ] **Social links** — currently `#` in `src/content/site.ts`.
 - [ ] **Legal pages** — privacy policy and terms are template text and carry a
       visible notice saying so. Have an attorney review before launch.
-- [ ] **`SITE.url`** — drives metadata, sitemap and robots.
+- [ ] **`SITE.url`** — drives metadata, sitemap and robots. Set it in BOTH
+      `src/content/en/site.ts` and `src/content/es/site.ts`.
+- [ ] **Spanish review** — the translation is professional-register neutral
+      Latin-American Spanish, but have a native speaker in the Atlanta market
+      read it before launch, especially the FAQ and legal pages.
 
 ## Verification
 
-Automated pass across **25 routes × 3 viewports (390 / 768 / 1440) × 2 themes**
-— 150 checks, all passing: HTTP 200, no console errors, no broken images, no
-horizontal overflow, exactly one `<h1>` per page. Menus were driven end-to-end
-(all five dropdowns open with the right item counts, close on mouse-out, and
-navigate; the mobile accordion expands and closes on navigation).
+Automated pass over the production build across **25 routes × 2 locales × 2
+viewports × 2 themes — 200 checks, all passing**: HTTP 200, correct `<html lang>`,
+no console errors, no broken images, no horizontal overflow, exactly one `<h1>`
+per page.
+
+Also driven end-to-end: all five dropdowns (correct item counts, close on
+mouse-out, navigate); the mobile accordion; language auto-detection from
+`Accept-Language` with cookie override; and the switcher preserving the current
+page across a locale change.
 
 Accessibility: skip link, sequential headings, labelled landmarks, ≥44px targets,
 visible gold focus rings, `role="alert"` form errors with focus moved to the

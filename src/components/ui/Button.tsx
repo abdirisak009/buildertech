@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 
 const button = cva(
   [
-    "group/btn relative inline-flex items-center justify-center gap-2",
+    "group/btn relative inline-flex items-center justify-center gap-2 whitespace-nowrap",
     "min-h-12 rounded-full px-7 text-[0.9375rem] font-semibold",
     "font-[family-name:var(--font-display)] tracking-tight",
     "transition-[background-color,color,border-color,transform,box-shadow] duration-250",

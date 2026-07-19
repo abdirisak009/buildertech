@@ -5,15 +5,19 @@ import { Eyebrow } from "@/components/ui/Section";
 import { ButtonLink } from "@/components/ui/Button";
 import { Reveal, RevealGroup, RevealItem } from "@/components/motion/Reveal";
 import { Counter } from "@/components/motion/Counter";
-import { SITE, STATS } from "@/content/site";
+import { getContent } from "@/content";
 import { IMAGES } from "@/content/images";
+import type { Locale } from "@/i18n/config";
 
-export function HomeHero() {
+export function HomeHero({ locale }: { locale: Locale }) {
+  const { site, stats, pages } = getContent(locale);
+  const copy = pages.home.hero;
+
   return (
     <section className="relative isolate flex min-h-[100svh] items-end overflow-hidden bg-navy-950 text-white">
       <Image
         src={IMAGES.heroHome}
-        alt="Architectural floor plans and blueprints laid out on a drafting table"
+        alt={copy.imageAlt}
         fill
         priority
         sizes="100vw"
@@ -36,46 +40,45 @@ export function HomeHero() {
 
       <Container className="relative pb-16 pt-36 sm:pb-20 sm:pt-44">
         <Reveal>
-          <Eyebrow className="text-navy-200">{SITE.headline}</Eyebrow>
+          <Eyebrow className="text-navy-200">{site.headline}</Eyebrow>
         </Reveal>
 
         <Reveal delay={0.1}>
           <h1 className="mt-8 max-w-[14ch] text-display-xl">
-            Design. Manage. <span className="text-gold-500">Build.</span>
+            {copy.titleBefore}
+            <span className="text-gold-500">{copy.titleAccent}</span>
           </h1>
         </Reveal>
 
         <Reveal delay={0.18}>
           <p className="mt-6 font-[family-name:var(--font-display)] text-2xl font-semibold tracking-tight text-gold-500 sm:text-3xl">
-            {SITE.motto}
+            {site.motto}
           </p>
         </Reveal>
 
         <Reveal delay={0.26}>
           <p className="mt-7 max-w-2xl text-lg leading-relaxed text-navy-100 sm:text-xl">
-            {SITE.subhead} From a deck permit to a townhome development, Builders
-            Tech delivers permit-ready plans in 10 business days — and can manage
-            the build from there.
+            {site.subhead} {copy.subheadTail}
           </p>
         </Reveal>
 
         <Reveal delay={0.34}>
           <div className="mt-10 flex flex-wrap gap-3">
-            <ButtonLink href="/contact" size="lg">
-              {SITE.cta}
+            <ButtonLink href={`/${locale}/contact`} size="lg">
+              {site.cta}
               <ArrowRight
                 aria-hidden
                 className="size-4 transition-transform duration-300 group-hover/btn:translate-x-1"
               />
             </ButtonLink>
             <ButtonLink
-              href={`tel:${SITE.phoneHref}`}
+              href={`tel:${site.phoneHref}`}
               variant="outline"
               size="lg"
               className="text-white"
             >
               <Phone aria-hidden className="size-4" />
-              {SITE.phone}
+              {site.phone}
             </ButtonLink>
           </div>
         </Reveal>
@@ -87,9 +90,7 @@ export function HomeHero() {
                 <Star key={i} className="size-4 fill-gold-500 text-gold-500" />
               ))}
             </span>
-            <span className="text-sm text-navy-200">
-              134+ five-star reviews on Google, Thumbtack &amp; Bark
-            </span>
+            <span className="text-sm text-navy-200">{copy.reviews}</span>
           </div>
         </Reveal>
 
@@ -99,7 +100,7 @@ export function HomeHero() {
           stagger={0.1}
           className="mt-16 grid grid-cols-2 gap-x-6 gap-y-9 border-t border-white/15 pt-10 lg:grid-cols-4"
         >
-          {STATS.map((stat) => (
+          {stats.map((stat) => (
             <RevealItem key={stat.label}>
               <dl>
                 <dt className="font-[family-name:var(--font-display)] text-4xl font-bold tracking-tight text-gold-500 sm:text-5xl">

@@ -3,21 +3,32 @@ import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Section";
 import { ButtonLink } from "@/components/ui/Button";
 import { Reveal } from "@/components/motion/Reveal";
-import { SITE } from "@/content/site";
+import { getContent } from "@/content";
+import type { Locale } from "@/i18n/config";
 
 export function CtaSection({
-  eyebrow = "Free consultation",
-  title = "Schedule your project today.",
-  lead = "Tell us what you are building. We'll give you a free consultation, an honest opinion on what your budget will actually cover, and permit-ready plans in 10 business days.",
-  primary = { href: "/contact", label: "Schedule Your Project" },
+  locale,
+  eyebrow,
+  title,
+  lead,
+  primary,
   showPhone = true,
 }: {
+  locale: Locale;
   eyebrow?: string;
   title?: string;
   lead?: string;
   primary?: { href: string; label: string };
   showPhone?: boolean;
 }) {
+  const { site, pages } = getContent(locale);
+  const d = pages.cta;
+
+  const primaryCta = primary ?? {
+    href: "/contact",
+    label: d.primaryLabel,
+  };
+
   return (
     <section className="py-20 sm:py-28">
       <Container>
@@ -34,13 +45,15 @@ export function CtaSection({
             />
 
             <div className="relative max-w-3xl">
-              <Eyebrow className="text-navy-200">{eyebrow}</Eyebrow>
-              <h2 className="mt-6 text-display-lg">{title}</h2>
-              <p className="mt-6 text-lg leading-relaxed text-navy-100">{lead}</p>
+              <Eyebrow className="text-navy-200">{eyebrow ?? d.eyebrow}</Eyebrow>
+              <h2 className="mt-6 text-display-lg">{title ?? d.title}</h2>
+              <p className="mt-6 text-lg leading-relaxed text-navy-100">
+                {lead ?? d.lead}
+              </p>
 
               <div className="mt-10 flex flex-wrap gap-3">
-                <ButtonLink href={primary.href} size="lg">
-                  {primary.label}
+                <ButtonLink href={`/${locale}${primaryCta.href}`} size="lg">
+                  {primaryCta.label}
                   <ArrowRight
                     aria-hidden
                     className="size-4 transition-transform duration-300 group-hover/btn:translate-x-1"
@@ -48,13 +61,13 @@ export function CtaSection({
                 </ButtonLink>
                 {showPhone && (
                   <ButtonLink
-                    href={`tel:${SITE.phoneHref}`}
+                    href={`tel:${site.phoneHref}`}
                     variant="outline"
                     size="lg"
                     className="text-white"
                   >
                     <Phone aria-hidden className="size-4" />
-                    {SITE.phone}
+                    {site.phone}
                   </ButtonLink>
                 )}
               </div>

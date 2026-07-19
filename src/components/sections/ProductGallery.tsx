@@ -6,46 +6,63 @@ import { Check, ArrowRight } from "lucide-react";
 
 import { ButtonLink } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
-import {
-  PRODUCTS,
-  PRODUCT_CATEGORIES,
-  type Product,
-  type ProductCategory,
-} from "@/content/products";
+import type { Product, ProductCategory } from "@/content";
+import type { Locale } from "@/i18n/config";
+import { getUi } from "@/i18n/ui";
 
 type Filter = "All" | ProductCategory;
+type CategoryOption = { value: Filter; label: string };
 
-const PRICE = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-  maximumFractionDigits: 0,
-});
+const PRICE_LOCALE: Record<Locale, string> = { en: "en-US", es: "es-US" };
 
-export function ProductGallery() {
-  const [filter, setFilter] = useState<Filter>("All");
+export function ProductGallery({
+  products,
+  categories,
+  locale,
+}: {
+  products: readonly Product[];
+  /** `value` is the untranslated filter key; `label` is what gets rendered. */
+  categories: readonly CategoryOption[];
+  locale: Locale;
+}) {
+  // ui carries functions, so it is resolved here rather than passed in.
+  const ui = getUi(locale);
+  const [filter, setFilter] = useState<Filter>(categories[0]?.value ?? "All");
   const reduced = useReducedMotion();
+
+  const price = useMemo(
+    () =>
+      new Intl.NumberFormat(PRICE_LOCALE[locale], {
+        style: "currency",
+        currency: "USD",
+        maximumFractionDigits: 0,
+      }),
+    [locale],
+  );
+
+  const allValue = categories[0]?.value;
 
   const visible = useMemo(
     () =>
-      filter === "All"
-        ? PRODUCTS
-        : PRODUCTS.filter((p) => p.category === filter),
-    [filter],
+      filter === allValue
+        ? products
+        : products.filter((p) => p.category === filter),
+    [filter, products, allValue],
   );
 
   return (
     <div>
       {/* ---------------- Filter chips ---------------- */}
       <div className="flex flex-col gap-6 border-b border-border pb-8 sm:flex-row sm:items-center sm:justify-between">
-        <ul className="flex flex-wrap gap-2.5" aria-label="Filter plans by category">
-          {PRODUCT_CATEGORIES.map((category) => {
-            const active = filter === category;
+        <ul className="flex flex-wrap gap-2.5" aria-label={ui.common.filterByCategory}>
+          {categories.map((category) => {
+            const active = filter === category.value;
             return (
-              <li key={category}>
+              <li key={category.value}>
                 <button
                   type="button"
                   aria-pressed={active}
-                  onClick={() => setFilter(category)}
+                  onClick={() => setFilter(category.value)}
                   className={cn(
                     "inline-flex min-h-11 cursor-pointer items-center rounded-full border px-5 text-sm font-semibold",
                     "font-[family-name:var(--font-display)] tracking-tight",
@@ -55,18 +72,15 @@ export function ProductGallery() {
                       : "border-border-strong bg-transparent text-muted-foreground hover:border-navy-700 hover:text-foreground dark:hover:border-gold-500",
                   )}
                 >
-                  {category}
+                  {category.label}
                 </button>
               </li>
             );
           })}
         </ul>
 
-        <p
-          aria-live="polite"
-          className="tabular text-sm text-subtle-foreground"
-        >
-          Showing {visible.length} of {PRODUCTS.length} plan sets
+        <p aria-live="polite" className="tabular text-sm text-subtle-foreground">
+          {ui.common.showingOf(visible.length, products.length, ui.common.planSets)}
         </p>
       </div>
 
@@ -89,7 +103,11 @@ export function ProductGallery() {
               }}
               className="h-full"
             >
-              <ProductCard product={product} />
+              <ProductCard
+                product={product}
+                priceText={price.format(product.price)}
+                locale={locale}
+              />
             </motion.li>
           ))}
         </AnimatePresence>
@@ -98,7 +116,16 @@ export function ProductGallery() {
   );
 }
 
-function ProductCard({ product }: { product: Product }) {
+function ProductCard({
+  product,
+  priceText,
+  locale,
+}: {
+  product: Product;
+  priceText: string;
+  locale: Locale;
+}) {
+  const ui = getUi(locale);
   return (
     <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-surface transition-[transform,box-shadow,border-color] duration-400 ease-[cubic-bezier(0.22,0.61,0.36,1)] hover:-translate-y-1.5 hover:border-border-strong hover:shadow-[0_24px_60px_-28px_rgba(10,36,114,0.45)]">
       {/* Blueprint panel — plan sets are drawings, not photographs. */}
@@ -114,10 +141,7 @@ function ProductCard({ product }: { product: Product }) {
         />
 
         {/* Corner ticks — drafting sheet framing */}
-        <div
-          aria-hidden
-          className="absolute inset-5 border border-white/12"
-        />
+        <div aria-hidden className="absolute inset-5 border border-white/12" />
         <div
           aria-hidden
           className="absolute left-5 top-5 size-4 border-l-2 border-t-2 border-gold-500/70"
@@ -145,7 +169,7 @@ function ProductCard({ product }: { product: Product }) {
         </p>
 
         <p className="mt-6 text-xs uppercase tracking-[0.16em] text-subtle-foreground">
-          Includes
+          {ui.common.includes}
         </p>
         <ul className="mt-3 flex-1 space-y-2">
           {product.includes.map((item) => (
@@ -164,14 +188,14 @@ function ProductCard({ product }: { product: Product }) {
 
         <div className="mt-7 flex items-center justify-between gap-4 border-t border-border pt-6">
           <p className="tabular font-[family-name:var(--font-display)] text-2xl font-bold tracking-tight text-gold-600 dark:text-gold-400">
-            {PRICE.format(product.price)}
+            {priceText}
           </p>
           <ButtonLink
-            href={`/contact?plan=${product.slug}`}
+            href={`/${locale}/contact?plan=${product.slug}`}
             size="sm"
-            aria-label={`Purchase plan — ${product.name}`}
+            aria-label={ui.common.purchaseAria(product.name)}
           >
-            Purchase plan
+            {ui.common.purchasePlan}
             <ArrowRight
               aria-hidden
               className="size-4 transition-transform duration-300 group-hover/btn:translate-x-1"

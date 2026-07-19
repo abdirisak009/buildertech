@@ -7,24 +7,42 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { ChevronDown, ArrowRight, Phone, Mail } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import { NAV, SITE } from "@/content/site";
 import { Container } from "@/components/ui/Container";
 import { ButtonLink } from "@/components/ui/Button";
+import type { NavItem } from "@/content";
+import type { Locale } from "@/i18n/config";
+import type { UiDict } from "@/i18n/ui";
 
-export function MobileNav({ onNavigate }: { onNavigate: () => void }) {
+export function MobileNav({
+  nav,
+  locale,
+  ui,
+  contact,
+  onNavigate,
+}: {
+  nav: readonly NavItem[];
+  locale: Locale;
+  ui: UiDict;
+  contact: { phone: string; phoneHref: string; email: string; cta: string };
+  onNavigate: () => void;
+}) {
   const pathname = usePathname();
   const [expanded, setExpanded] = useState<string | null>(null);
   const reduced = useReducedMotion();
 
+  const href = (path: string) => `/${locale}${path === "/" ? "" : path}`;
+
   return (
     <Container className="py-6">
       <ul className="divide-y divide-border">
-        {NAV.map((item, i) => {
+        {nav.map((item, i) => {
           const hasChildren = !!item.children?.length;
           const isOpen = expanded === item.label;
+          const itemHref = href(item.href);
           const active =
-            pathname.startsWith(item.href) ||
-            (item.children?.some((c) => pathname.startsWith(c.href)) ?? false);
+            pathname.startsWith(itemHref) ||
+            (item.children?.some((c) => pathname.startsWith(href(c.href))) ??
+              false);
           const Icon = item.icon;
 
           return (
@@ -40,7 +58,7 @@ export function MobileNav({ onNavigate }: { onNavigate: () => void }) {
             >
               <div className="flex items-center">
                 <Link
-                  href={item.href}
+                  href={itemHref}
                   onClick={onNavigate}
                   aria-current={active ? "page" : undefined}
                   className={cn(
@@ -67,7 +85,11 @@ export function MobileNav({ onNavigate }: { onNavigate: () => void }) {
                     type="button"
                     onClick={() => setExpanded(isOpen ? null : item.label)}
                     aria-expanded={isOpen}
-                    aria-label={`${isOpen ? "Collapse" : "Expand"} ${item.label} menu`}
+                    aria-label={
+                      isOpen
+                        ? ui.a11y.collapseMenu(item.label)
+                        : ui.a11y.expandMenu(item.label)
+                    }
                     className="inline-grid size-12 shrink-0 cursor-pointer place-items-center rounded-full border border-border-strong text-muted-foreground"
                   >
                     <ChevronDown
@@ -102,11 +124,12 @@ export function MobileNav({ onNavigate }: { onNavigate: () => void }) {
                       <ul className="space-y-1 border-l-2 border-gold-500 pl-4">
                         {item.children!.map((child) => {
                           const ChildIcon = child.icon;
-                          const childActive = pathname.startsWith(child.href);
+                          const childHref = href(child.href);
+                          const childActive = pathname.startsWith(childHref);
                           return (
                             <li key={child.href}>
                               <Link
-                                href={child.href}
+                                href={childHref}
                                 onClick={onNavigate}
                                 className={cn(
                                   "flex min-h-12 items-center gap-3 rounded-lg py-3 pl-2 pr-3 text-base transition-colors",
@@ -140,24 +163,29 @@ export function MobileNav({ onNavigate }: { onNavigate: () => void }) {
         })}
       </ul>
 
-      <ButtonLink href="/contact" size="lg" className="mt-8 w-full" onClick={onNavigate}>
-        {SITE.cta}
+      <ButtonLink
+        href={href("/contact")}
+        size="lg"
+        className="mt-8 w-full"
+        onClick={onNavigate}
+      >
+        {contact.cta}
       </ButtonLink>
 
       <div className="mt-8 space-y-3 text-sm">
         <a
-          href={`tel:${SITE.phoneHref}`}
+          href={`tel:${contact.phoneHref}`}
           className="flex items-center gap-3 text-muted-foreground"
         >
           <Phone aria-hidden className="size-4 text-gold-600 dark:text-gold-400" />
-          {SITE.phone}
+          {contact.phone}
         </a>
         <a
-          href={`mailto:${SITE.email}`}
+          href={`mailto:${contact.email}`}
           className="flex items-center gap-3 break-all text-muted-foreground"
         >
           <Mail aria-hidden className="size-4 shrink-0 text-gold-600 dark:text-gold-400" />
-          {SITE.email}
+          {contact.email}
         </a>
       </div>
     </Container>

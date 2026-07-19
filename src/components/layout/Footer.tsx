@@ -1,33 +1,11 @@
 import Link from "next/link";
 import { Mail, Phone, MapPin, Star } from "lucide-react";
+
 import { Container } from "@/components/ui/Container";
 import { Logo } from "./Logo";
-import { SITE } from "@/content/site";
-import { SERVICES } from "@/content/services";
-import { REVIEW_PLATFORMS } from "@/content/about";
-
-const COLUMNS = [
-  {
-    heading: "Company",
-    links: [
-      { href: "/how-it-works", label: "How it Works" },
-      { href: "/about", label: "About Us" },
-      { href: "/faq", label: "FAQ" },
-      { href: "/resources", label: "Building Resources" },
-      { href: "/contact", label: "Contact Us" },
-    ],
-  },
-  {
-    heading: "Explore",
-    links: [
-      { href: "/products/stock-plans", label: "Stock Plans" },
-      { href: "/blog/irc-code-updates", label: "IRC Code Updates" },
-      { href: "/blog/design-trends", label: "Design Trends" },
-      { href: "/careers/open-positions", label: "Open Positions" },
-      { href: "/careers/internships", label: "Internships" },
-    ],
-  },
-];
+import { getContent } from "@/content";
+import { getUi } from "@/i18n/ui";
+import type { Locale } from "@/i18n/config";
 
 function SocialIcon({ label }: { label: string }) {
   const common = { className: "size-[18px]", "aria-hidden": true } as const;
@@ -54,7 +32,35 @@ function SocialIcon({ label }: { label: string }) {
   );
 }
 
-export function Footer() {
+export function Footer({ locale }: { locale: Locale }) {
+  const { site, services, reviewPlatforms } = getContent(locale);
+  const ui = getUi(locale);
+  const l = ui.footer.links;
+  const href = (path: string) => `/${locale}${path}`;
+
+  const columns = [
+    {
+      heading: ui.footer.company,
+      links: [
+        { href: "/how-it-works", label: l.howItWorks },
+        { href: "/about", label: l.about },
+        { href: "/faq", label: l.faq },
+        { href: "/resources", label: l.resources },
+        { href: "/contact", label: l.contact },
+      ],
+    },
+    {
+      heading: ui.footer.explore,
+      links: [
+        { href: "/products/stock-plans", label: l.stockPlans },
+        { href: "/blog/irc-code-updates", label: l.ircUpdates },
+        { href: "/blog/design-trends", label: l.designTrends },
+        { href: "/careers/open-positions", label: l.openPositions },
+        { href: "/careers/internships", label: l.internships },
+      ],
+    },
+  ];
+
   return (
     <footer className="relative isolate overflow-hidden bg-navy-950 text-navy-100">
       <div aria-hidden className="absolute inset-0 bg-blueprint opacity-50" />
@@ -66,12 +72,16 @@ export function Footer() {
       <Container className="relative pb-10 pt-20 sm:pt-24">
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-[1.6fr_1fr_1fr_1.3fr]">
           <div>
-            <Logo variant="onDark" />
+            <Logo
+              locale={locale}
+              homeLabel={`${site.name} — ${ui.a11y.home}`}
+              variant="onDark"
+            />
             <p className="mt-3 font-[family-name:var(--font-display)] text-sm font-semibold uppercase tracking-[0.18em] text-gold-500">
-              {SITE.tagline}
+              {site.tagline}
             </p>
             <p className="mt-5 max-w-sm text-sm leading-relaxed text-navy-200">
-              {SITE.headline}. {SITE.subhead}
+              {site.headline}. {site.subhead}
             </p>
 
             <div className="mt-6 flex items-center gap-2.5">
@@ -81,16 +91,16 @@ export function Footer() {
                 ))}
               </span>
               <span className="text-xs text-navy-200">
-                134+ reviews on {REVIEW_PLATFORMS.join(", ")}
+                {ui.footer.reviews("134+", reviewPlatforms.join(", "))}
               </span>
             </div>
 
             <ul className="mt-7 flex gap-2">
-              {SITE.socials.map((s) => (
+              {site.socials.map((s) => (
                 <li key={s.label}>
                   <a
                     href={s.href}
-                    aria-label={`${SITE.name} on ${s.label}`}
+                    aria-label={`${site.name} ${ui.a11y.onPlatform(s.label)}`}
                     className="inline-grid size-11 place-items-center rounded-full border border-white/15 text-navy-100 transition-colors duration-200 hover:border-gold-500 hover:bg-gold-500 hover:text-navy-950"
                   >
                     <SocialIcon label={s.label} />
@@ -100,15 +110,15 @@ export function Footer() {
             </ul>
           </div>
 
-          <nav aria-label="Services">
+          <nav aria-label={ui.footer.services}>
             <h2 className="font-[family-name:var(--font-display)] text-xs font-semibold uppercase tracking-[0.18em] text-white">
-              Services
+              {ui.footer.services}
             </h2>
             <ul className="mt-5 space-y-3">
-              {SERVICES.map((s) => (
+              {services.map((s) => (
                 <li key={s.slug}>
                   <Link
-                    href={`/services/${s.slug}`}
+                    href={href(`/services/${s.slug}`)}
                     className="text-sm text-navy-200 transition-colors duration-200 hover:text-gold-400"
                   >
                     {s.title}
@@ -118,19 +128,19 @@ export function Footer() {
             </ul>
           </nav>
 
-          {COLUMNS.map((col) => (
+          {columns.map((col) => (
             <nav key={col.heading} aria-label={col.heading}>
               <h2 className="font-[family-name:var(--font-display)] text-xs font-semibold uppercase tracking-[0.18em] text-white">
                 {col.heading}
               </h2>
               <ul className="mt-5 space-y-3">
-                {col.links.map((l) => (
-                  <li key={l.href}>
+                {col.links.map((link) => (
+                  <li key={link.href}>
                     <Link
-                      href={l.href}
+                      href={href(link.href)}
                       className="text-sm text-navy-200 transition-colors duration-200 hover:text-gold-400"
                     >
-                      {l.label}
+                      {link.label}
                     </Link>
                   </li>
                 ))}
@@ -140,58 +150,40 @@ export function Footer() {
         </div>
 
         <div className="mt-14 grid gap-6 border-t border-white/10 pt-10 sm:grid-cols-3">
-          <a
-            href={`tel:${SITE.phoneHref}`}
-            className="group flex items-start gap-3.5"
-          >
-            <Phone
-              aria-hidden
-              className="mt-0.5 size-5 shrink-0 text-gold-500"
-              strokeWidth={1.75}
-            />
+          <a href={`tel:${site.phoneHref}`} className="group flex items-start gap-3.5">
+            <Phone aria-hidden className="mt-0.5 size-5 shrink-0 text-gold-500" strokeWidth={1.75} />
             <span>
               <span className="block text-xs uppercase tracking-[0.14em] text-navy-300">
-                Phone
+                {ui.footer.phone}
               </span>
               <span className="font-[family-name:var(--font-display)] text-lg font-semibold text-white transition-colors group-hover:text-gold-400">
-                {SITE.phone}
+                {site.phone}
               </span>
             </span>
           </a>
 
-          <a
-            href={`mailto:${SITE.email}`}
-            className="group flex items-start gap-3.5"
-          >
-            <Mail
-              aria-hidden
-              className="mt-0.5 size-5 shrink-0 text-gold-500"
-              strokeWidth={1.75}
-            />
+          <a href={`mailto:${site.email}`} className="group flex items-start gap-3.5">
+            <Mail aria-hidden className="mt-0.5 size-5 shrink-0 text-gold-500" strokeWidth={1.75} />
             <span className="min-w-0">
               <span className="block text-xs uppercase tracking-[0.14em] text-navy-300">
-                Email
+                {ui.footer.email}
               </span>
               <span className="block break-all text-sm text-white transition-colors group-hover:text-gold-400">
-                {SITE.email}
+                {site.email}
               </span>
             </span>
           </a>
 
           <div className="flex items-start gap-3.5">
-            <MapPin
-              aria-hidden
-              className="mt-0.5 size-5 shrink-0 text-gold-500"
-              strokeWidth={1.75}
-            />
+            <MapPin aria-hidden className="mt-0.5 size-5 shrink-0 text-gold-500" strokeWidth={1.75} />
             <span>
               <span className="block text-xs uppercase tracking-[0.14em] text-navy-300">
-                Office
+                {ui.footer.office}
               </span>
               <span className="block text-sm text-white">
-                {SITE.address.street}
+                {site.address.street}
                 <br />
-                {SITE.address.city}, {SITE.address.state} {SITE.address.zip}
+                {site.address.city}, {site.address.state} {site.address.zip}
               </span>
             </span>
           </div>
@@ -199,14 +191,14 @@ export function Footer() {
 
         <div className="mt-12 flex flex-col gap-3 border-t border-white/10 pt-7 text-xs text-navy-300 sm:flex-row sm:items-center sm:justify-between">
           <p>
-            © {new Date().getFullYear()} {SITE.name}. All rights reserved.
+            © {new Date().getFullYear()} {site.name}. {ui.footer.rights}
           </p>
           <div className="flex gap-6">
-            <Link href="/privacy-policy" className="transition-colors hover:text-gold-400">
-              Privacy Policy
+            <Link href={href("/privacy-policy")} className="transition-colors hover:text-gold-400">
+              {ui.footer.privacy}
             </Link>
-            <Link href="/terms-of-use" className="transition-colors hover:text-gold-400">
-              Terms of Use
+            <Link href={href("/terms-of-use")} className="transition-colors hover:text-gold-400">
+              {ui.footer.terms}
             </Link>
           </div>
         </div>
