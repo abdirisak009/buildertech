@@ -6,6 +6,8 @@ import {
   OctagonAlert,
   ClipboardCheck,
   HardHat,
+  Home,
+  Store,
   type LucideIcon,
 } from "lucide-react";
 import { IMAGES } from "../images";
@@ -230,24 +232,121 @@ export const WORK_CATEGORIES = [
   "Renderings",
 ];
 
-/** The three headline offers on the live homepage. */
-export const HEADLINE_OFFERS = [
+/**
+ * The six service cards on the homepage, mirroring the live Builders Tech
+ * site. Each links to the closest matching service detail page.
+ */
+export type HomeServiceCard = {
+  title: string;
+  body: string;
+  points: string[];
+  href: string;
+  icon: LucideIcon;
+};
+
+export const HOME_SERVICES: HomeServiceCard[] = [
   {
-    slug: "stop-work-orders",
-    title: "Urgent & Stop Work Order Projects",
-    body: "Have a Stop Work Order? Reach out today — we have experts that can help you resolve city issues and get your project back on track!",
+    title: "Stop Work Orders",
+    body: "Have a Stop Work Order? Reach out today — we have experts that can help you resolve city issues and get your project back on track.",
+    points: [
+      "Additions without permits",
+      "Decks without permits",
+      "Zoning compliance & site plans",
+      "Unlicensed work performed",
+    ],
     href: "/services/stop-work-orders",
+    icon: OctagonAlert,
   },
   {
-    slug: "project-design",
-    title: "Project Design",
-    body: "Planning a project? Whether it's Residential, Commercial or even a DIY — no project is too small for us.",
+    title: "Residential Permit Set Plans",
+    body: "Need plans for permits or construction approval? We provide plans for:",
+    points: [
+      "Additions",
+      "ADUs & guest houses",
+      "Decks & covered porches",
+      "Basement finishes",
+      "Renovations & remodels",
+      "Garages & carports",
+    ],
     href: "/services/architectural-plans",
+    icon: Home,
   },
   {
-    slug: "design-build",
-    title: "Design-Build Services",
-    body: "Our design-build service unites architecture and construction into one seamless, white-glove experience.",
-    href: "/services/construction",
+    title: "Commercial Permit Set Plans",
+    body: "Professional commercial permit plans for offices, retail, restaurants and more — with coordinated architectural, structural and MEP drawings for smooth approvals.",
+    points: [
+      "Cafes",
+      "Retail buildouts",
+      "Offices",
+      "Prefab warehouses",
+      "Daycares",
+      "Life safety plans",
+    ],
+    href: "/services/architectural-plans",
+    icon: Store,
   },
+  {
+    title: "Site Plans",
+    body: "Need a site plan for permits, development or construction approval?",
+    points: [
+      "Property lines & setbacks",
+      "Impervious calculations",
+      "Drainage",
+      "Erosion control",
+      "Tree & landscape",
+      "Zoning & building data",
+    ],
+    href: "/services/civil-plans",
+    icon: Map,
+  },
+  {
+    title: "Structural Engineering",
+    body: "Reliable structural engineering for residential and commercial projects — safe, code-compliant designs with detailed plans and calculations tailored to your project.",
+    points: [
+      "Structural letters",
+      "Deck inspections & repairs",
+      "Load-bearing wall evaluation",
+      "Retaining wall support",
+    ],
+    href: "/services/structural-plans",
+    icon: Frame,
+  },
+  {
+    title: "Design-Build Services",
+    body: "Our design-build service unites architecture and construction into one seamless, white-glove experience. From concept to completion, we deliver custom, timeless spaces with exceptional craftsmanship.",
+    points: [
+      "Architecture & construction, one team",
+      "Custom, timeless spaces",
+      "Exceptional craftsmanship",
+      "Concept to completion",
+    ],
+    href: "/services/construction",
+    icon: HardHat,
+  },
+];
+
+/** Partner logos shown in the "Companies Who Trust Us" section. */
+export const TRUST_LOGOS = [
+  "Advanced Remodeling",
+  "AP Construction",
+  "33 North Homes",
+  "BIG Construction",
+  "Better Homes Real Estate",
+  "Keller Williams",
+  "GFS",
+  "SBA",
+  "So Far So Good Remodeling",
+  "M Studio",
+  "Nextgen Builders",
+  "SIS Professional Services",
+];
+
+/** Review platforms Builders Tech is rated on. */
+export const REVIEW_PLATFORMS_LIST = [
+  "Google",
+  "Thumbtack",
+  "Bark",
+  "Nextdoor",
+  "Houzz",
+  "Facebook",
 ];

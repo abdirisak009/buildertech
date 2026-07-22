@@ -16,6 +16,7 @@ import { faq } from "./faq";
 import { about } from "./about";
 import { contact } from "./contact";
 import { legal } from "./legal";
+import { becomeAPartner } from "./become-a-partner";
 
 export const PAGES: PagesCopy = {
   cta,
@@ -34,4 +35,5 @@ export const PAGES: PagesCopy = {
   about,
   contact,
   legal,
+  becomeAPartner,
 };

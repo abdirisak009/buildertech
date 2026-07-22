@@ -118,12 +118,17 @@ its own icon.
 
 | Menu | Submenu |
 |---|---|
-| How it Works | — |
-| Services | Renderings · Architectural · Structural · Civil · Stop Work Orders · Project Management · Construction |
+| About Us | — |
+| Services | Renderings · Architectural · Structural · Civil · Stop Work Orders · Project Management · Design-Build |
 | Products | Stock Plans |
-| Blog | IRC Code Updates · Design Trends |
 | Careers | Current Open Positions · Internships |
-| More | Building Resources · FAQ · About Us · Contact Us |
+| **Become a Partner** (button) | — |
+
+Structure and copy mirror the live Builders Tech Webflow site
+(builders-tech-18e93d.webflow.io): hero "Complicated Projects. Simplified.",
+a six-card services grid, the five-step process, "Why Choose Builders Tech?",
+"Our Work", "Companies Who Trust Us", the reviews rail, and a partner CTA.
+Blog, FAQ, Building Resources, How-it-Works and Contact live in the footer.
 
 - **Desktop** — hover/focus dropdown panels with an icon tile and description per
   item, gold top rule, keyboard accessible, Escape to close

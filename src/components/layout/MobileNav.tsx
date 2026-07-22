@@ -43,7 +43,6 @@ export function MobileNav({
             pathname.startsWith(itemHref) ||
             (item.children?.some((c) => pathname.startsWith(href(c.href))) ??
               false);
-          const Icon = item.icon;
 
           return (
             <motion.li
@@ -62,21 +61,10 @@ export function MobileNav({
                   onClick={onNavigate}
                   aria-current={active ? "page" : undefined}
                   className={cn(
-                    "flex flex-1 items-center gap-4 py-5 font-[family-name:var(--font-display)] text-2xl font-semibold tracking-tight",
+                    "flex flex-1 items-center py-5 font-[family-name:var(--font-display)] text-2xl font-semibold tracking-tight",
                     active ? "text-gold-600 dark:text-gold-400" : "text-foreground",
                   )}
                 >
-                  <span
-                    aria-hidden
-                    className={cn(
-                      "inline-grid size-10 shrink-0 place-items-center rounded-xl transition-colors",
-                      active
-                        ? "bg-gold-500 text-navy-950"
-                        : "bg-gold-500/15 text-gold-700 dark:text-gold-400",
-                    )}
-                  >
-                    <Icon className="size-5" strokeWidth={1.75} />
-                  </span>
                   {item.label}
                 </Link>
 
@@ -123,7 +111,6 @@ export function MobileNav({
                     <li className="pb-4">
                       <ul className="space-y-1 border-l-2 border-gold-500 pl-4">
                         {item.children!.map((child) => {
-                          const ChildIcon = child.icon;
                           const childHref = href(child.href);
                           const childActive = pathname.startsWith(childHref);
                           return (
@@ -132,22 +119,12 @@ export function MobileNav({
                                 href={childHref}
                                 onClick={onNavigate}
                                 className={cn(
-                                  "flex min-h-12 items-center gap-3 rounded-lg py-3 pl-2 pr-3 text-base transition-colors",
+                                  "flex min-h-12 items-center rounded-lg py-3 pl-2 pr-3 text-base transition-colors",
                                   childActive
                                     ? "font-semibold text-gold-700 dark:text-gold-400"
                                     : "text-muted-foreground",
                                 )}
                               >
-                                <ChildIcon
-                                  aria-hidden
-                                  className={cn(
-                                    "size-[18px] shrink-0",
-                                    childActive
-                                      ? "text-gold-600 dark:text-gold-400"
-                                      : "text-subtle-foreground",
-                                  )}
-                                  strokeWidth={1.75}
-                                />
                                 {child.label}
                               </Link>
                             </li>
@@ -170,6 +147,16 @@ export function MobileNav({
         onClick={onNavigate}
       >
         {contact.cta}
+      </ButtonLink>
+
+      <ButtonLink
+        href={href("/become-a-partner")}
+        variant="outline"
+        size="lg"
+        className="mt-3 w-full"
+        onClick={onNavigate}
+      >
+        {ui.header.partnerCta}
       </ButtonLink>
 
       <div className="mt-8 space-y-3 text-sm">

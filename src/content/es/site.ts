@@ -1,10 +1,8 @@
 import {
-  Route,
+  Info,
   Layers,
   Package,
-  Newspaper,
   Briefcase,
-  LayoutGrid,
   Box,
   Building2,
   Frame,
@@ -13,28 +11,27 @@ import {
   ClipboardCheck,
   HardHat,
   FileStack,
-  Scale,
-  TrendingUp,
   BriefcaseBusiness,
   GraduationCap,
-  Network,
-  CircleQuestionMark,
-  Users,
-  Mail,
   type LucideIcon,
 } from "lucide-react";
 
 export const SITE = {
   name: "Builders Tech",
-  tagline: "Diseñamos. Gestionamos. Construimos.",
-  motto: "Construyendo, Juntos",
-  headline: "Una firma multidisciplinaria de diseño y gerencia de construcción",
-  subhead: "¡Ningún proyecto es demasiado grande ni demasiado pequeño!",
-  cta: "¡Agende su proyecto hoy mismo!",
+  tagline: "Construyendo en toda América",
+  motto: "Construyendo en toda América",
+  headline: "Diseño y gerencia de construcción con sede en Atlanta",
+  subhead: "Ningún proyecto es demasiado pequeño.",
+  cta: "Agende su proyecto hoy",
+  partnerCta: "Sea socio",
   url: "https://www.builderstechnologysource.com",
   email: "services@builderstechnologysource.com",
+  // Primary (English) line
   phone: "404-542-4280",
   phoneHref: "+14045424280",
+  // Spanish line
+  phoneEs: "407-289-6606",
+  phoneEsHref: "+14072896606",
   address: {
     street: "5300 Memorial Dr, Unit 102",
     city: "Stone Mountain",
@@ -43,7 +40,7 @@ export const SITE = {
     full: "5300 Memorial Dr Unit 102, Stone Mountain, GA 30083",
   },
   serviceArea:
-    "Georgia — principalmente dentro de un radio de 2 horas de Stone Mountain, incluyendo Atlanta, Decatur, el condado de DeKalb, Marietta y el condado de Cobb.",
+    "Atlanta y todo Georgia — atendemos a propietarios, constructores e inversionistas desde Stone Mountain, Decatur, el condado de DeKalb, Marietta y el condado de Cobb.",
   socials: [
     { label: "LinkedIn", href: "#" },
     { label: "Instagram", href: "#" },
@@ -53,14 +50,15 @@ export const SITE = {
 
 /** Datos destacados que respaldan nuestro trabajo, usados en todo el sitio. */
 export const STATS = [
-  { value: 400, suffix: "+", label: "Proyectos completados localmente" },
+  { value: 372, suffix: "+", label: "Proyectos completados localmente" },
   { value: 134, suffix: "+", label: "Reseñas de cinco estrellas" },
-  { value: 10, suffix: "", label: "Días hábiles de entrega" },
-  { value: 5, suffix: "★", label: "Google, Thumbtack y Bark" },
+  { value: 24, suffix: "hr", label: "Respuesta a su formulario de admisión" },
+  { value: 6, suffix: "", label: "Plataformas de reseñas, todas 5 estrellas" },
 ] as const;
 
 /* ------------------------------------------------------------------
-   Navegación — refleja la estructura de menús y submenús del sitio
+   Navegación — refleja el sitio Webflow de builders-tech:
+   Inicio · Sobre nosotros · Servicios ▾ · Productos ▾ · Empleos · Sea socio
    ------------------------------------------------------------------ */
 
 export type NavChild = {
@@ -78,7 +76,7 @@ export type NavItem = {
 };
 
 export const NAV: NavItem[] = [
-  { href: "/how-it-works", label: "Cómo Funciona", icon: Route },
+  { href: "/about", label: "Sobre nosotros", icon: Info },
   {
     href: "/services",
     label: "Servicios",
@@ -122,14 +120,14 @@ export const NAV: NavItem[] = [
       },
       {
         href: "/services/construction",
-        label: "Construcción",
-        description: "Entrega diseño-construcción bajo un solo responsable",
+        label: "Diseño-Construcción",
+        description: "Arquitectura y construcción bajo un solo responsable",
         icon: HardHat,
       },
     ],
   },
   {
-    href: "/products",
+    href: "/products/stock-plans",
     label: "Productos",
     icon: Package,
     children: [
@@ -142,27 +140,8 @@ export const NAV: NavItem[] = [
     ],
   },
   {
-    href: "/blog",
-    label: "Blog",
-    icon: Newspaper,
-    children: [
-      {
-        href: "/blog/irc-code-updates",
-        label: "Actualizaciones del Código IRC",
-        description: "Qué cambió en el código y qué significa para su obra",
-        icon: Scale,
-      },
-      {
-        href: "/blog/design-trends",
-        label: "Tendencias de Diseño",
-        description: "Lo que los clientes de Atlanta realmente nos están pidiendo construir",
-        icon: TrendingUp,
-      },
-    ],
-  },
-  {
     href: "/careers",
-    label: "Empleo",
+    label: "Empleos",
     icon: Briefcase,
     children: [
       {
@@ -176,37 +155,6 @@ export const NAV: NavItem[] = [
         label: "Pasantías",
         description: "Desarrollo juvenil y la próxima generación de constructores",
         icon: GraduationCap,
-      },
-    ],
-  },
-  {
-    href: "/about",
-    label: "Más",
-    icon: LayoutGrid,
-    children: [
-      {
-        href: "/resources",
-        label: "Recursos de Construcción",
-        description: "Topógrafos, inspectores, oficios y proveedores locales verificados",
-        icon: Network,
-      },
-      {
-        href: "/faq",
-        label: "Preguntas Frecuentes",
-        description: "Permisos, plazos, presupuestos y cómo trabajamos",
-        icon: CircleQuestionMark,
-      },
-      {
-        href: "/about",
-        label: "Quiénes Somos",
-        description: "De una oficina en un sótano de Atlanta a una firma de servicio completo",
-        icon: Users,
-      },
-      {
-        href: "/contact",
-        label: "Contáctenos",
-        description: "Consulta gratuita — llame, escriba un correo o use WhatsApp",
-        icon: Mail,
       },
     ],
   },

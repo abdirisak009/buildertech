@@ -35,7 +35,9 @@ const BUNDLES = {
     services: enServices.SERVICES,
     getService: enServices.getService,
     workCategories: enServices.WORK_CATEGORIES,
-    headlineOffers: enServices.HEADLINE_OFFERS,
+    homeServices: enServices.HOME_SERVICES,
+    trustLogos: enServices.TRUST_LOGOS,
+    reviewPlatformsList: enServices.REVIEW_PLATFORMS_LIST,
     products: enProducts.PRODUCTS,
     productCategories: enProducts.PRODUCT_CATEGORIES,
     productNotes: enProducts.PRODUCT_NOTES,
@@ -64,7 +66,9 @@ const BUNDLES = {
     services: esServices.SERVICES,
     getService: esServices.getService,
     workCategories: esServices.WORK_CATEGORIES,
-    headlineOffers: esServices.HEADLINE_OFFERS,
+    homeServices: esServices.HOME_SERVICES,
+    trustLogos: esServices.TRUST_LOGOS,
+    reviewPlatformsList: esServices.REVIEW_PLATFORMS_LIST,
     products: esProducts.PRODUCTS,
     productCategories: esProducts.PRODUCT_CATEGORIES,
     productNotes: esProducts.PRODUCT_NOTES,
@@ -95,7 +99,7 @@ export function getContent(locale: Locale) {
 export type Content = ReturnType<typeof getContent>;
 
 /* Shared types — identical across locales. */
-export type { Service, ServiceItem } from "./en/services";
+export type { Service, ServiceItem, HomeServiceCard } from "./en/services";
 export type { Product, ProductCategory } from "./en/products";
 export type { Post, BlogCategory } from "./en/blog";
 export type { Position } from "./en/careers";

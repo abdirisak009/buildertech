@@ -32,6 +32,7 @@ export const es: UiDict = {
 
   header: {
     cta: "Agende su proyecto",
+    partnerCta: "Sea socio",
   },
 
   breadcrumb: {

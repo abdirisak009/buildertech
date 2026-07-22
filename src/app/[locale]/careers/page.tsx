@@ -161,7 +161,7 @@ export default async function CareersPage({
                 <div className="h-full rounded-2xl border border-border bg-surface p-8">
                   <span
                     aria-hidden
-                    className="tabular inline-grid size-12 place-items-center rounded-full bg-navy-700 font-[family-name:var(--font-display)] text-sm font-bold text-gold-500"
+                    className="tabular inline-grid size-12 place-items-center rounded-full bg-black font-[family-name:var(--font-display)] text-sm font-bold text-gold-500"
                   >
                     {item.step}
                   </span>

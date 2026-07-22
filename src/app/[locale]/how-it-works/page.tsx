@@ -142,7 +142,7 @@ export default async function HowItWorksPage({
                     <div>
                       <span
                         aria-hidden
-                        className="tabular inline-grid size-12 place-items-center rounded-full bg-navy-700 font-[family-name:var(--font-display)] text-sm font-bold text-gold-500"
+                        className="tabular inline-grid size-12 place-items-center rounded-full bg-black font-[family-name:var(--font-display)] text-sm font-bold text-gold-500"
                       >
                         {step.number}
                       </span>

@@ -20,10 +20,12 @@
   --color-navy-400: #4f66c2;
   --color-navy-500: #2b45a3;
   --color-navy-600: #17318a;
-  --color-navy-700: #0a2472; /* brand primary */
-  --color-navy-800: #071a56;
-  --color-navy-900: #05123c;
-  --color-navy-950: #030b26;
+  --color-navy-700: #0a2472; /* brand primary (logo + light-mode accents) */
+  /* Dark surfaces are pure black rather than deep navy, matching the reference
+     site. navy-800/900/950 are used only as dark backgrounds. */
+  --color-navy-800: #161618;
+  --color-navy-900: #0a0a0b;
+  --color-navy-950: #000000;
 
   /* ---- Brand: gold ---- */
   --color-gold-50: #fff9e8;

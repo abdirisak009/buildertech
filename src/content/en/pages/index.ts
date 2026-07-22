@@ -14,6 +14,7 @@ import { faq } from "./faq";
 import { about } from "./about";
 import { contact } from "./contact";
 import { legal } from "./legal";
+import { becomeAPartner } from "./become-a-partner";
 
 export const PAGES = {
   cta,
@@ -32,6 +33,7 @@ export const PAGES = {
   about,
   contact,
   legal,
+  becomeAPartner,
 } as const;
 
 export type PagesCopy = typeof PAGES;

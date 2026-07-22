@@ -150,17 +150,28 @@ export function Footer({ locale }: { locale: Locale }) {
         </div>
 
         <div className="mt-14 grid gap-6 border-t border-white/10 pt-10 sm:grid-cols-3">
-          <a href={`tel:${site.phoneHref}`} className="group flex items-start gap-3.5">
+          <div className="flex items-start gap-3.5">
             <Phone aria-hidden className="mt-0.5 size-5 shrink-0 text-gold-500" strokeWidth={1.75} />
             <span>
               <span className="block text-xs uppercase tracking-[0.14em] text-navy-300">
                 {ui.footer.phone}
               </span>
-              <span className="font-[family-name:var(--font-display)] text-lg font-semibold text-white transition-colors group-hover:text-gold-400">
-                {site.phone}
-              </span>
+              <a
+                href={`tel:${site.phoneHref}`}
+                className="block font-[family-name:var(--font-display)] text-lg font-semibold text-white transition-colors hover:text-gold-400"
+              >
+                {site.phone}{" "}
+                <span className="text-xs font-normal text-navy-300">EN</span>
+              </a>
+              <a
+                href={`tel:${site.phoneEsHref}`}
+                className="block font-[family-name:var(--font-display)] text-lg font-semibold text-white transition-colors hover:text-gold-400"
+              >
+                {site.phoneEs}{" "}
+                <span className="text-xs font-normal text-navy-300">ES</span>
+              </a>
             </span>
-          </a>
+          </div>
 
           <a href={`mailto:${site.email}`} className="group flex items-start gap-3.5">
             <Mail aria-hidden className="mt-0.5 size-5 shrink-0 text-gold-500" strokeWidth={1.75} />

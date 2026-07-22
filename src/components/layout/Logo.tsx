@@ -4,9 +4,9 @@ import { cn } from "@/lib/utils";
 import type { Locale } from "@/i18n/config";
 
 /**
- * The supplied logo artwork is navy + gold on transparent, which reads well on
- * light surfaces. On dark surfaces we swap in a knocked-out white version via
- * a CSS filter so the wordmark stays legible.
+ * The BT hexagon mark only (no wordmark). The artwork is gold + navy on a
+ * transparent field, which reads on light surfaces. On dark surfaces we knock
+ * it out to a clean white silhouette via a CSS filter so it stays legible.
  */
 export function Logo({
   locale,
@@ -28,13 +28,13 @@ export function Logo({
       className={cn("inline-flex shrink-0 items-center", className)}
     >
       <Image
-        src="/logo.png"
-        alt="Builders Tech — Design. Manage. Build."
-        width={4236}
-        height={1095}
+        src="/logo-mark.png"
+        alt="Builders Tech"
+        width={900}
+        height={818}
         priority={priority}
         className={cn(
-          "h-9 w-auto sm:h-10",
+          "h-11 w-auto sm:h-12",
           variant === "onDark" && "brightness-0 invert",
           variant === "auto" && "dark:brightness-0 dark:invert",
         )}

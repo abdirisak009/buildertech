@@ -65,7 +65,6 @@ export function DesktopNav({
           const active = isActive(item);
           const hasChildren = !!item.children?.length;
           const open = openKey === item.label;
-          const Icon = item.icon;
 
           return (
             <li
@@ -83,7 +82,7 @@ export function DesktopNav({
                 aria-expanded={hasChildren ? open : undefined}
                 onFocus={() => hasChildren && setOpenKey(item.label)}
                 className={cn(
-                  "group relative flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-2.5 text-sm font-medium",
+                  "group relative flex items-center gap-1.5 whitespace-nowrap rounded-full px-3.5 py-2.5 text-sm font-medium",
                   "transition-colors duration-200",
                   onDark
                     ? active
@@ -94,18 +93,6 @@ export function DesktopNav({
                       : "text-muted-foreground hover:text-foreground",
                 )}
               >
-                <Icon
-                  aria-hidden
-                  className={cn(
-                    "size-4 shrink-0 transition-colors duration-200",
-                    active
-                      ? "text-gold-500"
-                      : onDark
-                        ? "text-white/50 group-hover:text-white"
-                        : "text-subtle-foreground",
-                  )}
-                  strokeWidth={1.75}
-                />
                 {item.label}
                 {hasChildren && (
                   <ChevronDown
@@ -156,44 +143,29 @@ export function DesktopNav({
                           {item.children!.map((child) => {
                             const childHref = href(child.href);
                             const childActive = pathname.startsWith(childHref);
-                            const ChildIcon = child.icon;
                             return (
                               <li key={child.href}>
                                 <Link
                                   href={childHref}
                                   className={cn(
-                                    "group/link flex gap-3.5 rounded-xl p-3.5 transition-colors duration-200",
+                                    "group/link block rounded-xl p-3.5 transition-colors duration-200",
                                     childActive
                                       ? "bg-gold-500/12"
                                       : "hover:bg-surface-muted",
                                   )}
                                 >
-                                  <span
-                                    aria-hidden
-                                    className={cn(
-                                      "mt-0.5 inline-grid size-9 shrink-0 place-items-center rounded-lg transition-colors duration-250",
-                                      childActive
-                                        ? "bg-gold-500 text-navy-950"
-                                        : "bg-gold-500/15 text-gold-700 group-hover/link:bg-gold-500 group-hover/link:text-navy-950 dark:text-gold-400",
-                                    )}
-                                  >
-                                    <ChildIcon className="size-[18px]" strokeWidth={1.75} />
+                                  <span className="flex items-center gap-2 font-[family-name:var(--font-display)] text-[0.9375rem] font-semibold tracking-tight text-foreground">
+                                    {child.label}
+                                    <ArrowRight
+                                      aria-hidden
+                                      className="size-3.5 -translate-x-1 text-gold-600 opacity-0 transition-all duration-250 group-hover/link:translate-x-0 group-hover/link:opacity-100 dark:text-gold-400"
+                                    />
                                   </span>
-
-                                  <span className="min-w-0">
-                                    <span className="flex items-center gap-2 font-[family-name:var(--font-display)] text-[0.9375rem] font-semibold tracking-tight text-foreground">
-                                      {child.label}
-                                      <ArrowRight
-                                        aria-hidden
-                                        className="size-3.5 -translate-x-1 text-gold-600 opacity-0 transition-all duration-250 group-hover/link:translate-x-0 group-hover/link:opacity-100 dark:text-gold-400"
-                                      />
+                                  {child.description && (
+                                    <span className="mt-1 block text-xs leading-relaxed text-muted-foreground">
+                                      {child.description}
                                     </span>
-                                    {child.description && (
-                                      <span className="mt-1 block text-xs leading-relaxed text-muted-foreground">
-                                        {child.description}
-                                      </span>
-                                    )}
-                                  </span>
+                                  )}
                                 </Link>
                               </li>
                             );

@@ -1,7 +1,6 @@
 import Image from "next/image";
-import { ArrowRight, Phone, Star } from "lucide-react";
+import { ArrowRight, Phone, Star, ChevronRight } from "lucide-react";
 import { Container } from "@/components/ui/Container";
-import { Eyebrow } from "@/components/ui/Section";
 import { ButtonLink } from "@/components/ui/Button";
 import { Reveal, RevealGroup, RevealItem } from "@/components/motion/Reveal";
 import { Counter } from "@/components/motion/Counter";
@@ -15,20 +14,36 @@ export function HomeHero({ locale }: { locale: Locale }) {
 
   return (
     <section className="relative isolate flex min-h-[100svh] items-end overflow-hidden bg-navy-950 text-white">
+      {/* Poster image sits underneath as the fallback: it shows before the
+          video loads, if the video fails, and for reduced-motion users (the
+          video is hidden for them via motion-reduce:hidden). */}
       <Image
-        src={IMAGES.heroHome}
+        src={IMAGES.interiorFinished}
         alt={copy.imageAlt}
         fill
         priority
         sizes="100vw"
-        className="object-cover opacity-25"
+        className="object-cover opacity-70"
       />
+      <video
+        aria-hidden
+        autoPlay
+        muted
+        loop
+        playsInline
+        poster={IMAGES.interiorFinished}
+        className="absolute inset-0 size-full object-cover opacity-80 motion-reduce:hidden"
+      >
+        <source src="/hero.mp4" type="video/mp4" />
+      </video>
 
+      {/* Lighter scrim than other sections — the footage should read clearly,
+          only darkened enough to keep the headline legible. */}
       <div
         aria-hidden
-        className="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/88 to-navy-950/60"
+        className="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/70 to-navy-950/35"
       />
-      <div aria-hidden className="absolute inset-0 bg-blueprint opacity-70" />
+      <div aria-hidden className="absolute inset-0 bg-blueprint opacity-25" />
       <div
         aria-hidden
         className="absolute -right-40 top-10 h-[42rem] w-[42rem] rounded-full bg-gold-500/14 blur-[140px]"
@@ -40,29 +55,35 @@ export function HomeHero({ locale }: { locale: Locale }) {
 
       <Container className="relative pb-16 pt-36 sm:pb-20 sm:pt-44">
         <Reveal>
-          <Eyebrow className="text-navy-200">{site.headline}</Eyebrow>
-        </Reveal>
-
-        <Reveal delay={0.1}>
-          <h1 className="mt-8 max-w-[14ch] text-display-xl">
+          <h1 className="max-w-[16ch] text-display-xl">
             {copy.titleBefore}
             <span className="text-gold-500">{copy.titleAccent}</span>
           </h1>
         </Reveal>
 
-        <Reveal delay={0.18}>
-          <p className="mt-6 font-[family-name:var(--font-display)] text-2xl font-semibold tracking-tight text-gold-500 sm:text-3xl">
-            {site.motto}
-          </p>
-        </Reveal>
-
-        <Reveal delay={0.26}>
+        <Reveal delay={0.14}>
           <p className="mt-7 max-w-2xl text-lg leading-relaxed text-navy-100 sm:text-xl">
-            {site.subhead} {copy.subheadTail}
+            {copy.subhead}
           </p>
         </Reveal>
 
-        <Reveal delay={0.34}>
+        {/* Architectural → Structural → Civil */}
+        <Reveal delay={0.22}>
+          <div className="mt-7 flex flex-wrap items-center gap-x-2 gap-y-2 font-[family-name:var(--font-display)] text-sm font-semibold tracking-tight">
+            {copy.flow.map((step, i) => (
+              <span key={step} className="flex items-center gap-2">
+                <span className={i === 1 ? "text-gold-500" : "text-white"}>
+                  {step}
+                </span>
+                {i < copy.flow.length - 1 && (
+                  <ChevronRight aria-hidden className="size-4 text-navy-300" />
+                )}
+              </span>
+            ))}
+          </div>
+        </Reveal>
+
+        <Reveal delay={0.3}>
           <div className="mt-10 flex flex-wrap gap-3">
             <ButtonLink href={`/${locale}/contact`} size="lg">
               {site.cta}
@@ -83,7 +104,7 @@ export function HomeHero({ locale }: { locale: Locale }) {
           </div>
         </Reveal>
 
-        <Reveal delay={0.42}>
+        <Reveal delay={0.38}>
           <div className="mt-8 flex items-center gap-3">
             <span className="flex" aria-hidden>
               {Array.from({ length: 5 }).map((_, i) => (

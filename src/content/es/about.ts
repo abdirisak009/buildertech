@@ -54,10 +54,29 @@ export const APPROACH = {
 export const TESTIMONIALS = [
   {
     quote:
-      "Builders Tech elaboró el diseño de distribución de la propiedad. Respondieron muy rápido, explicaron el proceso y entregaron con profesionalismo.",
+      "Builders Tech visitó mi casa para una consulta. Fueron muy profesionales, conocedores y perspicaces.",
     author: "Cliente verificado",
-    context: "Reseña en Bark",
+    context: "Reseña de Bark",
+  },
+  {
+    quote:
+      "¡Tuve una experiencia excepcional trabajando con Builders Tech! Desde el momento en que los contacté, fueron sumamente eficientes, atentos y profesionales.",
+    author: "Cliente verificado",
+    context: "Reseña de Thumbtack",
+  },
+  {
+    quote:
+      "Builders Tech elaboró el diseño de distribución de la propiedad. Respondieron muy rápido, explicaron el proceso y entregaron a tiempo.",
+    author: "Cliente verificado",
+    context: "Reseña de Google",
   },
 ];
 
-export const REVIEW_PLATFORMS = ["Google", "Thumbtack", "Bark"];
+export const REVIEW_PLATFORMS = [
+  "Google",
+  "Thumbtack",
+  "Bark",
+  "Nextdoor",
+  "Houzz",
+  "Facebook",
+];

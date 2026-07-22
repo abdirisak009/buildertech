@@ -1,10 +1,8 @@
 import {
-  Route,
+  Info,
   Layers,
   Package,
-  Newspaper,
   Briefcase,
-  LayoutGrid,
   Box,
   Building2,
   Frame,
@@ -13,28 +11,27 @@ import {
   ClipboardCheck,
   HardHat,
   FileStack,
-  Scale,
-  TrendingUp,
   BriefcaseBusiness,
   GraduationCap,
-  Network,
-  CircleQuestionMark,
-  Users,
-  Mail,
   type LucideIcon,
 } from "lucide-react";
 
 export const SITE = {
   name: "Builders Tech",
-  tagline: "Design. Manage. Build.",
-  motto: "Building, Together",
-  headline: "A Multidisciplinary Design & Construction Management Firm",
-  subhead: "No Project is too Big or too Small!",
-  cta: "Schedule Your Project Today!",
+  tagline: "Building Across America",
+  motto: "Building Across America",
+  headline: "Atlanta-based design & construction management",
+  subhead: "No project is too small.",
+  cta: "Schedule Your Project Today",
+  partnerCta: "Become a Partner",
   url: "https://www.builderstechnologysource.com",
   email: "services@builderstechnologysource.com",
+  // Primary (English) line
   phone: "404-542-4280",
   phoneHref: "+14045424280",
+  // Spanish line
+  phoneEs: "407-289-6606",
+  phoneEsHref: "+14072896606",
   address: {
     street: "5300 Memorial Dr, Unit 102",
     city: "Stone Mountain",
@@ -43,7 +40,7 @@ export const SITE = {
     full: "5300 Memorial Dr Unit 102, Stone Mountain, GA 30083",
   },
   serviceArea:
-    "Georgia — primarily within a 2-hour radius of Stone Mountain, including Atlanta, Decatur, DeKalb County, Marietta and Cobb County.",
+    "Atlanta and across Georgia — serving homeowners, builders and investors from Stone Mountain, Decatur, DeKalb County, Marietta and Cobb County.",
   socials: [
     { label: "LinkedIn", href: "#" },
     { label: "Instagram", href: "#" },
@@ -53,14 +50,15 @@ export const SITE = {
 
 /** Headline proof points used across the site. */
 export const STATS = [
-  { value: 400, suffix: "+", label: "Projects completed locally" },
+  { value: 372, suffix: "+", label: "Projects completed locally" },
   { value: 134, suffix: "+", label: "Five-star reviews" },
-  { value: 10, suffix: "", label: "Business-day turnaround" },
-  { value: 5, suffix: "★", label: "Google, Thumbtack & Bark" },
+  { value: 24, suffix: "hr", label: "Response to your intake form" },
+  { value: 6, suffix: "", label: "Review platforms, all 5-star" },
 ] as const;
 
 /* ------------------------------------------------------------------
-   Navigation — mirrors the live site's menu and submenu structure
+   Navigation — mirrors the live builders-tech Webflow site:
+   Home · About Us · Services ▾ · Products ▾ · Careers · Become a Partner
    ------------------------------------------------------------------ */
 
 export type NavChild = {
@@ -78,7 +76,7 @@ export type NavItem = {
 };
 
 export const NAV: NavItem[] = [
-  { href: "/how-it-works", label: "How it Works", icon: Route },
+  { href: "/about", label: "About Us", icon: Info },
   {
     href: "/services",
     label: "Services",
@@ -122,14 +120,14 @@ export const NAV: NavItem[] = [
       },
       {
         href: "/services/construction",
-        label: "Construction",
-        description: "Design-build delivery under one accountable roof",
+        label: "Design-Build",
+        description: "Architecture and construction under one accountable roof",
         icon: HardHat,
       },
     ],
   },
   {
-    href: "/products",
+    href: "/products/stock-plans",
     label: "Products",
     icon: Package,
     children: [
@@ -138,25 +136,6 @@ export const NAV: NavItem[] = [
         label: "Stock Plans",
         description: "Ready-to-build plan sets you can buy and download today",
         icon: FileStack,
-      },
-    ],
-  },
-  {
-    href: "/blog",
-    label: "Blog",
-    icon: Newspaper,
-    children: [
-      {
-        href: "/blog/irc-code-updates",
-        label: "IRC Code Updates",
-        description: "What changed in the code and what it means for your build",
-        icon: Scale,
-      },
-      {
-        href: "/blog/design-trends",
-        label: "Design Trends",
-        description: "What Atlanta clients are actually asking us to build",
-        icon: TrendingUp,
       },
     ],
   },
@@ -176,37 +155,6 @@ export const NAV: NavItem[] = [
         label: "Internships",
         description: "Youth development and the next generation of builders",
         icon: GraduationCap,
-      },
-    ],
-  },
-  {
-    href: "/about",
-    label: "More",
-    icon: LayoutGrid,
-    children: [
-      {
-        href: "/resources",
-        label: "Building Resources",
-        description: "Vetted local surveyors, inspectors, trades and suppliers",
-        icon: Network,
-      },
-      {
-        href: "/faq",
-        label: "FAQ",
-        description: "Permits, timelines, budgets and how we work",
-        icon: CircleQuestionMark,
-      },
-      {
-        href: "/about",
-        label: "About Us",
-        description: "From a basement office in Atlanta to a full-service firm",
-        icon: Users,
-      },
-      {
-        href: "/contact",
-        label: "Contact Us",
-        description: "Free consultation — call, email or WhatsApp",
-        icon: Mail,
       },
     ],
   },

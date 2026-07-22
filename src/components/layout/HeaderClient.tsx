@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { Menu, X, Phone, ArrowRight } from "lucide-react";
+import { Menu, X, ArrowRight } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Container } from "@/components/ui/Container";
@@ -80,32 +80,9 @@ export function HeaderClient({
 
   return (
     <>
-      {/* Utility bar */}
-      <div className="relative z-50 hidden bg-navy-900 text-white lg:block">
-        <Container>
-          <div className="flex h-10 items-center justify-between text-xs">
-            <p className="text-navy-100">{site.headline}</p>
-            <div className="flex items-center gap-6">
-              <a
-                href={`tel:${site.phoneHref}`}
-                className="flex items-center gap-2 font-medium transition-colors hover:text-gold-400"
-              >
-                <Phone aria-hidden className="size-3.5 text-gold-500" strokeWidth={2} />
-                {site.phone}
-              </a>
-              <span className="text-navy-200">{site.addressFull}</span>
-            </div>
-          </div>
-        </Container>
-      </div>
-
       <header
         className={cn(
-          "fixed inset-x-0 z-50 transition-[background-color,border-color,backdrop-filter,top] duration-300",
-          // At the very top the utility bar is on screen, so the header sits
-          // below it. Once scrolled, the bar is gone — the header must pin to
-          // top-0 or a transparent strip is left for content to show through.
-          solid ? "top-0" : "top-0 lg:top-10",
+          "fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-300",
           solid
             ? "border-b border-border bg-background/85 backdrop-blur-xl"
             : "border-b border-transparent bg-transparent",
@@ -144,11 +121,11 @@ export function HeaderClient({
               />
 
               <ButtonLink
-                href={`/${locale}/contact`}
+                href={`/${locale}/become-a-partner`}
                 size="sm"
-                className="hidden xl:inline-flex"
+                className="hidden lg:inline-flex"
               >
-                {ui.header.cta}
+                {ui.header.partnerCta}
                 <ArrowRight
                   aria-hidden
                   className="size-4 transition-transform duration-300 group-hover/btn:translate-x-1"

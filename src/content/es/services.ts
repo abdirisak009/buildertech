@@ -6,6 +6,8 @@ import {
   OctagonAlert,
   ClipboardCheck,
   HardHat,
+  Home,
+  Store,
   type LucideIcon,
 } from "lucide-react";
 import { IMAGES } from "../images";
@@ -230,24 +232,121 @@ export const WORK_CATEGORIES = [
   "Renders 3D",
 ];
 
-/** Las tres ofertas destacadas de la página de inicio. */
-export const HEADLINE_OFFERS = [
+/**
+ * Las seis tarjetas de servicio de la página de inicio, que reflejan el sitio
+ * en vivo de Builders Tech. Cada una enlaza a la página de detalle más cercana.
+ */
+export type HomeServiceCard = {
+  title: string;
+  body: string;
+  points: string[];
+  href: string;
+  icon: LucideIcon;
+};
+
+export const HOME_SERVICES: HomeServiceCard[] = [
   {
-    slug: "stop-work-orders",
-    title: "Proyectos urgentes y órdenes de suspensión de obra",
+    title: "Órdenes de Suspensión de Obra",
     body: "¿Tiene una orden de suspensión de obra? Contáctenos hoy — contamos con expertos que pueden ayudarle a resolver los problemas con la ciudad y retomar su proyecto.",
+    points: [
+      "Ampliaciones sin permiso",
+      "Decks sin permiso",
+      "Cumplimiento de zonificación y planos de lote",
+      "Trabajo realizado sin licencia",
+    ],
     href: "/services/stop-work-orders",
+    icon: OctagonAlert,
   },
   {
-    slug: "project-design",
-    title: "Diseño de proyectos",
-    body: "¿Está planeando un proyecto? Sea residencial, comercial o incluso hágalo usted mismo — ningún proyecto es demasiado pequeño para nosotros.",
+    title: "Juegos de Planos Residenciales para Permiso",
+    body: "¿Necesita planos para permisos o aprobación de construcción? Ofrecemos planos para:",
+    points: [
+      "Ampliaciones",
+      "ADUs y casas de huéspedes",
+      "Decks y porches cubiertos",
+      "Acabados de sótano",
+      "Renovaciones y remodelaciones",
+      "Garajes y cocheras",
+    ],
     href: "/services/architectural-plans",
+    icon: Home,
   },
   {
-    slug: "design-build",
-    title: "Servicios de diseño-construcción",
-    body: "Nuestro servicio de diseño-construcción une la arquitectura y la obra en una sola experiencia impecable y de primer nivel.",
-    href: "/services/construction",
+    title: "Juegos de Planos Comerciales para Permiso",
+    body: "Planos comerciales profesionales para permiso, para oficinas, comercios, restaurantes y más — con dibujos arquitectónicos, estructurales y de instalaciones coordinados para aprobaciones sin contratiempos.",
+    points: [
+      "Cafeterías",
+      "Adecuaciones comerciales",
+      "Oficinas",
+      "Bodegas prefabricadas",
+      "Guarderías",
+      "Planos de protección de la vida",
+    ],
+    href: "/services/architectural-plans",
+    icon: Store,
   },
+  {
+    title: "Planos de Lote",
+    body: "¿Necesita un plano de lote para permisos, desarrollo o aprobación de construcción?",
+    points: [
+      "Linderos y retiros",
+      "Cálculos de área impermeable",
+      "Drenaje",
+      "Control de erosión",
+      "Árboles y paisajismo",
+      "Datos de zonificación y construcción",
+    ],
+    href: "/services/civil-plans",
+    icon: Map,
+  },
+  {
+    title: "Ingeniería Estructural",
+    body: "Ingeniería estructural confiable para proyectos residenciales y comerciales — diseños seguros y conformes al código, con planos y cálculos detallados a la medida de su proyecto.",
+    points: [
+      "Cartas estructurales",
+      "Inspecciones y reparaciones de decks",
+      "Evaluación de muros de carga",
+      "Soporte de muros de contención",
+    ],
+    href: "/services/structural-plans",
+    icon: Frame,
+  },
+  {
+    title: "Servicios de Diseño-Construcción",
+    body: "Nuestro servicio de diseño-construcción une la arquitectura y la obra en una sola experiencia impecable y de primer nivel. Del concepto a la entrega, creamos espacios personalizados y atemporales con una ejecución excepcional.",
+    points: [
+      "Arquitectura y construcción, un solo equipo",
+      "Espacios personalizados y atemporales",
+      "Ejecución excepcional",
+      "Del concepto a la entrega",
+    ],
+    href: "/services/construction",
+    icon: HardHat,
+  },
+];
+
+/** Logos de socios en la sección "Empresas que confían en nosotros". */
+export const TRUST_LOGOS = [
+  "Advanced Remodeling",
+  "AP Construction",
+  "33 North Homes",
+  "BIG Construction",
+  "Better Homes Real Estate",
+  "Keller Williams",
+  "GFS",
+  "SBA",
+  "So Far So Good Remodeling",
+  "M Studio",
+  "Nextgen Builders",
+  "SIS Professional Services",
+];
+
+/** Plataformas de reseñas donde Builders Tech está calificado. */
+export const REVIEW_PLATFORMS_LIST = [
+  "Google",
+  "Thumbtack",
+  "Bark",
+  "Nextdoor",
+  "Houzz",
+  "Facebook",
 ];

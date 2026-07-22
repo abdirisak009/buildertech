@@ -34,6 +34,7 @@ export const en = {
 
   header: {
     cta: "Schedule Your Project",
+    partnerCta: "Become a Partner",
   },
 
   breadcrumb: {

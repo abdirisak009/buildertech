@@ -68,7 +68,7 @@ export function ProductGallery({
                     "font-[family-name:var(--font-display)] tracking-tight",
                     "transition-[background-color,color,border-color] duration-250 ease-[cubic-bezier(0.22,0.61,0.36,1)]",
                     active
-                      ? "border-navy-700 bg-navy-700 text-white dark:border-gold-500 dark:bg-gold-500 dark:text-navy-950"
+                      ? "border-black bg-black text-white dark:border-gold-500 dark:bg-gold-500 dark:text-navy-950"
                       : "border-border-strong bg-transparent text-muted-foreground hover:border-navy-700 hover:text-foreground dark:hover:border-gold-500",
                   )}
                 >
