@@ -42,11 +42,12 @@ const WORK_IMAGES = [
 /** Background image revealed on hover for each home service card, in order. */
 const SERVICE_IMAGES = [
   IMAGES.stopWork,
+  IMAGES.blueprints,
+  IMAGES.structural,
+  IMAGES.civil,
+  IMAGES.studioTeam,
   IMAGES.residentialHome,
   IMAGES.apartments,
-  IMAGES.civil,
-  IMAGES.siteWork,
-  IMAGES.construction,
 ];
 
 export default async function HomePage({

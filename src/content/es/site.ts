@@ -1,4 +1,5 @@
 import {
+  Home,
   Info,
   Layers,
   Package,
@@ -76,6 +77,7 @@ export type NavItem = {
 };
 
 export const NAV: NavItem[] = [
+  { href: "/", label: "Inicio", icon: Home },
   { href: "/about", label: "Sobre nosotros", icon: Info },
   {
     href: "/services",
