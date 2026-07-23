@@ -17,7 +17,8 @@ type FieldName =
   | "projectType"
   | "service"
   | "budget"
-  | "location"
+  | "county"
+  | "city"
   | "message";
 
 type Errors = Partial<Record<FieldName, string>>;
@@ -339,14 +340,26 @@ export function ContactForm({ locale }: { locale: Locale }) {
           </select>
         </Field>
 
-        <Field label={t.labels.location} name="location" requiredLabel={t.required}>
-          <input
-            id="location"
-            name="location"
-            type="text"
-            className={inputClass()}
-            placeholder={t.placeholders.location}
-          />
+        <Field label={t.labels.county} name="county" requiredLabel={t.required}>
+          <select id="county" name="county" defaultValue="" className={inputClass()}>
+            <option value="">{t.placeholders.selectCounty}</option>
+            {t.counties.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+        </Field>
+
+        <Field label={t.labels.city} name="city" requiredLabel={t.required}>
+          <select id="city" name="city" defaultValue="" className={inputClass()}>
+            <option value="">{t.placeholders.selectCity}</option>
+            {t.cities.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
         </Field>
       </div>
 

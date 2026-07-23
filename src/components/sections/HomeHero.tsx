@@ -4,9 +4,13 @@ import { Container } from "@/components/ui/Container";
 import { ButtonLink } from "@/components/ui/Button";
 import { Reveal, RevealGroup, RevealItem } from "@/components/motion/Reveal";
 import { Counter } from "@/components/motion/Counter";
+import { HeroVideo } from "./HeroVideo";
 import { getContent } from "@/content";
 import { IMAGES } from "@/content/images";
 import type { Locale } from "@/i18n/config";
+
+/** Vimeo clip used as the hero background. Replace to swap the video. */
+const HERO_VIMEO_ID = "1212424117";
 
 export function HomeHero({ locale }: { locale: Locale }) {
   const { site, stats, pages } = getContent(locale);
@@ -25,17 +29,7 @@ export function HomeHero({ locale }: { locale: Locale }) {
         sizes="100vw"
         className="object-cover opacity-70"
       />
-      <video
-        aria-hidden
-        autoPlay
-        muted
-        loop
-        playsInline
-        poster={IMAGES.interiorFinished}
-        className="absolute inset-0 size-full object-cover opacity-80 motion-reduce:hidden"
-      >
-        <source src="/hero.mp4" type="video/mp4" />
-      </video>
+      <HeroVideo vimeoId={HERO_VIMEO_ID} />
 
       {/* Lighter scrim than other sections — the footage should read clearly,
           only darkened enough to keep the headline legible. */}
