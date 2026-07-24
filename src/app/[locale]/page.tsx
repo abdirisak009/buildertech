@@ -11,7 +11,7 @@ import { Reveal, RevealGroup, RevealItem } from "@/components/motion/Reveal";
 import { HomeHero } from "@/components/sections/HomeHero";
 import { CtaSection } from "@/components/sections/CtaSection";
 
-import { getContent } from "@/content";
+import { getContent, type TrustLogo } from "@/content";
 import { getUi } from "@/i18n/ui";
 import { isLocale } from "@/i18n/config";
 import { IMAGES } from "@/content/images";
@@ -306,50 +306,57 @@ export default async function HomePage({
             </h2>
           </Reveal>
 
-          <div className="mt-16 flex flex-col items-center gap-8 lg:flex-row lg:justify-center lg:gap-14">
-            {/* Left cluster */}
-            <RevealGroup
-              as="ul"
-              stagger={0.06}
-              className="order-2 grid grid-cols-3 gap-5 sm:gap-6 lg:order-1"
-            >
-              {trustLogos.slice(0, 6).map((name) => (
-                <RevealItem as="li" key={name}>
-                  <LogoBadge name={name} />
-                </RevealItem>
-              ))}
-            </RevealGroup>
+          {(() => {
+            const half = Math.ceil(trustLogos.length / 2);
+            const left = trustLogos.slice(0, half);
+            const right = trustLogos.slice(half);
+            return (
+              <div className="mt-16 flex flex-col items-center gap-8 lg:flex-row lg:justify-center lg:gap-12">
+                {/* Left cluster */}
+                <RevealGroup
+                  as="ul"
+                  stagger={0.05}
+                  className="order-2 grid grid-cols-3 gap-4 sm:gap-5 lg:order-1"
+                >
+                  {left.map((logo) => (
+                    <RevealItem as="li" key={logo.src}>
+                      <LogoBadge logo={logo} />
+                    </RevealItem>
+                  ))}
+                </RevealGroup>
 
-            {/* Center BT mark */}
-            <Reveal className="order-1 lg:order-2">
-              <div className="relative grid size-40 place-items-center rounded-full bg-gradient-to-b from-neutral-700 via-neutral-900 to-black shadow-[0_20px_60px_-15px_rgba(255,186,8,0.35)] sm:size-48">
-                <div
-                  aria-hidden
-                  className="absolute inset-0 rounded-full ring-1 ring-inset ring-gold-500/40"
-                />
-                <Image
-                  src="/logo-mark.png"
-                  alt="Builders Tech"
-                  width={900}
-                  height={818}
-                  className="w-24 brightness-0 invert sm:w-28"
-                />
+                {/* Center BT mark */}
+                <Reveal className="order-1 lg:order-2">
+                  <div className="relative grid size-36 place-items-center rounded-full bg-gradient-to-b from-neutral-700 via-neutral-900 to-black shadow-[0_20px_60px_-15px_rgba(255,186,8,0.35)] sm:size-44">
+                    <div
+                      aria-hidden
+                      className="absolute inset-0 rounded-full ring-1 ring-inset ring-gold-500/40"
+                    />
+                    <Image
+                      src="/logo-mark.png"
+                      alt="Builders Tech"
+                      width={900}
+                      height={818}
+                      className="w-20 brightness-0 invert sm:w-24"
+                    />
+                  </div>
+                </Reveal>
+
+                {/* Right cluster */}
+                <RevealGroup
+                  as="ul"
+                  stagger={0.05}
+                  className="order-3 grid grid-cols-3 gap-4 sm:gap-5"
+                >
+                  {right.map((logo) => (
+                    <RevealItem as="li" key={logo.src}>
+                      <LogoBadge logo={logo} />
+                    </RevealItem>
+                  ))}
+                </RevealGroup>
               </div>
-            </Reveal>
-
-            {/* Right cluster */}
-            <RevealGroup
-              as="ul"
-              stagger={0.06}
-              className="order-3 grid grid-cols-3 gap-5 sm:gap-6"
-            >
-              {trustLogos.slice(6, 12).map((name) => (
-                <RevealItem as="li" key={name}>
-                  <LogoBadge name={name} />
-                </RevealItem>
-              ))}
-            </RevealGroup>
-          </div>
+            );
+          })()}
         </Container>
       </section>
 
@@ -450,31 +457,20 @@ export default async function HomePage({
   );
 }
 
-/** Two-letter monogram derived from a company name. */
-function monogram(name: string) {
-  const words = name
-    .replace(/[^A-Za-z0-9 ]/g, "")
-    .split(/\s+/)
-    .filter(Boolean);
-  if (words.length === 0) return "?";
-  if (words.length === 1) return words[0].slice(0, 2).toUpperCase();
-  return (words[0][0] + words[1][0]).toUpperCase();
-}
-
-/**
- * A partner logo placeholder: a white circular badge with the company's
- * monogram. Drop a real logo at public/partners/<file>.png and swap the inner
- * span for an <Image> to use the actual mark.
- */
-function LogoBadge({ name }: { name: string }) {
+/** A partner logo in a white circular badge. */
+function LogoBadge({ logo }: { logo: TrustLogo }) {
   return (
     <div
-      title={name}
-      className="grid size-20 place-items-center rounded-full bg-white shadow-[0_8px_24px_-8px_rgba(0,0,0,0.5)] transition-transform duration-300 hover:scale-105 sm:size-24"
+      title={logo.name}
+      className="relative grid size-20 place-items-center overflow-hidden rounded-full bg-white shadow-[0_8px_24px_-8px_rgba(0,0,0,0.5)] transition-transform duration-300 hover:scale-105 sm:size-24"
     >
-      <span className="font-[family-name:var(--font-display)] text-lg font-bold tracking-tight text-navy-700 sm:text-xl">
-        {monogram(name)}
-      </span>
+      <Image
+        src={logo.src}
+        alt={logo.name}
+        fill
+        sizes="96px"
+        className="object-contain p-3.5"
+      />
     </div>
   );
 }

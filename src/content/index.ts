@@ -99,7 +99,12 @@ export function getContent(locale: Locale) {
 export type Content = ReturnType<typeof getContent>;
 
 /* Shared types — identical across locales. */
-export type { Service, ServiceItem, HomeServiceCard } from "./en/services";
+export type {
+  Service,
+  ServiceItem,
+  HomeServiceCard,
+  TrustLogo,
+} from "./en/services";
 export type { Product, ProductCategory } from "./en/products";
 export type { Post, BlogCategory } from "./en/blog";
 export type { Position } from "./en/careers";

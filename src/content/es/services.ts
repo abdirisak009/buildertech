@@ -333,19 +333,27 @@ export const HOME_SERVICES: HomeServiceCard[] = [
 ];
 
 /** Logos de socios en la sección "Empresas que confían en nosotros". */
-export const TRUST_LOGOS = [
-  "Advanced Remodeling",
-  "AP Construction",
-  "33 North Homes",
-  "BIG Construction",
-  "Better Homes Real Estate",
-  "Keller Williams",
-  "GFS",
-  "SBA",
-  "So Far So Good Remodeling",
-  "M Studio",
-  "Nextgen Builders",
-  "SIS Professional Services",
+export type TrustLogo = { name: string; src: string };
+
+export const TRUST_LOGOS: TrustLogo[] = [
+  { name: "Division 31 Construction", src: "/logos/division-31.jpeg" },
+  { name: "33 North Homes & Construction", src: "/logos/33-north.png" },
+  { name: "Audubon Place Properties", src: "/logos/audubon-place.png" },
+  { name: "Advanced Renovations", src: "/logos/advanced-renovations.png" },
+  { name: "Better Homes and Gardens Real Estate", src: "/logos/better-homes.png" },
+  { name: "BIG", src: "/logos/big.png" },
+  { name: "Contractors Corner of Atlanta", src: "/logos/contractors-corner.png" },
+  { name: "AM Consulting & Hauling", src: "/logos/am-consulting.jpg" },
+  { name: "GFS", src: "/logos/gfs-logo.jpg" },
+  { name: "Southeast Restoration", src: "/logos/southeast-restoration.png" },
+  { name: "Ben Hill Renovations", src: "/logos/ben-hill.png" },
+  { name: "Neil Engineering Inc.", src: "/logos/neil-engineering.png" },
+  { name: "MainStreet Renewal", src: "/logos/mainstreet-renewal.png" },
+  { name: "Keller Williams Georgia Communities", src: "/logos/keller-williams.png" },
+  { name: "eXp Realty", src: "/logos/exp-realty.png" },
+  { name: "Coldwell Banker Realty", src: "/logos/coldwell-banker.png" },
+  { name: "Delta Carpet & Decor", src: "/logos/delta-carpet.png" },
+  { name: "Y Studio", src: "/logos/y-studio.png" },
 ];
 
 /** Plataformas de reseñas donde Builders Tech está calificado. */
