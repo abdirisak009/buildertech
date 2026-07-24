@@ -9,8 +9,8 @@ import { getContent } from "@/content";
 import { IMAGES } from "@/content/images";
 import type { Locale } from "@/i18n/config";
 
-/** Vimeo clip used as the hero background. Replace to swap the video. */
-const HERO_VIMEO_ID = "1212424117";
+/** YouTube clip used as the hero background. Replace to swap the video. */
+const HERO_YOUTUBE_ID = "UL5YI8KGemg";
 
 export function HomeHero({ locale }: { locale: Locale }) {
   const { site, stats, pages } = getContent(locale);
@@ -29,7 +29,8 @@ export function HomeHero({ locale }: { locale: Locale }) {
         sizes="100vw"
         className="object-cover opacity-70"
       />
-      <HeroVideo vimeoId={HERO_VIMEO_ID} />
+
+      <HeroVideo youtubeId={HERO_YOUTUBE_ID} />
 
       {/* Lighter scrim than other sections — the footage should read clearly,
           only darkened enough to keep the headline legible. */}
