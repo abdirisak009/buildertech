@@ -81,37 +81,48 @@ export const REVIEW_PLATFORMS = [
   "Facebook",
 ];
 
-export type TeamMember = { name: string; role: string; photo: string };
+export type TeamMember = {
+  name: string;
+  role: string;
+  photo: string;
+  bio: string;
+};
 
 export const TEAM: TeamMember[] = [
   {
     name: "Shailesh G., PE",
     role: "Ingeniero Civil",
     photo: "/teams/shailesh-g.png",
+    bio: "Se asegura de que cada proyecto comience sobre una base sólida, diseñando nivelación, drenaje, servicios y planos de lote que controlan las aguas pluviales y hacen avanzar los desarrollos hacia la aprobación del permiso.",
   },
   {
     name: "Daniela C., RA",
     role: "Arquitecta",
     photo: "/teams/daniela-c.jpeg",
+    bio: "Convierte las ideas en diseños construibles para viviendas, proyectos multifamiliares, remodelaciones y espacios comerciales. Le encanta crear espacios que se ven bien, funcionan bien y cumplen con el código.",
   },
   {
     name: "Yavuz A., PMP",
     role: "Gerente de Operaciones",
     photo: "/teams/yavuz-a.png",
+    bio: "El motor detrás de escena. Mantiene proyectos, personas y procesos funcionando sin problemas mientras encuentra formas más inteligentes y eficientes de trabajar. Formación en Ingeniería Mecánica.",
   },
   {
     name: "Elizabeth B.",
     role: "Gerente de Sistemas de Negocio",
     photo: "/teams/elizabeth-b.png",
+    bio: "La maga de la tecnología del equipo. Mantiene nuestros sistemas, herramientas de IA y flujos de trabajo funcionando sin problemas para que el resto del equipo pueda concentrarse en diseñar, calcular y atender a nuestros clientes. Formación en administración de empresas, mejora de procesos y diseño de sistemas.",
   },
   {
     name: "Daniela A.",
     role: "Ventas y Gerente de Proyecto",
     photo: "/teams/daniela-a.jpeg",
+    bio: "Su guía de referencia desde la primera conversación hasta la aprobación del permiso. Con experiencia en diseño civil y construcción residencial, ayuda a que el proceso sea simple y sin estrés.",
   },
   {
     name: "Taha Addow",
     role: "Ventas y Gerente de Proyecto",
     photo: "/teams/taha-addow.png",
+    bio: "Una de las primeras personas con quien probablemente hablará. A Taha le gusta convertir proyectos difíciles en éxitos. Con experiencia en gerencia de construcción, diseño y construcción sostenible, trabaja de cerca con los clientes para hacer realidad su visión.",
   },
 ];

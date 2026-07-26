@@ -85,10 +85,10 @@ export const NAV: NavItem[] = [
     icon: Layers,
     children: [
       {
-        href: "/services/renderings",
-        label: "Renders 3D",
-        description: "Imágenes 3D fotorrealistas que venden el proyecto antes de existir",
-        icon: Box,
+        href: "/services/stop-work-orders",
+        label: "Órdenes de Suspensión de Obra",
+        description: "Levantamos la etiqueta roja y ponemos su proyecto en marcha otra vez",
+        icon: OctagonAlert,
       },
       {
         href: "/services/architectural-plans",
@@ -109,16 +109,16 @@ export const NAV: NavItem[] = [
         icon: Map,
       },
       {
-        href: "/services/stop-work-orders",
-        label: "Órdenes de Suspensión de Obra",
-        description: "Levantamos la etiqueta roja y ponemos su proyecto en marcha otra vez",
-        icon: OctagonAlert,
-      },
-      {
         href: "/services/project-management",
         label: "Gerencia de Proyectos",
         description: "Programación, control de calidad, personal, seguridad e inspecciones",
         icon: ClipboardCheck,
+      },
+      {
+        href: "/services/renderings",
+        label: "Renders 3D",
+        description: "Imágenes 3D fotorrealistas que venden el proyecto antes de existir",
+        icon: Box,
       },
       {
         href: "/services/construction",

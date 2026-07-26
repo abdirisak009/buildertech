@@ -81,37 +81,48 @@ export const REVIEW_PLATFORMS = [
   "Facebook",
 ];
 
-export type TeamMember = { name: string; role: string; photo: string };
+export type TeamMember = {
+  name: string;
+  role: string;
+  photo: string;
+  bio: string;
+};
 
 export const TEAM: TeamMember[] = [
   {
     name: "Shailesh G., PE",
     role: "Civil Engineer",
     photo: "/teams/shailesh-g.png",
+    bio: "Makes sure every project starts on solid ground by designing grading, drainage, utilities and site plans that keep stormwater in check and developments moving toward permit approval.",
   },
   {
     name: "Daniela C., RA",
     role: "Architect",
     photo: "/teams/daniela-c.jpeg",
+    bio: "Turns ideas into buildable designs for homes, multifamily projects, renovations and commercial spaces. Loves creating spaces that look great, work well and meet code.",
   },
   {
     name: "Yavuz A., PMP",
     role: "Operations Manager",
     photo: "/teams/yavuz-a.png",
+    bio: "The engine behind the scenes. Keeps projects, people and processes running smoothly while finding smarter, more efficient ways to work. Background in Mechanical Engineering.",
   },
   {
     name: "Elizabeth B.",
     role: "Business Systems Manager",
     photo: "/teams/elizabeth-b.png",
+    bio: "The tech wizard of the team. Keeps our systems, AI tools and workflows running smoothly so the rest of the team can focus on designing, engineering and serving our clients. Background in business management, process improvement and system design.",
   },
   {
     name: "Daniela A.",
     role: "Sales & Project Manager",
     photo: "/teams/daniela-a.jpeg",
+    bio: "Your go-to guide from the first conversation to permit approval. With a background in civil design and residential construction, she helps make the process simple and stress-free.",
   },
   {
     name: "Taha Addow",
     role: "Sales & Project Manager",
     photo: "/teams/taha-addow.png",
+    bio: "One of the first people you'll likely speak with. Taha enjoys turning challenging projects into successful ones. With a background in construction management, design and sustainable building, he works closely with clients to bring their vision to life.",
   },
 ];

@@ -85,10 +85,10 @@ export const NAV: NavItem[] = [
     icon: Layers,
     children: [
       {
-        href: "/services/renderings",
-        label: "Renderings",
-        description: "Photoreal 3D visuals that sell the project before it exists",
-        icon: Box,
+        href: "/services/stop-work-orders",
+        label: "Stop Work Orders",
+        description: "Get the red tag lifted and your project moving again",
+        icon: OctagonAlert,
       },
       {
         href: "/services/architectural-plans",
@@ -109,16 +109,16 @@ export const NAV: NavItem[] = [
         icon: Map,
       },
       {
-        href: "/services/stop-work-orders",
-        label: "Stop Work Orders",
-        description: "Get the red tag lifted and your project moving again",
-        icon: OctagonAlert,
-      },
-      {
         href: "/services/project-management",
         label: "Project Management",
         description: "Scheduling, QA/QC, staffing, safety and inspections",
         icon: ClipboardCheck,
+      },
+      {
+        href: "/services/renderings",
+        label: "Renderings",
+        description: "Photoreal 3D visuals that sell the project before it exists",
+        icon: Box,
       },
       {
         href: "/services/construction",

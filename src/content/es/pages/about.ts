@@ -53,4 +53,10 @@ export const about: AboutCopy = {
     title: "Dónde trabajamos.",
     officeLabel: "Oficina:",
   },
+
+  team: {
+    eyebrow: "Nuestro equipo",
+    title: "Conozca al equipo.",
+    lead: "Arquitectos, ingenieros y gerentes de proyecto bajo un mismo techo — las personas que dibujarán, coordinarán y entregarán su proyecto.",
+  },
 };

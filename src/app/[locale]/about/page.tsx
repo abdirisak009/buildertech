@@ -46,6 +46,7 @@ export default async function AboutPage({
     whyChooseUs,
     testimonials,
     reviewPlatforms,
+    team,
   } = getContent(locale);
   const d = pages.about;
 
@@ -283,6 +284,57 @@ export default async function AboutPage({
           </Reveal>
         </Container>
       </Section>
+
+      {/* ---------------- Team ---------------- */}
+      <section className="relative isolate overflow-hidden bg-navy-950 py-20 text-white sm:py-28 lg:py-32">
+        <div aria-hidden className="absolute inset-0 bg-blueprint opacity-[0.07]" />
+        <Container className="relative">
+          <div className="mx-auto max-w-2xl text-center">
+            <Reveal>
+              <Eyebrow align="center" className="text-navy-200">
+                {d.team.eyebrow}
+              </Eyebrow>
+            </Reveal>
+            <Reveal delay={0.08}>
+              <h2 className="mt-5 text-display-lg text-white">{d.team.title}</h2>
+            </Reveal>
+            <Reveal delay={0.16}>
+              <p className="mt-6 text-lg leading-relaxed text-navy-100">
+                {d.team.lead}
+              </p>
+            </Reveal>
+          </div>
+
+          <RevealGroup className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {team.map((member) => (
+              <RevealItem key={member.name} as="article" className="h-full">
+                <div className="flex h-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03] transition-[transform,border-color] duration-400 ease-[cubic-bezier(0.22,0.61,0.36,1)] hover:-translate-y-1.5 hover:border-gold-500/50">
+                  <div className="relative aspect-[5/4] overflow-hidden">
+                    <Image
+                      src={member.photo}
+                      alt={member.name}
+                      fill
+                      sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw"
+                      className="object-cover object-top"
+                    />
+                  </div>
+                  <div className="flex flex-1 flex-col p-6">
+                    <h3 className="font-[family-name:var(--font-display)] text-xl font-semibold tracking-tight text-white">
+                      {member.name}
+                    </h3>
+                    <p className="mt-1 text-sm font-medium text-gold-400">
+                      {member.role}
+                    </p>
+                    <p className="mt-4 text-sm leading-relaxed text-navy-100">
+                      {member.bio}
+                    </p>
+                  </div>
+                </div>
+              </RevealItem>
+            ))}
+          </RevealGroup>
+        </Container>
+      </section>
 
       <CtaSection locale={locale} />
     </>

@@ -50,6 +50,12 @@ export const about = {
     title: "Where we work.",
     officeLabel: "Office:",
   },
+
+  team: {
+    eyebrow: "Our team",
+    title: "Meet the team.",
+    lead: "Architects, engineers and project managers working under one roof — the people who will draw, coordinate and deliver your project.",
+  },
 };
 
 export type AboutCopy = typeof about;
