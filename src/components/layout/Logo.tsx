@@ -5,8 +5,14 @@ import type { Locale } from "@/i18n/config";
 
 /**
  * The BT hexagon mark only (no wordmark). The artwork is gold + navy on a
- * transparent field, which reads on light surfaces. On dark surfaces we knock
- * it out to a clean white silhouette via a CSS filter so it stays legible.
+ * transparent field.
+ *
+ * - `light`   — original colours, for light surfaces.
+ * - `auto`    — original on light, knocked out to white in dark mode.
+ * - `onDark`  — solid white silhouette, for solid dark surfaces (footer).
+ * - `onMedia` — original colours + a soft halo, so the two-tone mark stays
+ *   legible over the video/photo hero (navy lifts off dark frames, gold off
+ *   light ones) without losing its brand colours.
  */
 export function Logo({
   locale,
@@ -18,7 +24,7 @@ export function Logo({
   locale: Locale;
   homeLabel: string;
   className?: string;
-  variant?: "auto" | "light" | "onDark";
+  variant?: "auto" | "light" | "onDark" | "onMedia";
   priority?: boolean;
 }) {
   return (
@@ -37,6 +43,8 @@ export function Logo({
           "h-11 w-auto sm:h-12",
           variant === "onDark" && "brightness-0 invert",
           variant === "auto" && "dark:brightness-0 dark:invert",
+          variant === "onMedia" &&
+            "[filter:drop-shadow(0_0_7px_rgba(255,255,255,0.6))_drop-shadow(0_1px_2px_rgba(0,0,0,0.45))]",
         )}
       />
     </Link>

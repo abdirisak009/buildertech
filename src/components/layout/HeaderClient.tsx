@@ -94,7 +94,7 @@ export function HeaderClient({
               locale={locale}
               homeLabel={`${site.name} — ${ui.a11y.home}`}
               priority
-              variant={solid ? "auto" : "onDark"}
+              variant={solid ? "auto" : "onMedia"}
             />
 
             <DesktopNav
