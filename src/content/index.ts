@@ -57,6 +57,7 @@ const BUNDLES = {
     approach: enAbout.APPROACH,
     testimonials: enAbout.TESTIMONIALS,
     reviewPlatforms: enAbout.REVIEW_PLATFORMS,
+    team: enAbout.TEAM,
     pages: enPages,
   },
   es: {
@@ -88,6 +89,7 @@ const BUNDLES = {
     approach: esAbout.APPROACH,
     testimonials: esAbout.TESTIMONIALS,
     reviewPlatforms: esAbout.REVIEW_PLATFORMS,
+    team: esAbout.TEAM,
     pages: esPages,
   },
 } as const;
@@ -111,4 +113,5 @@ export type { Position } from "./en/careers";
 export type { Provider, ResourceCategory } from "./en/resources";
 export type { FaqItem, FaqGroup } from "./en/faq";
 export type { NavItem, NavChild } from "./en/site";
+export type { TeamMember } from "./en/about";
 

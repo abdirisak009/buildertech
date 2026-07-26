@@ -80,3 +80,38 @@ export const REVIEW_PLATFORMS = [
   "Houzz",
   "Facebook",
 ];
+
+export type TeamMember = { name: string; role: string; photo: string };
+
+export const TEAM: TeamMember[] = [
+  {
+    name: "Shailesh G., PE",
+    role: "Ingeniero Civil",
+    photo: "/teams/shailesh-g.png",
+  },
+  {
+    name: "Daniela C., RA",
+    role: "Arquitecta",
+    photo: "/teams/daniela-c.jpeg",
+  },
+  {
+    name: "Yavuz A., PMP",
+    role: "Gerente de Operaciones",
+    photo: "/teams/yavuz-a.png",
+  },
+  {
+    name: "Elizabeth B.",
+    role: "Gerente de Sistemas de Negocio",
+    photo: "/teams/elizabeth-b.png",
+  },
+  {
+    name: "Daniela A.",
+    role: "Ventas y Gerente de Proyecto",
+    photo: "/teams/daniela-a.jpeg",
+  },
+  {
+    name: "Taha Addow",
+    role: "Ventas y Gerente de Proyecto",
+    photo: "/teams/taha-addow.png",
+  },
+];

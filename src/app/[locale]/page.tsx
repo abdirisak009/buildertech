@@ -58,7 +58,7 @@ export default async function HomePage({
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
 
-  const { homeServices, trustLogos, testimonials, reviewPlatforms, pages } =
+  const { homeServices, trustLogos, testimonials, reviewPlatforms, team, pages } =
     getContent(locale);
   const ui = getUi(locale);
   const c = pages.home;
@@ -253,6 +253,66 @@ export default async function HomePage({
         </Container>
       </section>
 
+      {/* ---------------- Team ---------------- */}
+      <section className="relative isolate overflow-hidden bg-navy-950 py-20 text-white sm:py-28 lg:py-32">
+        <div aria-hidden className="absolute inset-0 bg-blueprint opacity-[0.07]" />
+        <div
+          aria-hidden
+          className="absolute -left-32 top-1/3 h-96 w-96 rounded-full bg-gold-500/10 blur-[120px]"
+        />
+        <Container className="relative">
+          <div className="mx-auto max-w-2xl text-center">
+            <Reveal>
+              <Eyebrow align="center" className="text-navy-200">
+                {c.team.eyebrow}
+              </Eyebrow>
+            </Reveal>
+            <Reveal delay={0.08}>
+              <h2 className="mt-5 text-display-lg text-white">{c.team.title}</h2>
+            </Reveal>
+            <Reveal delay={0.16}>
+              <p className="mt-6 text-lg leading-relaxed text-navy-100">
+                {c.team.lead}
+              </p>
+            </Reveal>
+          </div>
+
+          <RevealGroup className="mt-16 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {team.map((member) => (
+              <RevealItem key={member.name} as="article">
+                <div className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03] transition-[transform,border-color] duration-400 ease-[cubic-bezier(0.22,0.61,0.36,1)] hover:-translate-y-1.5 hover:border-gold-500/50">
+                  <div className="relative aspect-[4/5] overflow-hidden">
+                    <Image
+                      src={member.photo}
+                      alt={member.name}
+                      fill
+                      sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw"
+                      className="object-cover object-top transition-transform duration-500 group-hover:scale-[1.04]"
+                    />
+                    <div
+                      aria-hidden
+                      className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent"
+                    />
+                    <div className="absolute inset-x-0 bottom-0 p-6">
+                      <h3 className="font-[family-name:var(--font-display)] text-xl font-semibold tracking-tight text-white">
+                        {member.name}
+                      </h3>
+                      <p className="mt-1 text-sm font-medium text-gold-400">
+                        {member.role}
+                      </p>
+                    </div>
+                    <span
+                      aria-hidden
+                      className="absolute inset-x-6 bottom-0 h-1 origin-left scale-x-0 rounded-full bg-gold-500 transition-transform duration-400 group-hover:scale-x-100"
+                    />
+                  </div>
+                </div>
+              </RevealItem>
+            ))}
+          </RevealGroup>
+        </Container>
+      </section>
+
       {/* ---------------- Our Work ---------------- */}
       <Section>
         <Container>
@@ -327,17 +387,17 @@ export default async function HomePage({
 
                 {/* Center BT mark */}
                 <Reveal className="order-1 lg:order-2">
-                  <div className="relative grid size-36 place-items-center rounded-full bg-gradient-to-b from-neutral-700 via-neutral-900 to-black shadow-[0_20px_60px_-15px_rgba(255,186,8,0.35)] sm:size-44">
+                  <div className="relative grid size-40 place-items-center rounded-full bg-gradient-to-b from-sky-400 via-blue-600 to-blue-900 shadow-[0_20px_70px_-15px_rgba(37,99,235,0.6)] sm:size-52">
                     <div
                       aria-hidden
-                      className="absolute inset-0 rounded-full ring-1 ring-inset ring-gold-500/40"
+                      className="absolute inset-0 rounded-full ring-1 ring-inset ring-white/25"
                     />
                     <Image
                       src="/logo-mark.png"
                       alt="Builders Tech"
                       width={900}
                       height={818}
-                      className="w-20 brightness-0 invert sm:w-24"
+                      className="w-24 brightness-0 invert sm:w-28"
                     />
                   </div>
                 </Reveal>

@@ -84,6 +84,12 @@ export const home: HomeCopy = {
     viewAll: "Ver todos los proyectos",
   },
 
+  team: {
+    eyebrow: "Nuestro equipo",
+    title: "Las personas detrás de los planos.",
+    lead: "Arquitectos, ingenieros y gerentes de proyecto bajo un mismo techo — para que su proyecto esté coordinado desde el primer boceto hasta la aprobación final.",
+  },
+
   trust: {
     eyebrow: "Socios",
     title: "¡Empresas que confían en nosotros!",

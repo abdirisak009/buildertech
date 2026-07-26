@@ -82,6 +82,12 @@ export const home = {
     viewAll: "View all projects",
   },
 
+  team: {
+    eyebrow: "Our team",
+    title: "The people behind the plans.",
+    lead: "Architects, engineers and project managers working under one roof — so your project is coordinated from the first sketch to the final approval.",
+  },
+
   trust: {
     eyebrow: "Partners",
     title: "Companies Who Trust Us!",
