@@ -52,11 +52,11 @@ const SERVICE_IMAGES = [
 
 /** Image beside each of the 5 process steps, in order. */
 const PROCESS_IMAGES = [
-  IMAGES.engineerModel,
-  IMAGES.studioTeam,
-  IMAGES.teamHands,
-  IMAGES.blueprints,
-  IMAGES.inspection,
+  IMAGES.processIntake, // 1. Submission of intake form
+  IMAGES.processEstimate, // 2. Project estimate
+  IMAGES.processSiteVisit, // 3. Consultation & site visit
+  IMAGES.blueprints, // 4. Design development
+  IMAGES.processSubmission, // 5. Project submission
 ];
 
 export default async function HomePage({

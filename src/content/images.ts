@@ -52,6 +52,12 @@ export const IMAGES = {
   glassTower: img("323705"),
   warehouse: img("236698"),
   inspection: img("2760241"),
+
+  /* --- Process steps --- */
+  processIntake: img("3861958"), // person filling a form at a desktop
+  processEstimate: img("4064840"), // reviewing an estimate on a laptop
+  processSiteVisit: img("8961065"), // on-site consultation, hard hats
+  processSubmission: img("5387261"), // signing off the final documents
 } as const;
 
 export type ImageKey = keyof typeof IMAGES;
