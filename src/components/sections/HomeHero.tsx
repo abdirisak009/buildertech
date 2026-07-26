@@ -4,8 +4,8 @@ import { Container } from "@/components/ui/Container";
 import { ButtonLink } from "@/components/ui/Button";
 import { Reveal, RevealGroup, RevealItem } from "@/components/motion/Reveal";
 import { Counter } from "@/components/motion/Counter";
+import { TypeText } from "@/components/motion/TypeText";
 import { getContent } from "@/content";
-import { IMAGES } from "@/content/images";
 import { LOCALE_LABELS, type Locale } from "@/i18n/config";
 
 /** The multicolour Google "G" mark, used to badge the review rating. */
@@ -37,21 +37,20 @@ export function HomeHero({ locale }: { locale: Locale }) {
   const copy = pages.home.hero;
 
   return (
-    <section className="relative isolate flex min-h-[100svh] items-center overflow-hidden bg-navy-950 text-white">
-      {/* Poster image sits underneath as the fallback: it shows before the
-          video loads, if the video fails, and for reduced-motion users (the
-          video is hidden for them via motion-reduce:hidden). */}
+    <section className="relative isolate flex min-h-[100svh] items-end overflow-hidden bg-navy-950 text-white">
+      {/* Poster is the video's own first frame, so there is no visible switch
+          when the clip starts — it just continues from the same image. It also
+          covers reduced-motion users (the video is hidden for them). */}
       <Image
-        src={IMAGES.interiorFinished}
+        src="/hero-poster.jpg"
         alt={copy.imageAlt}
         fill
         priority
         sizes="100vw"
-        className="object-cover opacity-70"
+        className="object-cover"
       />
 
-      {/* Background video, served straight from /public. The poster image above
-          shows before it loads and for reduced-motion users (video hidden). */}
+      {/* Background video, served straight from /public. */}
       <video
         aria-hidden
         autoPlay
@@ -59,7 +58,7 @@ export function HomeHero({ locale }: { locale: Locale }) {
         loop
         playsInline
         preload="auto"
-        poster={IMAGES.interiorFinished}
+        poster="/hero-poster.jpg"
         className="absolute inset-0 size-full object-cover motion-reduce:hidden"
       >
         <source src="/hero-video.mp4" type="video/mp4" />
@@ -88,7 +87,12 @@ export function HomeHero({ locale }: { locale: Locale }) {
             <Reveal>
               <h1 className="max-w-[16ch] text-[clamp(2.5rem,5.6vw,4.75rem)] leading-[1.05]">
                 {copy.titleBefore}
-                <span className="text-gold-500">{copy.titleAccent}</span>
+                <br />
+                <TypeText
+                  text={copy.titleAccent}
+                  className="text-gold-500"
+                  startDelay={550}
+                />
               </h1>
             </Reveal>
 
