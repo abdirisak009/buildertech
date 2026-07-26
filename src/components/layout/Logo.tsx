@@ -40,7 +40,7 @@ export function Logo({
         height={818}
         priority={priority}
         className={cn(
-          "h-11 w-auto sm:h-12",
+          "h-14 w-auto sm:h-16",
           variant === "onDark" && "brightness-0 invert",
           variant === "auto" && "dark:brightness-0 dark:invert",
           // Original navy + gold mark over the hero media, with a soft halo so

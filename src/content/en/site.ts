@@ -14,6 +14,10 @@ import {
   FileStack,
   BriefcaseBusiness,
   GraduationCap,
+  Handshake,
+  BookOpen,
+  Newspaper,
+  CircleQuestionMark,
   type LucideIcon,
 } from "lucide-react";
 
@@ -143,7 +147,7 @@ export const NAV: NavItem[] = [
   },
   {
     href: "/careers",
-    label: "Careers",
+    label: "Opportunities",
     icon: Briefcase,
     children: [
       {
@@ -157,6 +161,37 @@ export const NAV: NavItem[] = [
         label: "Internships",
         description: "Youth development and the next generation of builders",
         icon: GraduationCap,
+      },
+      {
+        href: "/become-a-partner",
+        label: "Become a Partner",
+        description: "Partner pricing, priority turnaround and one point of contact",
+        icon: Handshake,
+      },
+    ],
+  },
+  {
+    href: "/resources",
+    label: "Building Resources",
+    icon: BookOpen,
+    children: [
+      {
+        href: "/resources",
+        label: "Building Resources",
+        description: "Vetted local surveyors, inspectors, trades and suppliers",
+        icon: BookOpen,
+      },
+      {
+        href: "/blog",
+        label: "Blog",
+        description: "IRC code updates and design trends for Atlanta builds",
+        icon: Newspaper,
+      },
+      {
+        href: "/faq",
+        label: "FAQ",
+        description: "Permits, timelines, budgets and how we work",
+        icon: CircleQuestionMark,
       },
     ],
   },

@@ -149,16 +149,6 @@ export function MobileNav({
         {contact.cta}
       </ButtonLink>
 
-      <ButtonLink
-        href={href("/become-a-partner")}
-        variant="outline"
-        size="lg"
-        className="mt-3 w-full"
-        onClick={onNavigate}
-      >
-        {ui.header.partnerCta}
-      </ButtonLink>
-
       <div className="mt-8 space-y-3 text-sm">
         <a
           href={`tel:${contact.phoneHref}`}

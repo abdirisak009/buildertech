@@ -3,11 +3,10 @@
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { Menu, X, ArrowRight } from "lucide-react";
+import { Menu, X } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Container } from "@/components/ui/Container";
-import { ButtonLink } from "@/components/ui/Button";
 import { Logo } from "./Logo";
 import { ThemeToggle } from "./ThemeToggle";
 import { LanguageSwitcher } from "./LanguageSwitcher";
@@ -119,18 +118,6 @@ export function HeaderClient({
                   !solid && "border-white/25 text-white hover:bg-white/10",
                 )}
               />
-
-              <ButtonLink
-                href={`/${locale}/become-a-partner`}
-                size="sm"
-                className="hidden lg:inline-flex"
-              >
-                {ui.header.partnerCta}
-                <ArrowRight
-                  aria-hidden
-                  className="size-4 transition-transform duration-300 group-hover/btn:translate-x-1"
-                />
-              </ButtonLink>
 
               <button
                 type="button"
