@@ -7,7 +7,7 @@ import { Counter } from "@/components/motion/Counter";
 import { HeroVideo } from "./HeroVideo";
 import { getContent } from "@/content";
 import { IMAGES } from "@/content/images";
-import type { Locale } from "@/i18n/config";
+import { LOCALE_LABELS, type Locale } from "@/i18n/config";
 
 /** YouTube clip used as the hero background. Replace to swap the video. */
 const HERO_YOUTUBE_ID = "UL5YI8KGemg";
@@ -48,6 +48,23 @@ export function HomeHero({ locale }: { locale: Locale }) {
         className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-gold-500/50 to-transparent"
       />
 
+      {/* Animated BT circuit mark on the right (desktop). It's a transparent
+          GIF, so `unoptimized` keeps it animating (next/image would otherwise
+          flatten it to a still frame). */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute right-2 top-1/2 hidden -translate-y-1/2 lg:block xl:right-12"
+      >
+        <Image
+          src="/animated.gif"
+          alt=""
+          width={1280}
+          height={720}
+          unoptimized
+          className="w-[24rem] xl:w-[30rem] 2xl:w-[34rem] drop-shadow-[0_10px_40px_rgba(37,99,235,0.35)]"
+        />
+      </div>
+
       <Container className="relative pb-16 pt-36 sm:pb-20 sm:pt-44">
         <Reveal>
           <h1 className="max-w-[16ch] text-display-xl">
@@ -87,14 +104,19 @@ export function HomeHero({ locale }: { locale: Locale }) {
                 className="size-4 transition-transform duration-300 group-hover/btn:translate-x-1"
               />
             </ButtonLink>
-            <ButtonLink
-              href={`tel:${site.phoneHref}`}
-              variant="outline"
-              size="lg"
-              className="text-white"
-            >
+          </div>
+        </Reveal>
+
+        {/* Language phone lines */}
+        <Reveal delay={0.36}>
+          <div className="mt-4 flex flex-wrap gap-3">
+            <ButtonLink href={`tel:${site.phoneHref}`} size="lg">
               <Phone aria-hidden className="size-4" />
-              {site.phone}
+              {LOCALE_LABELS.en.native}
+            </ButtonLink>
+            <ButtonLink href={`tel:${site.phoneEsHref}`} size="lg">
+              <Phone aria-hidden className="size-4" />
+              {LOCALE_LABELS.es.native}
             </ButtonLink>
           </div>
         </Reveal>
