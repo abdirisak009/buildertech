@@ -48,89 +48,94 @@ export function HomeHero({ locale }: { locale: Locale }) {
         className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-gold-500/50 to-transparent"
       />
 
-      {/* Animated BT circuit mark on the right (desktop). It's a transparent
-          GIF, so `unoptimized` keeps it animating (next/image would otherwise
-          flatten it to a still frame). */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute right-2 top-1/2 hidden -translate-y-1/2 lg:block xl:right-12"
-      >
-        <Image
-          src="/animated.gif"
-          alt=""
-          width={1280}
-          height={720}
-          unoptimized
-          className="w-[24rem] xl:w-[30rem] 2xl:w-[34rem] drop-shadow-[0_10px_40px_rgba(37,99,235,0.35)]"
-        />
-      </div>
-
       <Container className="relative pb-16 pt-36 sm:pb-20 sm:pt-44">
-        <Reveal>
-          <h1 className="max-w-[16ch] text-display-xl">
-            {copy.titleBefore}
-            <span className="text-gold-500">{copy.titleAccent}</span>
-          </h1>
-        </Reveal>
+        <div className="grid items-center gap-10 lg:grid-cols-[1.25fr_0.75fr] lg:gap-8">
+          {/* ---- Left: copy ---- */}
+          <div>
+            <Reveal>
+              <h1 className="max-w-[16ch] text-display-xl">
+                {copy.titleBefore}
+                <span className="text-gold-500">{copy.titleAccent}</span>
+              </h1>
+            </Reveal>
 
-        <Reveal delay={0.14}>
-          <p className="mt-7 max-w-2xl text-lg leading-relaxed text-navy-100 sm:text-xl">
-            {copy.subhead}
-          </p>
-        </Reveal>
+            <Reveal delay={0.14}>
+              <p className="mt-7 max-w-2xl text-lg leading-relaxed text-navy-100 sm:text-xl">
+                {copy.subhead}
+              </p>
+            </Reveal>
 
-        {/* Architectural → Structural → Civil */}
-        <Reveal delay={0.22}>
-          <div className="mt-7 flex flex-wrap items-center gap-x-2 gap-y-2 font-[family-name:var(--font-display)] text-sm font-semibold tracking-tight">
-            {copy.flow.map((step, i) => (
-              <span key={step} className="flex items-center gap-2">
-                <span className={i === 1 ? "text-gold-500" : "text-white"}>
-                  {step}
+            {/* Architectural → Structural → Civil */}
+            <Reveal delay={0.22}>
+              <div className="mt-7 flex flex-wrap items-center gap-x-2 gap-y-2 font-[family-name:var(--font-display)] text-sm font-semibold tracking-tight">
+                {copy.flow.map((step, i) => (
+                  <span key={step} className="flex items-center gap-2">
+                    <span className={i === 1 ? "text-gold-500" : "text-white"}>
+                      {step}
+                    </span>
+                    {i < copy.flow.length - 1 && (
+                      <ChevronRight aria-hidden className="size-4 text-navy-300" />
+                    )}
+                  </span>
+                ))}
+              </div>
+            </Reveal>
+
+            <Reveal delay={0.3}>
+              <div className="mt-10 flex flex-wrap gap-3">
+                <ButtonLink href={`/${locale}/contact`} size="lg">
+                  {site.cta}
+                  <ArrowRight
+                    aria-hidden
+                    className="size-4 transition-transform duration-300 group-hover/btn:translate-x-1"
+                  />
+                </ButtonLink>
+              </div>
+            </Reveal>
+
+            <Reveal delay={0.38}>
+              <div className="mt-8 flex items-center gap-3">
+                <span className="flex" aria-hidden>
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <Star key={i} className="size-4 fill-gold-500 text-gold-500" />
+                  ))}
                 </span>
-                {i < copy.flow.length - 1 && (
-                  <ChevronRight aria-hidden className="size-4 text-navy-300" />
-                )}
-              </span>
-            ))}
+                <span className="text-sm text-navy-200">{copy.reviews}</span>
+              </div>
+            </Reveal>
           </div>
-        </Reveal>
 
-        <Reveal delay={0.3}>
-          <div className="mt-10 flex flex-wrap gap-3">
-            <ButtonLink href={`/${locale}/contact`} size="lg">
-              {site.cta}
-              <ArrowRight
+          {/* ---- Right: animated mark + language phone lines ---- */}
+          <div className="flex flex-col items-center gap-8 lg:items-end">
+            {/* Animated BT circuit mark (gold). Transparent GIF → `unoptimized`
+                keeps it animating; the CSS filter recolours the blue to gold. */}
+            <Reveal className="hidden lg:block">
+              <Image
+                src="/animated.gif"
+                alt=""
                 aria-hidden
-                className="size-4 transition-transform duration-300 group-hover/btn:translate-x-1"
+                width={1280}
+                height={720}
+                unoptimized
+                className="w-[22rem] xl:w-[26rem] [filter:grayscale(1)_sepia(1)_saturate(6)_hue-rotate(3deg)_brightness(1.05)_drop-shadow(0_10px_40px_rgba(255,186,8,0.3))]"
               />
-            </ButtonLink>
-          </div>
-        </Reveal>
+            </Reveal>
 
-        {/* Language phone lines */}
-        <Reveal delay={0.36}>
-          <div className="mt-4 flex flex-wrap gap-3">
-            <ButtonLink href={`tel:${site.phoneHref}`} size="lg">
-              <Phone aria-hidden className="size-4" />
-              {LOCALE_LABELS.en.native}
-            </ButtonLink>
-            <ButtonLink href={`tel:${site.phoneEsHref}`} size="lg">
-              <Phone aria-hidden className="size-4" />
-              {LOCALE_LABELS.es.native}
-            </ButtonLink>
+            {/* Language phone lines */}
+            <Reveal delay={0.36} className="w-full lg:w-auto">
+              <div className="flex flex-wrap justify-center gap-3 lg:justify-end">
+                <ButtonLink href={`tel:${site.phoneHref}`} size="lg">
+                  <Phone aria-hidden className="size-4" />
+                  {LOCALE_LABELS.en.native}
+                </ButtonLink>
+                <ButtonLink href={`tel:${site.phoneEsHref}`} size="lg">
+                  <Phone aria-hidden className="size-4" />
+                  {LOCALE_LABELS.es.native}
+                </ButtonLink>
+              </div>
+            </Reveal>
           </div>
-        </Reveal>
-
-        <Reveal delay={0.38}>
-          <div className="mt-8 flex items-center gap-3">
-            <span className="flex" aria-hidden>
-              {Array.from({ length: 5 }).map((_, i) => (
-                <Star key={i} className="size-4 fill-gold-500 text-gold-500" />
-              ))}
-            </span>
-            <span className="text-sm text-navy-200">{copy.reviews}</span>
-          </div>
-        </Reveal>
+        </div>
 
         <RevealGroup
           as="div"

@@ -50,6 +50,15 @@ const SERVICE_IMAGES = [
   IMAGES.apartments,
 ];
 
+/** Image beside each of the 5 process steps, in order. */
+const PROCESS_IMAGES = [
+  IMAGES.engineerModel,
+  IMAGES.studioTeam,
+  IMAGES.teamHands,
+  IMAGES.blueprints,
+  IMAGES.inspection,
+];
+
 export default async function HomePage({
   params,
 }: {
@@ -174,11 +183,12 @@ export default async function HomePage({
             </Reveal>
           </div>
 
-          <ol className="mx-auto mt-16 max-w-3xl">
+          <ol className="mx-auto mt-16 max-w-5xl">
             {c.process.steps.map((step, i) => (
               <li key={step.title}>
                 <Reveal>
-                  <div className="flex gap-6 pb-10 last:pb-0">
+                  <div className="grid grid-cols-[3rem_1fr] gap-x-5 gap-y-5 pb-12 last:pb-0 sm:gap-x-6">
+                    {/* Number + connecting line */}
                     <div className="flex flex-col items-center">
                       <span className="tabular inline-grid size-12 shrink-0 place-items-center rounded-full bg-gold-500 font-[family-name:var(--font-display)] text-lg font-bold text-navy-950">
                         {i + 1}
@@ -187,17 +197,48 @@ export default async function HomePage({
                         <span aria-hidden className="mt-2 w-px flex-1 bg-white/15" />
                       )}
                     </div>
-                    <div className="pb-2 pt-1.5">
-                      <h3 className="text-xl text-white">{step.title}</h3>
-                      <p className="mt-3 leading-relaxed text-navy-100">
-                        {step.body}
-                      </p>
+
+                    {/* Text + image */}
+                    <div className="grid gap-6 pt-1.5 lg:grid-cols-2 lg:items-center lg:gap-10">
+                      <div>
+                        <h3 className="text-xl text-white sm:text-2xl">
+                          {step.title}
+                        </h3>
+                        <p className="mt-3 leading-relaxed text-navy-100">
+                          {step.body}
+                        </p>
+                      </div>
+                      <div className="relative aspect-[16/10] overflow-hidden rounded-2xl border border-white/10">
+                        <Image
+                          src={PROCESS_IMAGES[i]}
+                          alt=""
+                          fill
+                          sizes="(min-width: 1024px) 40vw, 90vw"
+                          className="object-cover"
+                        />
+                        <div
+                          aria-hidden
+                          className="absolute inset-0 bg-gradient-to-t from-navy-950/30 to-transparent"
+                        />
+                      </div>
                     </div>
                   </div>
                 </Reveal>
               </li>
             ))}
           </ol>
+
+          <Reveal delay={0.15}>
+            <div className="mt-14 flex justify-center">
+              <ButtonLink href={href("/contact")} size="lg">
+                {ui.header.cta}
+                <ArrowRight
+                  aria-hidden
+                  className="size-4 transition-transform duration-300 group-hover/btn:translate-x-1"
+                />
+              </ButtonLink>
+            </div>
+          </Reveal>
         </Container>
       </Section>
 
