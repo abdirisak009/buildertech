@@ -120,7 +120,7 @@ export const TEAM: TeamMember[] = [
     bio: "Su guía de referencia desde la primera conversación hasta la aprobación del permiso. Con experiencia en diseño civil y construcción residencial, ayuda a que el proceso sea simple y sin estrés.",
   },
   {
-    name: "Taha Addow",
+    name: "Taha A.",
     role: "Ventas y Gerente de Proyecto",
     photo: "/teams/taha-addow.png",
     bio: "Una de las primeras personas con quien probablemente hablará. A Taha le gusta convertir proyectos difíciles en éxitos. Con experiencia en gerencia de construcción, diseño y construcción sostenible, trabaja de cerca con los clientes para hacer realidad su visión.",

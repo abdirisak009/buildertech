@@ -120,7 +120,7 @@ export const TEAM: TeamMember[] = [
     bio: "Your go-to guide from the first conversation to permit approval. With a background in civil design and residential construction, she helps make the process simple and stress-free.",
   },
   {
-    name: "Taha Addow",
+    name: "Taha A.",
     role: "Sales & Project Manager",
     photo: "/teams/taha-addow.png",
     bio: "One of the first people you'll likely speak with. Taha enjoys turning challenging projects into successful ones. With a background in construction management, design and sustainable building, he works closely with clients to bring their vision to life.",

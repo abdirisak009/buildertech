@@ -197,7 +197,7 @@ export default async function AboutPage({
                       alt={member.name}
                       fill
                       sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw"
-                      className="object-cover object-center"
+                      className="object-cover object-top"
                     />
                   </div>
                   <div className="flex flex-1 flex-col p-6">
