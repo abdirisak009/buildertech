@@ -29,7 +29,7 @@ export const services = {
     title: "Where We Work",
     lead: "From our Decatur office we cover the metro Atlanta counties in person and take on projects across the state. Here is where our plans get built.",
     countiesLabel: "Counties we serve",
-    citiesLabel: "Cities on the map",
+    citiesLabel: "Cities we serve",
   },
 
   cta: {

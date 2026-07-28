@@ -134,7 +134,7 @@ export function HomeHero({ locale }: { locale: Locale }) {
                 width={640}
                 height={560}
                 unoptimized
-                className="w-[40rem] xl:w-[46rem] 2xl:w-[50rem] [filter:drop-shadow(0_12px_45px_rgba(37,99,235,0.45))]"
+                className="w-[15rem] xl:w-[18rem] 2xl:w-[20rem] [filter:drop-shadow(0_12px_45px_rgba(37,99,235,0.45))]"
               />
             </Reveal>
           </div>

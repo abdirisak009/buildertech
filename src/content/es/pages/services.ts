@@ -31,7 +31,7 @@ export const services: ServicesCopy = {
     title: "Dónde trabajamos",
     lead: "Desde nuestra oficina en Decatur cubrimos en persona los condados del área metropolitana de Atlanta y aceptamos proyectos en todo el estado. Aquí es donde se construyen nuestros planos.",
     countiesLabel: "Condados que atendemos",
-    citiesLabel: "Ciudades en el mapa",
+    citiesLabel: "Ciudades que atendemos",
   },
 
   cta: {

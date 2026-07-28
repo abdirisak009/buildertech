@@ -98,10 +98,22 @@ export default async function ContactPage({
                           {d.sidebar.phone}
                         </span>
                         <a
-                          href={`tel:${site.phoneHref}`}
-                          className="font-[family-name:var(--font-display)] text-lg font-semibold text-foreground underline-offset-4 hover:text-gold-700 dark:hover:text-gold-400"
+                          href={`tel:${site.phoneEnHref}`}
+                          className="block font-[family-name:var(--font-display)] text-lg font-semibold text-foreground underline-offset-4 hover:text-gold-700 dark:hover:text-gold-400"
                         >
-                          {site.phone}
+                          {site.phoneEn}{" "}
+                          <span className="text-xs font-normal text-muted-foreground">
+                            EN
+                          </span>
+                        </a>
+                        <a
+                          href={`tel:${site.phoneEsHref}`}
+                          className="block font-[family-name:var(--font-display)] text-lg font-semibold text-foreground underline-offset-4 hover:text-gold-700 dark:hover:text-gold-400"
+                        >
+                          {site.phoneEs}{" "}
+                          <span className="text-xs font-normal text-muted-foreground">
+                            ES
+                          </span>
                         </a>
                       </div>
                     </li>
@@ -206,13 +218,28 @@ export default async function ContactPage({
                     <p className="mt-3 text-sm leading-relaxed text-navy-100">
                       {d.stopWork.body}
                     </p>
-                    <a
-                      href={`tel:${site.phoneHref}`}
-                      className="mt-5 inline-flex min-h-11 items-center gap-2 font-[family-name:var(--font-display)] font-semibold text-gold-500 underline-offset-4 hover:underline"
-                    >
-                      <Phone aria-hidden className="size-4" />
-                      {site.phone}
-                    </a>
+                    <div className="mt-5 flex flex-wrap gap-x-6 gap-y-2">
+                      <a
+                        href={`tel:${site.phoneEnHref}`}
+                        className="inline-flex min-h-11 items-center gap-2 font-[family-name:var(--font-display)] font-semibold text-gold-500 underline-offset-4 hover:underline"
+                      >
+                        <Phone aria-hidden className="size-4" />
+                        {site.phoneEn}
+                        <span className="text-xs font-normal text-navy-300">
+                          EN
+                        </span>
+                      </a>
+                      <a
+                        href={`tel:${site.phoneEsHref}`}
+                        className="inline-flex min-h-11 items-center gap-2 font-[family-name:var(--font-display)] font-semibold text-gold-500 underline-offset-4 hover:underline"
+                      >
+                        <Phone aria-hidden className="size-4" />
+                        {site.phoneEs}
+                        <span className="text-xs font-normal text-navy-300">
+                          ES
+                        </span>
+                      </a>
+                    </div>
                   </div>
                 </div>
               </Reveal>

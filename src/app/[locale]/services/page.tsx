@@ -39,6 +39,22 @@ export default async function ServicesPage({
   const { services, workCategories, pages } = getContent(locale);
   const copy = pages.services;
 
+  // Match the Services mega-menu order.
+  const MENU_ORDER = [
+    "stop-work-orders",
+    "architectural-plans",
+    "structural-plans",
+    "civil-plans",
+    "project-management",
+    "renderings",
+    "construction",
+  ];
+  const orderedServices = [...services].sort(
+    (a, b) =>
+      (MENU_ORDER.indexOf(a.slug) + 1 || 99) -
+      (MENU_ORDER.indexOf(b.slug) + 1 || 99),
+  );
+
   return (
     <>
       <PageHero
@@ -60,7 +76,7 @@ export default async function ServicesPage({
       <Section>
         <Container>
           <RevealGroup className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {services.map((service) => {
+            {orderedServices.map((service) => {
               const Icon = service.icon;
               return (
                 <RevealItem key={service.slug} as="article" className="h-full">

@@ -10,6 +10,7 @@ import {
   GEORGIA_VIEWBOX,
   METRO_VIEW,
   SERVICE_CITIES,
+  SERVICE_CITIES_ALL,
   SERVICE_COUNTIES,
   SERVICE_ZONE,
 } from "@/content/georgiaMap";
@@ -34,7 +35,7 @@ export function WhereWeWork({ copy }: { copy: Copy }) {
   const reduced = useReducedMotion();
 
   return (
-    <section className="relative isolate overflow-hidden bg-navy-950 py-20 text-white sm:py-28 lg:py-32">
+    <section className="relative isolate overflow-hidden bg-navy-950 pb-20 pt-8 text-white sm:pb-28 sm:pt-10 lg:pb-32 lg:pt-14">
       <div aria-hidden className="absolute inset-0 bg-blueprint opacity-[0.07]" />
       <div
         aria-hidden
@@ -253,18 +254,19 @@ export function WhereWeWork({ copy }: { copy: Copy }) {
             </div>
           </Reveal>
 
-          {/* ---- Legend ---- */}
-          <div className="space-y-8">
+          {/* ---- Counties ---- */}
+          <div className="space-y-6">
             <Reveal delay={0.1}>
               <div>
                 <h3 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.16em] text-gold-400">
                   <MapPin aria-hidden className="size-4" />
                   {copy.countiesLabel}
                 </h3>
-                <ul className="mt-4 flex flex-wrap gap-2.5">
+                <ul className="mt-5 flex flex-wrap gap-2.5">
                   {SERVICE_COUNTIES.map((county) => (
                     <li key={county}>
-                      <span className="inline-flex min-h-9 items-center rounded-full border border-gold-500/40 bg-gold-500/10 px-4 text-sm font-medium text-gold-300">
+                      <span className="inline-flex min-h-10 items-center gap-2 rounded-xl border border-gold-500/40 bg-gold-500/10 px-4 text-sm font-semibold text-gold-200 transition-colors hover:border-gold-400 hover:bg-gold-500/20">
+                        <MapPin aria-hidden className="size-3.5 text-gold-400" />
                         {county}
                       </span>
                     </li>
@@ -272,33 +274,30 @@ export function WhereWeWork({ copy }: { copy: Copy }) {
                 </ul>
               </div>
             </Reveal>
-
-            <Reveal delay={0.18}>
-              <div>
-                <h3 className="text-sm font-semibold uppercase tracking-[0.16em] text-navy-200">
-                  {copy.citiesLabel}
-                </h3>
-                <ul className="mt-4 grid grid-cols-2 gap-x-6 gap-y-3">
-                  {SERVICE_CITIES.map((city) => (
-                    <li
-                      key={city.name}
-                      className="flex items-center gap-2.5 text-sm text-navy-100"
-                    >
-                      <span
-                        aria-hidden
-                        className={
-                          "inline-block size-2.5 shrink-0 rounded-full " +
-                          (city.primary ? "bg-gold-400" : "bg-gold-500")
-                        }
-                      />
-                      {city.name}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </Reveal>
           </div>
         </div>
+
+        {/* ---- Cities (full-width card grid) ---- */}
+        <Reveal delay={0.1}>
+          <div className="mt-14 rounded-3xl border border-white/10 bg-white/[0.02] p-6 sm:p-8">
+            <h3 className="text-sm font-semibold uppercase tracking-[0.16em] text-navy-200">
+              {copy.citiesLabel}
+            </h3>
+            <ul className="mt-5 flex flex-wrap gap-2.5">
+              {SERVICE_CITIES_ALL.map((city) => (
+                <li key={city}>
+                  <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-2 text-sm text-navy-100 transition-colors hover:border-gold-500/50 hover:bg-white/[0.08] hover:text-white">
+                    <span
+                      aria-hidden
+                      className="size-1.5 shrink-0 rounded-full bg-gold-500"
+                    />
+                    {city}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </Reveal>
       </Container>
     </section>
   );

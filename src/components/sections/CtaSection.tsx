@@ -60,15 +60,32 @@ export function CtaSection({
                   />
                 </ButtonLink>
                 {showPhone && (
-                  <ButtonLink
-                    href={`tel:${site.phoneHref}`}
-                    variant="outline"
-                    size="lg"
-                    className="text-white"
-                  >
-                    <Phone aria-hidden className="size-4" />
-                    {site.phone}
-                  </ButtonLink>
+                  <>
+                    <ButtonLink
+                      href={`tel:${site.phoneEnHref}`}
+                      variant="outline"
+                      size="lg"
+                      className="text-white"
+                    >
+                      <Phone aria-hidden className="size-4" />
+                      {site.phoneEn}
+                      <span className="text-xs font-normal text-navy-300">
+                        EN
+                      </span>
+                    </ButtonLink>
+                    <ButtonLink
+                      href={`tel:${site.phoneEsHref}`}
+                      variant="outline"
+                      size="lg"
+                      className="text-white"
+                    >
+                      <Phone aria-hidden className="size-4" />
+                      {site.phoneEs}
+                      <span className="text-xs font-normal text-navy-300">
+                        ES
+                      </span>
+                    </ButtonLink>
+                  </>
                 )}
               </div>
             </div>

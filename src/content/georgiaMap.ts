@@ -40,4 +40,57 @@ export const METRO_VIEW = '-46 30 246 135';
 // Centre + radius of the metro-Atlanta service zone highlight (viewBox units).
 export const SERVICE_ZONE = { cx: 70, cy: 80, rx: 30, ry: 24 };
 
-export const SERVICE_COUNTIES = ['Fulton', 'DeKalb', 'Cobb', 'Gwinnett'];
+// Counties served (in person across metro Atlanta).
+export const SERVICE_COUNTIES = [
+  'Fulton',
+  'DeKalb',
+  'Cobb',
+  'Gwinnett',
+  'Clayton',
+  'Douglas',
+  'Fayette',
+  'Cherokee',
+  'Henry',
+  'Rockdale',
+  'Paulding',
+];
+
+// Full list of cities served. The map plots the representative subset in
+// SERVICE_CITIES; this is the complete directory shown in the legend cards.
+export const SERVICE_CITIES_ALL = [
+  'Atlanta',
+  'Alpharetta',
+  'Sandy Springs',
+  'Roswell',
+  'Johns Creek',
+  'Brookhaven',
+  'Dunwoody',
+  'Decatur',
+  'Tucker',
+  'Stone Mountain',
+  'Clarkston',
+  'Chamblee',
+  'Doraville',
+  'Marietta',
+  'Smyrna',
+  'Mableton',
+  'Kennesaw',
+  'Peachtree Corners',
+  'Norcross',
+  'Duluth',
+  'Lilburn',
+  'Lawrenceville',
+  'Snellville',
+  'Douglasville',
+  'Fayetteville',
+  'Peachtree City',
+  'Woodstock',
+  'Stockbridge',
+  'Conyers',
+  'East Point',
+  'College Park',
+  'Hapeville',
+  'South Fulton',
+  'Forest Park',
+  'Jonesboro',
+];

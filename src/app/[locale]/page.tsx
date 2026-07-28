@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, ArrowUpRight, Check, Quote, Star, Handshake } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Check, Quote, Star } from "lucide-react";
 
 import { Container } from "@/components/ui/Container";
-import { Section, Eyebrow } from "@/components/ui/Section";
+import { Eyebrow } from "@/components/ui/Section";
 import { ButtonLink } from "@/components/ui/Button";
 import { Reveal, RevealGroup, RevealItem } from "@/components/motion/Reveal";
 import { HomeHero } from "@/components/sections/HomeHero";
@@ -13,6 +13,7 @@ import { CtaSection } from "@/components/sections/CtaSection";
 import { WhereWeWork } from "@/components/sections/WhereWeWork";
 import { ProcessTimeline } from "@/components/sections/ProcessTimeline";
 import { OurWork } from "@/components/sections/OurWork";
+import { VideoShowcase } from "@/components/sections/VideoShowcase";
 
 import { getContent, type TrustLogo } from "@/content";
 import { getUi } from "@/i18n/ui";
@@ -38,6 +39,16 @@ const WORK_SLIDES = [
   "/work/construction.png",
   "/work/project-management.png",
   "/work/renderings.png",
+];
+
+/** Logos for the "Other Places You Can Find Us" section, in order. */
+const FIND_US_LOGOS = [
+  "/find-us/bark.png",
+  "/find-us/thumbtack.png",
+  "/find-us/google-reviews.png",
+  "/find-us/nextdoor.png",
+  "/find-us/houzz.png",
+  "/find-us/facebook.png",
 ];
 
 /** Background image revealed on hover for each home service card, in order. */
@@ -79,7 +90,7 @@ export default async function HomePage({
       <HomeHero locale={locale} />
 
       {/* ---------------- Services (6 cards, dark) ---------------- */}
-      <section className="relative isolate overflow-hidden bg-navy-950 py-20 text-white sm:py-28 lg:py-32">
+      <section className="relative isolate overflow-hidden bg-navy-950 pb-14 pt-20 text-white sm:pb-16 sm:pt-28 lg:pb-20 lg:pt-32">
         <div aria-hidden className="absolute inset-0 bg-blueprint opacity-[0.08]" />
         <Container className="relative">
           <div className="text-center">
@@ -256,12 +267,12 @@ export default async function HomePage({
             const left = trustLogos.slice(0, half);
             const right = trustLogos.slice(half);
             return (
-              <div className="mt-16 flex flex-col items-center gap-8 lg:flex-row lg:justify-center lg:gap-12">
+              <div className="mt-16 flex flex-col items-center gap-10 lg:flex-row lg:justify-between lg:gap-8">
                 {/* Left cluster */}
                 <RevealGroup
                   as="ul"
                   stagger={0.05}
-                  className="order-2 grid grid-cols-3 gap-4 sm:gap-5 lg:order-1"
+                  className="order-2 grid grid-cols-3 gap-5 sm:gap-6 lg:order-1"
                 >
                   {left.map((logo) => (
                     <RevealItem as="li" key={logo.src}>
@@ -270,19 +281,16 @@ export default async function HomePage({
                   ))}
                 </RevealGroup>
 
-                {/* Center BT mark */}
-                <Reveal className="order-1 lg:order-2 lg:mx-3">
-                  <div className="relative grid size-44 place-items-center rounded-full bg-gradient-to-b from-sky-400 via-blue-600 to-blue-900 shadow-[0_20px_70px_-15px_rgba(37,99,235,0.6)] sm:size-56">
-                    <div
-                      aria-hidden
-                      className="absolute inset-0 rounded-full ring-1 ring-inset ring-white/25"
-                    />
+                {/* Center TrustDale seal */}
+                <Reveal className="order-1 shrink-0 lg:order-2 lg:mx-4">
+                  <div className="relative size-56 sm:size-72 lg:size-80">
                     <Image
-                      src="/logo-mark-trim.png"
-                      alt="Builders Tech"
+                      src="/trustdale-seal.png"
+                      alt="TrustDale Certified — Investigated, Certified, Guaranteed"
                       fill
-                      sizes="224px"
-                      className="object-contain p-8 brightness-0 invert sm:p-10"
+                      sizes="320px"
+                      className="object-contain"
+                      priority
                     />
                   </div>
                 </Reveal>
@@ -291,7 +299,7 @@ export default async function HomePage({
                 <RevealGroup
                   as="ul"
                   stagger={0.05}
-                  className="order-3 grid grid-cols-3 gap-4 sm:gap-5"
+                  className="order-3 grid grid-cols-3 gap-5 sm:gap-6"
                 >
                   {right.map((logo) => (
                     <RevealItem as="li" key={logo.src}>
@@ -304,6 +312,15 @@ export default async function HomePage({
           })()}
         </Container>
       </section>
+
+      {/* ---------------- Video showcase ---------------- */}
+      <VideoShowcase
+        eyebrow={c.video.eyebrow}
+        title={c.video.title}
+        lead={c.video.lead}
+        youtubeId={c.video.youtubeId}
+        playLabel={c.video.playLabel}
+      />
 
       {/* ---------------- Reviews (dark) ---------------- */}
       <section className="relative isolate overflow-hidden bg-navy-950 py-20 text-white sm:py-28 lg:py-32">
@@ -370,32 +387,36 @@ export default async function HomePage({
         </Container>
       </section>
 
-      {/* ---------------- Partner teaser ---------------- */}
-      <Section tone="muted">
-        <Container>
+      {/* ---------------- Other Places You Can Find Us ---------------- */}
+      <section className="relative isolate overflow-hidden bg-navy-950 pb-20 text-white sm:pb-28 lg:pb-32">
+        <div aria-hidden className="absolute inset-0 bg-blueprint opacity-[0.06]" />
+        <Container className="relative">
           <Reveal>
-            <div className="relative isolate overflow-hidden rounded-3xl border border-border bg-surface p-8 sm:p-12 lg:p-16">
-              <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center">
-                <div>
-                  <Eyebrow>{c.partner.eyebrow}</Eyebrow>
-                  <h2 className="mt-5 text-display-md">{c.partner.title}</h2>
-                  <p className="mt-5 max-w-xl leading-relaxed text-muted-foreground">
-                    {c.partner.lead}
-                  </p>
-                </div>
-                <ButtonLink
-                  href={href("/become-a-partner")}
-                  size="lg"
-                  className="shrink-0"
-                >
-                  <Handshake aria-hidden className="size-4" />
-                  {c.partner.cta}
-                </ButtonLink>
-              </div>
-            </div>
+            <h2 className="text-center text-display-md text-white">
+              {c.findUs.title}
+            </h2>
           </Reveal>
+          <RevealGroup
+            as="ul"
+            stagger={0.06}
+            className="mx-auto mt-12 grid max-w-4xl grid-cols-2 gap-5 sm:gap-6 lg:grid-cols-3"
+          >
+            {c.findUs.platforms.map((name, i) => (
+              <RevealItem as="li" key={name}>
+                <div className="grid h-28 place-items-center rounded-2xl bg-white px-6 shadow-[0_10px_30px_-12px_rgba(0,0,0,0.6)] transition-transform duration-300 hover:-translate-y-1 sm:h-32">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={FIND_US_LOGOS[i]}
+                    alt={name}
+                    loading="lazy"
+                    className="max-h-16 w-auto max-w-[80%] object-contain sm:max-h-20"
+                  />
+                </div>
+              </RevealItem>
+            ))}
+          </RevealGroup>
         </Container>
-      </Section>
+      </section>
 
       <CtaSection locale={locale} />
     </>
@@ -407,14 +428,14 @@ function LogoBadge({ logo }: { logo: TrustLogo }) {
   return (
     <div
       title={logo.name}
-      className="relative grid size-20 place-items-center overflow-hidden rounded-full bg-white shadow-[0_8px_24px_-8px_rgba(0,0,0,0.5)] transition-transform duration-300 hover:scale-105 sm:size-24"
+      className="relative grid size-24 place-items-center overflow-hidden rounded-full bg-white shadow-[0_8px_24px_-8px_rgba(0,0,0,0.5)] transition-transform duration-300 hover:scale-105 sm:size-28"
     >
       <Image
         src={logo.src}
         alt={logo.name}
         fill
-        sizes="96px"
-        className="object-contain p-3.5"
+        sizes="112px"
+        className="object-contain p-4"
       />
     </div>
   );

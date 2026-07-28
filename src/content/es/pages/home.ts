@@ -116,11 +116,31 @@ export const home: HomeCopy = {
     lead: "Constructores, corredurías, remodeladores y desarrolladores que nos traen sus proyectos.",
   },
 
+  video: {
+    eyebrow: "Míralo",
+    title: "Builders Tech en acción",
+    lead: "Una mirada más cercana a cómo llevamos los proyectos desde el primer boceto hasta la entrega final.",
+    youtubeId: "Px-9BU9xmOw",
+    playLabel: "Reproducir video",
+  },
+
   testimonials: {
     eyebrow: "Reseñas",
     title: "Respaldados por más de 134 reseñas de cinco estrellas",
     lead: "Reseñas de la empresa en todas las sucursales al 9/01/25.",
     platformsLabel: "Reseñado en",
+  },
+
+  findUs: {
+    title: "Otros lugares donde puedes encontrarnos",
+    platforms: [
+      "Bark Elite Pro",
+      "Thumbtack",
+      "Google Reviews",
+      "Nextdoor",
+      "Houzz",
+      "Facebook",
+    ],
   },
 
   partner: {

@@ -114,11 +114,31 @@ export const home = {
     lead: "Builders, brokerages, remodelers and developers who bring us their projects.",
   },
 
+  video: {
+    eyebrow: "Watch",
+    title: "See Builders Tech in Action",
+    lead: "A closer look at how we take projects from first sketch to final walkthrough.",
+    youtubeId: "Px-9BU9xmOw",
+    playLabel: "Play video",
+  },
+
   testimonials: {
     eyebrow: "Reviews",
     title: "Backed By Over 134 Five-Star Reviews",
     lead: "Company reviews across all branches as of 9/01/25.",
     platformsLabel: "Reviewed on",
+  },
+
+  findUs: {
+    title: "Other Places You Can Find Us",
+    platforms: [
+      "Bark Elite Pro",
+      "Thumbtack",
+      "Google Reviews",
+      "Nextdoor",
+      "Houzz",
+      "Facebook",
+    ],
   },
 
   partner: {
