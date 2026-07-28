@@ -114,4 +114,5 @@ export type { Provider, ResourceCategory } from "./en/resources";
 export type { FaqItem, FaqGroup } from "./en/faq";
 export type { NavItem, NavChild } from "./en/site";
 export type { TeamMember } from "./en/about";
+export { teamDisplayName } from "./en/about";
 

@@ -1,7 +1,8 @@
-import { ArrowRight, Phone } from "lucide-react";
+import { Phone } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Section";
 import { ButtonLink } from "@/components/ui/Button";
+import { ScheduleCta } from "@/components/intake/ScheduleCta";
 import { Reveal } from "@/components/motion/Reveal";
 import { getContent } from "@/content";
 import type { Locale } from "@/i18n/config";
@@ -29,6 +30,11 @@ export function CtaSection({
     label: d.primaryLabel,
   };
 
+  const isScheduleCta =
+    !primary ||
+    primary.label === d.primaryLabel ||
+    primary.label === site.cta;
+
   return (
     <section className="py-20 sm:py-28">
       <Container>
@@ -52,13 +58,17 @@ export function CtaSection({
               </p>
 
               <div className="mt-10 flex flex-wrap gap-3">
-                <ButtonLink href={`/${locale}${primaryCta.href}`} size="lg">
-                  {primaryCta.label}
-                  <ArrowRight
-                    aria-hidden
-                    className="size-4 transition-transform duration-300 group-hover/btn:translate-x-1"
+                {isScheduleCta ? (
+                  <ScheduleCta
+                    locale={locale}
+                    label={primaryCta.label}
+                    size="lg"
                   />
-                </ButtonLink>
+                ) : (
+                  <ButtonLink href={`/${locale}${primaryCta.href}`} size="lg">
+                    {primaryCta.label}
+                  </ButtonLink>
+                )}
                 {showPhone && (
                   <>
                     <ButtonLink

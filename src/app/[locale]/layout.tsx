@@ -6,6 +6,7 @@ import "../globals.css";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { IntakeProvider } from "@/components/intake/IntakeProvider";
 import { LOCALES, isLocale, type Locale } from "@/i18n/config";
 import { getContent } from "@/content";
 import { getUi } from "@/i18n/ui";
@@ -89,17 +90,19 @@ export default async function LocaleLayout({
     >
       <body className="flex min-h-full flex-col bg-background text-foreground">
         <ThemeProvider>
-          <a
-            href="#main"
-            className="sr-only rounded-full bg-gold-500 px-6 py-3 font-semibold text-navy-950 focus:not-sr-only focus:fixed focus:left-5 focus:top-5 focus:z-[100]"
-          >
-            {ui.a11y.skipToContent}
-          </a>
-          <Header locale={typedLocale} />
-          <main id="main" className="flex-1 overflow-x-clip">
-            {children}
-          </main>
-          <Footer locale={typedLocale} />
+          <IntakeProvider locale={typedLocale}>
+            <a
+              href="#main"
+              className="sr-only rounded-full bg-gold-500 px-6 py-3 font-semibold text-navy-950 focus:not-sr-only focus:fixed focus:left-5 focus:top-5 focus:z-[100]"
+            >
+              {ui.a11y.skipToContent}
+            </a>
+            <Header locale={typedLocale} />
+            <main id="main" className="flex-1 overflow-x-clip">
+              {children}
+            </main>
+            <Footer locale={typedLocale} />
+          </IntakeProvider>
         </ThemeProvider>
       </body>
     </html>

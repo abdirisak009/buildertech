@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { Check, ArrowRight } from "lucide-react";
+import { Check } from "lucide-react";
 
 import { Container } from "@/components/ui/Container";
 import { Section, SectionHeader, Eyebrow } from "@/components/ui/Section";
 import { PageHero } from "@/components/ui/PageHero";
-import { ButtonLink } from "@/components/ui/Button";
+import { ScheduleCta } from "@/components/intake/ScheduleCta";
 import { Reveal, RevealGroup, RevealItem } from "@/components/motion/Reveal";
 import { Counter } from "@/components/motion/Counter";
 import { CtaSection } from "@/components/sections/CtaSection";
@@ -96,17 +96,12 @@ export default async function HowItWorksPage({
                 </p>
               </Reveal>
               <Reveal delay={0.24}>
-                <ButtonLink
-                  href={`/${locale}/contact`}
+                <ScheduleCta
+                  locale={locale}
+                  label={site.cta}
                   variant="navy"
                   className="mt-9"
-                >
-                  {site.cta}
-                  <ArrowRight
-                    aria-hidden
-                    className="size-4 transition-transform duration-300 group-hover/btn:translate-x-1"
-                  />
-                </ButtonLink>
+                />
               </Reveal>
             </div>
 

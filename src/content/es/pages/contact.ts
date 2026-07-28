@@ -18,9 +18,9 @@ export const contact: ContactCopy = {
   },
 
   brief: {
-    eyebrow: "Resumen del proyecto",
-    title: "Envíenos los detalles.",
-    lead: "Cuanto más nos cuente desde el principio, más útil será nuestra primera respuesta. Nada de esto lo compromete.",
+    eyebrow: "Ingreso del cliente",
+    title: "Cuéntenos qué va a construir.",
+    lead: "Complete el formulario de ingreso del cliente a continuación. Cuanto más nos cuente desde el principio, más útil será nuestra primera respuesta. Nada de esto lo compromete.",
   },
 
   sidebar: {

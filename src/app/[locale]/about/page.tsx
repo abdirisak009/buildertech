@@ -187,33 +187,55 @@ export default async function AboutPage({
             </Reveal>
           </div>
 
-          <RevealGroup className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {team.map((member) => (
-              <RevealItem key={member.name} as="article" className="h-full">
-                <div className="flex h-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03] transition-[transform,border-color] duration-400 ease-[cubic-bezier(0.22,0.61,0.36,1)] hover:-translate-y-1.5 hover:border-gold-500/50">
-                  <div className="relative aspect-[4/5] overflow-hidden">
-                    <Image
-                      src={member.photo}
-                      alt={member.name}
-                      fill
-                      sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw"
-                      className="object-cover object-top"
-                    />
+          <RevealGroup className="mt-16 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {team.map((member) => {
+              const displayName = `${member.firstName} ${member.lastInitial}.`;
+              return (
+                <RevealItem
+                  key={`${member.firstName}-${member.lastInitial}-${member.role}`}
+                  as="article"
+                  className="h-full"
+                >
+                  <div className="group flex h-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] transition-[transform,border-color,background-color] duration-400 ease-[cubic-bezier(0.22,0.61,0.36,1)] hover:-translate-y-1 hover:border-gold-500/45 hover:bg-white/[0.06]">
+                    <div className="relative aspect-square overflow-hidden bg-navy-900">
+                      <Image
+                        src={member.photo}
+                        alt={displayName}
+                        fill
+                        sizes="(min-width: 1024px) 28vw, (min-width: 640px) 45vw, 100vw"
+                        className="object-cover object-center transition-transform duration-500 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:scale-[1.03]"
+                      />
+                      <div
+                        aria-hidden
+                        className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-navy-950/55 to-transparent"
+                      />
+                      <div
+                        aria-hidden
+                        className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-gold-500/50 to-transparent"
+                      />
+                    </div>
+                    <div className="flex flex-1 flex-col px-5 py-5 sm:px-6 sm:py-6">
+                      <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+                        <h3 className="font-[family-name:var(--font-display)] text-lg font-semibold tracking-tight text-white sm:text-xl">
+                          {displayName}
+                        </h3>
+                        {member.credentials && (
+                          <span className="rounded-full border border-gold-500/35 bg-gold-500/10 px-2 py-0.5 text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-gold-400">
+                            {member.credentials}
+                          </span>
+                        )}
+                      </div>
+                      <p className="mt-1.5 text-sm font-medium text-gold-400">
+                        {member.role}
+                      </p>
+                      <p className="mt-3 text-sm leading-relaxed text-navy-100">
+                        {member.bio}
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex flex-1 flex-col p-6">
-                    <h3 className="font-[family-name:var(--font-display)] text-xl font-semibold tracking-tight text-white">
-                      {member.name}
-                    </h3>
-                    <p className="mt-1 text-sm font-medium text-gold-400">
-                      {member.role}
-                    </p>
-                    <p className="mt-4 text-sm leading-relaxed text-navy-100">
-                      {member.bio}
-                    </p>
-                  </div>
-                </div>
-              </RevealItem>
-            ))}
+                </RevealItem>
+              );
+            })}
           </RevealGroup>
         </Container>
       </section>

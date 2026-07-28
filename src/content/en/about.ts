@@ -82,47 +82,65 @@ export const REVIEW_PLATFORMS = [
 ];
 
 export type TeamMember = {
-  name: string;
+  /** Display as "First L." */
+  firstName: string;
+  lastInitial: string;
+  /** Optional professional credential shown after the name, e.g. PE */
+  credentials?: string;
   role: string;
   photo: string;
   bio: string;
 };
 
+export function teamDisplayName(member: TeamMember): string {
+  const base = `${member.firstName} ${member.lastInitial}.`;
+  return member.credentials ? `${base}, ${member.credentials}` : base;
+}
+
 export const TEAM: TeamMember[] = [
   {
-    name: "Shailesh G., PE",
+    firstName: "Shailesh",
+    lastInitial: "G",
+    credentials: "PE",
     role: "Civil Engineer",
-    photo: "/teams/shailesh-g.png",
+    photo: "/teams/shailesh-g.jpg",
     bio: "Makes sure every project starts on solid ground by designing grading, drainage, utilities and site plans that keep stormwater in check and developments moving toward permit approval.",
   },
   {
-    name: "Daniela C., RA",
+    firstName: "Daniela",
+    lastInitial: "C",
+    credentials: "RA",
     role: "Architect",
-    photo: "/teams/daniela-c.jpeg",
+    photo: "/teams/daniela-c.jpg",
     bio: "Turns ideas into buildable designs for homes, multifamily projects, renovations and commercial spaces. Loves creating spaces that look great, work well and meet code.",
   },
   {
-    name: "Yavuz A., PMP",
+    firstName: "Yavuz",
+    lastInitial: "A",
+    credentials: "PMP",
     role: "Operations Manager",
-    photo: "/teams/yavuz-a.png",
+    photo: "/teams/yavuz-a.jpg",
     bio: "The engine behind the scenes. Keeps projects, people and processes running smoothly while finding smarter, more efficient ways to work. Background in Mechanical Engineering.",
   },
   {
-    name: "Elizabeth B.",
+    firstName: "Elizabeth",
+    lastInitial: "B",
     role: "Business Systems Manager",
-    photo: "/teams/elizabeth-b.png",
+    photo: "/teams/elizabeth-b.jpg",
     bio: "The tech wizard of the team. Keeps our systems, AI tools and workflows running smoothly so the rest of the team can focus on designing, engineering and serving our clients. Background in business management, process improvement and system design.",
   },
   {
-    name: "Tania A.",
+    firstName: "Tania",
+    lastInitial: "A",
     role: "Sales & Project Manager",
-    photo: "/teams/daniela-a.jpeg",
+    photo: "/teams/tania-a.jpg",
     bio: "Your go-to guide from the first conversation to permit approval. With a background in civil design and residential construction, she helps make the process simple and stress-free.",
   },
   {
-    name: "Taha A.",
+    firstName: "Taha",
+    lastInitial: "A",
     role: "Sales & Project Manager",
-    photo: "/teams/taha-addow.png",
+    photo: "/teams/taha-a.jpg",
     bio: "One of the first people you'll likely speak with. Taha enjoys turning challenging projects into successful ones. With a background in construction management, design and sustainable building, he works closely with clients to bring their vision to life.",
   },
 ];

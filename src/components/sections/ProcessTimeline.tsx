@@ -8,30 +8,30 @@ import {
   useTransform,
   type MotionValue,
 } from "motion/react";
-import { ArrowRight } from "lucide-react";
 
 import { Container } from "@/components/ui/Container";
 import { Section, Eyebrow } from "@/components/ui/Section";
-import { ButtonLink } from "@/components/ui/Button";
+import { ScheduleCta } from "@/components/intake/ScheduleCta";
 import { Reveal } from "@/components/motion/Reveal";
+import type { Locale } from "@/i18n/config";
 
 type Step = { title: string; body: string };
 
 export function ProcessTimeline({
+  locale,
   eyebrow,
   title,
   lead,
   steps,
   images,
-  ctaHref,
   ctaLabel,
 }: {
+  locale: Locale;
   eyebrow: string;
   title: string;
   lead: string;
   steps: Step[];
   images: string[];
-  ctaHref: string;
   ctaLabel: string;
 }) {
   const listRef = useRef<HTMLOListElement>(null);
@@ -88,13 +88,7 @@ export function ProcessTimeline({
 
         <Reveal delay={0.15}>
           <div className="mt-14 flex justify-center">
-            <ButtonLink href={ctaHref} size="lg">
-              {ctaLabel}
-              <ArrowRight
-                aria-hidden
-                className="size-4 transition-transform duration-300 group-hover/btn:translate-x-1"
-              />
-            </ButtonLink>
+            <ScheduleCta locale={locale} label={ctaLabel} size="lg" />
           </div>
         </Reveal>
       </Container>

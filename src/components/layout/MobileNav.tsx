@@ -8,7 +8,7 @@ import { ChevronDown, ArrowRight, Phone, Mail } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Container } from "@/components/ui/Container";
-import { ButtonLink } from "@/components/ui/Button";
+import { ScheduleCta } from "@/components/intake/ScheduleCta";
 import type { NavItem } from "@/content";
 import type { Locale } from "@/i18n/config";
 import type { UiDict } from "@/i18n/ui";
@@ -140,14 +140,13 @@ export function MobileNav({
         })}
       </ul>
 
-      <ButtonLink
-        href={href("/contact")}
+      <ScheduleCta
+        locale={locale}
+        label={contact.cta}
         size="lg"
         className="mt-8 w-full"
         onClick={onNavigate}
-      >
-        {contact.cta}
-      </ButtonLink>
+      />
 
       <div className="mt-8 space-y-3 text-sm">
         <a

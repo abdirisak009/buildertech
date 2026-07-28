@@ -82,47 +82,63 @@ export const REVIEW_PLATFORMS = [
 ];
 
 export type TeamMember = {
-  name: string;
+  firstName: string;
+  lastInitial: string;
+  credentials?: string;
   role: string;
   photo: string;
   bio: string;
 };
 
+export function teamDisplayName(member: TeamMember): string {
+  const base = `${member.firstName} ${member.lastInitial}.`;
+  return member.credentials ? `${base}, ${member.credentials}` : base;
+}
+
 export const TEAM: TeamMember[] = [
   {
-    name: "Shailesh G., PE",
+    firstName: "Shailesh",
+    lastInitial: "G",
+    credentials: "PE",
     role: "Ingeniero Civil",
-    photo: "/teams/shailesh-g.png",
+    photo: "/teams/shailesh-g.jpg",
     bio: "Se asegura de que cada proyecto comience sobre una base sólida, diseñando nivelación, drenaje, servicios y planos de lote que controlan las aguas pluviales y hacen avanzar los desarrollos hacia la aprobación del permiso.",
   },
   {
-    name: "Daniela C., RA",
+    firstName: "Daniela",
+    lastInitial: "C",
+    credentials: "RA",
     role: "Arquitecta",
-    photo: "/teams/daniela-c.jpeg",
+    photo: "/teams/daniela-c.jpg",
     bio: "Convierte las ideas en diseños construibles para viviendas, proyectos multifamiliares, remodelaciones y espacios comerciales. Le encanta crear espacios que se ven bien, funcionan bien y cumplen con el código.",
   },
   {
-    name: "Yavuz A., PMP",
+    firstName: "Yavuz",
+    lastInitial: "A",
+    credentials: "PMP",
     role: "Gerente de Operaciones",
-    photo: "/teams/yavuz-a.png",
+    photo: "/teams/yavuz-a.jpg",
     bio: "El motor detrás de escena. Mantiene proyectos, personas y procesos funcionando sin problemas mientras encuentra formas más inteligentes y eficientes de trabajar. Formación en Ingeniería Mecánica.",
   },
   {
-    name: "Elizabeth B.",
+    firstName: "Elizabeth",
+    lastInitial: "B",
     role: "Gerente de Sistemas de Negocio",
-    photo: "/teams/elizabeth-b.png",
+    photo: "/teams/elizabeth-b.jpg",
     bio: "La maga de la tecnología del equipo. Mantiene nuestros sistemas, herramientas de IA y flujos de trabajo funcionando sin problemas para que el resto del equipo pueda concentrarse en diseñar, calcular y atender a nuestros clientes. Formación en administración de empresas, mejora de procesos y diseño de sistemas.",
   },
   {
-    name: "Tania A.",
+    firstName: "Tania",
+    lastInitial: "A",
     role: "Ventas y Gerente de Proyecto",
-    photo: "/teams/daniela-a.jpeg",
+    photo: "/teams/tania-a.jpg",
     bio: "Su guía de referencia desde la primera conversación hasta la aprobación del permiso. Con experiencia en diseño civil y construcción residencial, ayuda a que el proceso sea simple y sin estrés.",
   },
   {
-    name: "Taha A.",
+    firstName: "Taha",
+    lastInitial: "A",
     role: "Ventas y Gerente de Proyecto",
-    photo: "/teams/taha-addow.png",
+    photo: "/teams/taha-a.jpg",
     bio: "Una de las primeras personas con quien probablemente hablará. A Taha le gusta convertir proyectos difíciles en éxitos. Con experiencia en gerencia de construcción, diseño y construcción sostenible, trabaja de cerca con los clientes para hacer realidad su visión.",
   },
 ];

@@ -16,9 +16,9 @@ export const contact = {
   },
 
   brief: {
-    eyebrow: "Project brief",
-    title: "Send us the details.",
-    lead: "The more you can tell us up front, the more useful our first reply will be. Nothing here is a commitment.",
+    eyebrow: "Client intake",
+    title: "Tell us what you are building.",
+    lead: "Fill out the Client Intake Form below. The more you can tell us up front, the more useful our first reply will be. Nothing here is a commitment.",
   },
 
   sidebar: {

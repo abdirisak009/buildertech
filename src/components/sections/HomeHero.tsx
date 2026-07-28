@@ -1,7 +1,8 @@
 import Image from "next/image";
-import { ArrowRight, Phone, Star } from "lucide-react";
+import { Phone, Star } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { ButtonLink } from "@/components/ui/Button";
+import { ScheduleCta } from "@/components/intake/ScheduleCta";
 import { Reveal, RevealGroup, RevealItem } from "@/components/motion/Reveal";
 import { Counter } from "@/components/motion/Counter";
 import { TypeText } from "@/components/motion/TypeText";
@@ -143,13 +144,7 @@ export function HomeHero({ locale }: { locale: Locale }) {
         {/* ---- Actions: Schedule (left) + language phone lines (right) on one line ---- */}
         <Reveal delay={0.36}>
           <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
-            <ButtonLink href={`/${locale}/contact`} size="lg">
-              {site.cta}
-              <ArrowRight
-                aria-hidden
-                className="size-4 transition-transform duration-300 group-hover/btn:translate-x-1"
-              />
-            </ButtonLink>
+            <ScheduleCta locale={locale} label={site.cta} size="lg" />
 
             <div className="flex flex-wrap items-center gap-3">
               <ButtonLink href={`tel:${site.phoneEnHref}`} size="lg">

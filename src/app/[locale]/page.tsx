@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, ArrowUpRight, Check, Quote, Star } from "lucide-react";
+import { ArrowUpRight, Check, Quote, Star } from "lucide-react";
 
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Section";
-import { ButtonLink } from "@/components/ui/Button";
+import { ScheduleCta } from "@/components/intake/ScheduleCta";
 import { Reveal, RevealGroup, RevealItem } from "@/components/motion/Reveal";
 import { HomeHero } from "@/components/sections/HomeHero";
 import { CtaSection } from "@/components/sections/CtaSection";
@@ -163,13 +163,7 @@ export default async function HomePage({
 
           <Reveal delay={0.15}>
             <div className="mt-12 flex justify-center">
-              <ButtonLink href={href("/contact")} size="lg">
-                {ui.header.cta}
-                <ArrowRight
-                  aria-hidden
-                  className="size-4 transition-transform duration-300 group-hover/btn:translate-x-1"
-                />
-              </ButtonLink>
+              <ScheduleCta locale={locale} label={ui.header.cta} size="lg" />
             </div>
           </Reveal>
         </Container>
@@ -180,12 +174,12 @@ export default async function HomePage({
 
       {/* ---------------- Process (5 steps) ---------------- */}
       <ProcessTimeline
+        locale={locale}
         eyebrow={c.process.eyebrow}
         title={c.process.title}
         lead={c.process.lead}
         steps={c.process.steps}
         images={PROCESS_IMAGES}
-        ctaHref={href("/contact")}
         ctaLabel={ui.header.cta}
       />
 
@@ -240,13 +234,7 @@ export default async function HomePage({
               {c.why.closing}
             </p>
             <div className="mt-8 flex justify-center">
-              <ButtonLink href={href("/contact")} size="lg">
-                {ui.header.cta}
-                <ArrowRight
-                  aria-hidden
-                  className="size-4 transition-transform duration-300 group-hover/btn:translate-x-1"
-                />
-              </ButtonLink>
+              <ScheduleCta locale={locale} label={ui.header.cta} size="lg" />
             </div>
           </Reveal>
         </Container>
