@@ -31,10 +31,13 @@ export const SITE = {
   partnerCta: "Sea socio",
   url: "https://www.builderstechnologysource.com",
   email: "services@builderstechnologysource.com",
-  // Primary (English) line
-  phone: "404-542-4280",
-  phoneHref: "+14045424280",
-  // Spanish line
+  // Primary line shown on Spanish pages
+  phone: "407-289-6606",
+  phoneHref: "+14072896606",
+  // Canonical English line (always 404 regardless of locale)
+  phoneEn: "404-542-4280",
+  phoneEnHref: "+14045424280",
+  // Canonical Spanish line (always 407 regardless of locale)
   phoneEs: "407-289-6606",
   phoneEsHref: "+14072896606",
   address: {

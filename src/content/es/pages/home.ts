@@ -82,6 +82,26 @@ export const home: HomeCopy = {
     title: "Nuestro trabajo",
     lead: "Una muestra representativa de lo que construimos — adecuaciones comerciales, juegos de planos residenciales para permiso, planos de lote y trabajo estructural en toda el área metropolitana de Atlanta.",
     viewAll: "Ver todos los proyectos",
+    projects: [
+      {
+        title: "Construcción desde cero",
+        category: "Gerencia de construcción",
+        blurb:
+          "Cimientos, zapatas y trabajo de lote gestionados en obra — coordinados desde el primer vaciado hasta la inspección.",
+      },
+      {
+        title: "Gerencia de proyectos",
+        category: "Planificación y entrega",
+        blurb:
+          "Control de calidad, resolución de problemas, comunicación y programación que mantienen cada proyecto en marcha desde el primer día.",
+      },
+      {
+        title: "Diseño y renders",
+        category: "Arquitectura y visualización",
+        blurb:
+          "Townhomes, viviendas unifamiliares e interiores cobran vida con renders fotorrealistas en toda el área metropolitana de Atlanta.",
+      },
+    ],
   },
 
   team: {

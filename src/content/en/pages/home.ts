@@ -80,6 +80,26 @@ export const home = {
     title: "Our Work",
     lead: "A cross-section of what we build — commercial buildouts, residential permit sets, site plans and structural work across metro Atlanta.",
     viewAll: "View all projects",
+    projects: [
+      {
+        title: "Ground-Up Construction",
+        category: "Construction Management",
+        blurb:
+          "Foundations, footings and site work managed on the ground — coordinated from the first pour to inspection.",
+      },
+      {
+        title: "Project Management",
+        category: "Planning & Delivery",
+        blurb:
+          "Quality control, problem solving, communication and scheduling that keep every project on track from day one.",
+      },
+      {
+        title: "Design & Renderings",
+        category: "Architecture & Visualization",
+        blurb:
+          "Townhomes, single-family homes and interiors brought to life with photoreal renderings across metro Atlanta.",
+      },
+    ],
   },
 
   team: {

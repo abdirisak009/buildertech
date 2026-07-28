@@ -8,7 +8,7 @@
 /* ============================================================
    BUILDERS TECH — Architecture Solutions
    Design system: editorial / exaggerated minimalism
-   Brand: navy #0a2472 · gold #ffba08
+   Brand: navy #0a2472 · accent orange #e87838
    ============================================================ */
 
 @theme {
@@ -27,24 +27,24 @@
   --color-navy-900: #0a0a0b;
   --color-navy-950: #000000;
 
-  /* ---- Brand: gold ---- */
-  --color-gold-50: #fff9e8;
-  --color-gold-100: #fff0c2;
-  --color-gold-200: #ffe287;
-  --color-gold-300: #ffd254;
-  --color-gold-400: #ffc42b;
-  --color-gold-500: #ffba08; /* brand accent */
-  --color-gold-600: #d99700;
-  --color-gold-700: #a87400;
-  --color-gold-800: #7a5400;
-  --color-gold-900: #4d3500;
+  /* ---- Brand: accent (orange) ---- */
+  --color-gold-50: #fdf3ec;
+  --color-gold-100: #fbe0cd;
+  --color-gold-200: #f6c39c;
+  --color-gold-300: #f1a56b;
+  --color-gold-400: #ed8f4d;
+  --color-gold-500: #e87838; /* brand accent */
+  --color-gold-600: #d16320;
+  --color-gold-700: #a54e19;
+  --color-gold-800: #793a13;
+  --color-gold-900: #4d240c;
 
-  /* ---- Brand: orange (button / CTA accent) ---- */
-  --color-orange-100: #ffe9d5;
-  --color-orange-300: #ffb066;
-  --color-orange-400: #ff9838;
-  --color-orange-500: #f97316; /* CTA button */
-  --color-orange-600: #ea580c;
+  /* ---- Brand: orange (button / CTA accent) — same hue as accent ---- */
+  --color-orange-100: #fbe0cd;
+  --color-orange-300: #f1a56b;
+  --color-orange-400: #ed8f4d;
+  --color-orange-500: #e87838; /* CTA button */
+  --color-orange-600: #d16320;
 
   /* ---- Neutrals tuned to the navy ---- */
   --color-ink-50: #f7f8fb;
@@ -78,19 +78,19 @@
   --subtle-foreground: #6b7695;
   --border: #e3e7f1;
   --border-strong: #c9d0e2;
-  --ring: #ffba08;
+  --ring: #e87838;
 }
 
 .dark {
-  --background: #050b1c;
-  --surface: #0a1230;
-  --surface-muted: #081027;
+  --background: #08090c;
+  --surface: #121319;
+  --surface-muted: #16181f;
   --foreground: #f2f4fb;
-  --muted-foreground: #b8c1da;
-  --subtle-foreground: #939dbc;
-  --border: #1c2750;
-  --border-strong: #2b3866;
-  --ring: #ffba08;
+  --muted-foreground: #c2c6cf;
+  --subtle-foreground: #9a9ea8;
+  --border: #282a31;
+  --border-strong: #3a3d45;
+  --ring: #e87838;
 }
 
 @theme inline {

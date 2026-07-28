@@ -31,10 +31,13 @@ export const SITE = {
   partnerCta: "Become a Partner",
   url: "https://www.builderstechnologysource.com",
   email: "services@builderstechnologysource.com",
-  // Primary (English) line
+  // Primary line shown on English pages
   phone: "404-542-4280",
   phoneHref: "+14045424280",
-  // Spanish line
+  // Canonical English line (always 404 regardless of locale)
+  phoneEn: "404-542-4280",
+  phoneEnHref: "+14045424280",
+  // Canonical Spanish line (always 407 regardless of locale)
   phoneEs: "407-289-6606",
   phoneEsHref: "+14072896606",
   address: {

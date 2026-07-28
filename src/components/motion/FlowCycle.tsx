@@ -6,53 +6,106 @@ import { useReducedMotion } from "motion/react";
 import { cn } from "@/lib/utils";
 
 /**
- * The Architectural → Structural → Civil flow. A gold highlight travels from
- * one step to the next on a loop, so the pipeline reads as an active process.
- * Reduced-motion users get a static state with the middle step highlighted.
+ * The Architectural → Structural → Civil flow, revealed with a typewriter
+ * effect (matching the hero headline): the words type out one character at a
+ * time, hold, delete, and loop. A blinking caret follows the cursor.
+ * Reduced-motion users get the full line, statically.
  */
 export function FlowCycle({
   steps,
-  interval = 1400,
+  speed = 80,
+  holdTime = 1600,
+  deleteSpeed = 40,
 }: {
   steps: string[];
-  interval?: number;
+  speed?: number;
+  holdTime?: number;
+  deleteSpeed?: number;
 }) {
   const reduced = useReducedMotion();
-  const [active, setActive] = useState(reduced ? 1 : 0);
+  const total = steps.reduce((sum, s) => sum + s.length, 0);
+  const [count, setCount] = useState(reduced ? total : 0);
 
   useEffect(() => {
     if (reduced) return;
-    const id = setInterval(() => {
-      setActive((i) => (i + 1) % steps.length);
-    }, interval);
-    return () => clearInterval(id);
-  }, [reduced, steps.length, interval]);
+
+    let i = 0;
+    let phase: "typing" | "holding" | "deleting" = "typing";
+    let timer: ReturnType<typeof setTimeout>;
+
+    const tick = () => {
+      if (phase === "typing") {
+        i += 1;
+        setCount(i);
+        if (i >= total) {
+          phase = "holding";
+          timer = setTimeout(tick, holdTime);
+          return;
+        }
+        timer = setTimeout(tick, speed);
+      } else if (phase === "holding") {
+        phase = "deleting";
+        timer = setTimeout(tick, deleteSpeed);
+      } else {
+        i -= 1;
+        setCount(i);
+        if (i <= 0) {
+          phase = "typing";
+          timer = setTimeout(tick, speed);
+          return;
+        }
+        timer = setTimeout(tick, deleteSpeed);
+      }
+    };
+
+    timer = setTimeout(tick, speed);
+    return () => clearTimeout(timer);
+  }, [reduced, total, speed, holdTime, deleteSpeed]);
+
+  // How many characters of each word are visible for the current count.
+  const shownPerWord = steps.map((s, i) => {
+    const before = steps
+      .slice(0, i)
+      .reduce((sum, prev) => sum + prev.length, 0);
+    return Math.max(0, Math.min(s.length, count - before));
+  });
+
+  // The word the caret currently sits in — the first not-yet-complete word, or
+  // the last word once everything is typed.
+  let activeWord = steps.findIndex((s, i) => shownPerWord[i] < s.length);
+  if (activeWord === -1) activeWord = steps.length - 1;
+  const done = count >= total;
 
   return (
     <div className="flex flex-wrap items-center gap-x-2 gap-y-2 font-[family-name:var(--font-display)] text-sm font-semibold tracking-tight">
-      {steps.map((step, i) => (
-        <span key={step} className="flex items-center gap-2">
-          <span
-            className={cn(
-              "transition-[color,transform,text-shadow] duration-500 ease-out",
-              i === active
-                ? "scale-105 text-gold-500 [text-shadow:0_0_18px_rgba(255,186,8,0.55)]"
-                : "text-white/90",
-            )}
-          >
-            {step}
-          </span>
-          {i < steps.length - 1 && (
-            <ChevronRight
-              aria-hidden
+      {steps.map((step, i) => {
+        const shown = shownPerWord[i];
+        const complete = shown >= step.length;
+        return (
+          <span key={step} className="flex items-center gap-2">
+            <span
               className={cn(
-                "size-4 transition-colors duration-500",
-                i === active ? "text-gold-500" : "text-navy-300",
+                i === activeWord ? "text-gold-500" : "text-white",
               )}
-            />
-          )}
-        </span>
-      ))}
+            >
+              {step.slice(0, shown)}
+              {i === activeWord && (
+                <span
+                  aria-hidden
+                  className={cn(
+                    "ml-0.5 inline-block w-[0.06em] self-stretch bg-gold-500 align-baseline",
+                    "h-[0.85em] translate-y-[0.08em]",
+                    done ? "animate-caret" : "opacity-100",
+                  )}
+                />
+              )}
+            </span>
+            {complete && i < steps.length - 1 && (
+              <ChevronRight aria-hidden className="size-4 text-gold-500" />
+            )}
+          </span>
+        );
+      })}
     </div>
   );
 }

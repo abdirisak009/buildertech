@@ -4,7 +4,7 @@ export const contact: ContactCopy = {
   meta: {
     title: "Contacto",
     description:
-      "Consulta gratuita con Builders Tech. Llame al 404-542-4280, escríbanos por correo o envíe los detalles de su proyecto. Planos listos para permiso en 10 días hábiles en el área metropolitana de Atlanta.",
+      "Consulta gratuita con Builders Tech. Llame al 407-289-6606, escríbanos por correo o envíe los detalles de su proyecto. Planos listos para permiso en 10 días hábiles en el área metropolitana de Atlanta.",
   },
 
   hero: {

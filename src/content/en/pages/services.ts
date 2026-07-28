@@ -24,6 +24,14 @@ export const services = {
     lead: "Residential is our core, but the drawing board does not stop there.",
   },
 
+  whereWeWork: {
+    eyebrow: "Our service area",
+    title: "Where We Work",
+    lead: "From our Decatur office we cover the metro Atlanta counties in person and take on projects across the state. Here is where our plans get built.",
+    countiesLabel: "Counties we serve",
+    citiesLabel: "Cities on the map",
+  },
+
   cta: {
     eyebrow: "Not sure what you need?",
     title: "Ask us — the consultation is free.",

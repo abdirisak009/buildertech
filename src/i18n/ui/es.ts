@@ -31,7 +31,7 @@ export const es: UiDict = {
   },
 
   header: {
-    cta: "Agende su proyecto",
+    cta: "Agende su proyecto hoy",
     partnerCta: "Sea socio",
   },
 

@@ -157,10 +157,10 @@ export function Footer({ locale }: { locale: Locale }) {
                 {ui.footer.phone}
               </span>
               <a
-                href={`tel:${site.phoneHref}`}
+                href={`tel:${site.phoneEnHref}`}
                 className="block font-[family-name:var(--font-display)] text-lg font-semibold text-white transition-colors hover:text-gold-400"
               >
-                {site.phone}{" "}
+                {site.phoneEn}{" "}
                 <span className="text-xs font-normal text-navy-300">EN</span>
               </a>
               <a

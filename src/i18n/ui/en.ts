@@ -33,7 +33,7 @@ export const en = {
   },
 
   header: {
-    cta: "Schedule Your Project",
+    cta: "Schedule Your Project Today",
     partnerCta: "Become a Partner",
   },
 

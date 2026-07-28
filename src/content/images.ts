@@ -53,11 +53,12 @@ export const IMAGES = {
   warehouse: img("236698"),
   inspection: img("2760241"),
 
-  /* --- Process steps --- */
-  processIntake: img("3861958"), // person filling a form at a desktop
-  processEstimate: img("4064840"), // reviewing an estimate on a laptop
-  processSiteVisit: img("8961065"), // on-site consultation, hard hats
-  processSubmission: img("5387261"), // signing off the final documents
+  /* --- Process steps (Builders Tech branded imagery) --- */
+  processIntake: "/process/intake.png", // scheduling via the website intake
+  processEstimate: "/process/estimate.png", // project estimate & proposal email
+  processSiteVisit: "/process/consultation.png", // consultation & site visit
+  processDesign: "/process/design.png", // design development / structural plans
+  processSubmission: "/process/submission.png", // approved permit set
 } as const;
 
 export type ImageKey = keyof typeof IMAGES;

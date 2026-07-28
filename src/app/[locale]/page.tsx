@@ -5,11 +5,14 @@ import Image from "next/image";
 import { ArrowRight, ArrowUpRight, Check, Quote, Star, Handshake } from "lucide-react";
 
 import { Container } from "@/components/ui/Container";
-import { Section, SectionHeader, Eyebrow } from "@/components/ui/Section";
+import { Section, Eyebrow } from "@/components/ui/Section";
 import { ButtonLink } from "@/components/ui/Button";
 import { Reveal, RevealGroup, RevealItem } from "@/components/motion/Reveal";
 import { HomeHero } from "@/components/sections/HomeHero";
 import { CtaSection } from "@/components/sections/CtaSection";
+import { WhereWeWork } from "@/components/sections/WhereWeWork";
+import { ProcessTimeline } from "@/components/sections/ProcessTimeline";
+import { OurWork } from "@/components/sections/OurWork";
 
 import { getContent, type TrustLogo } from "@/content";
 import { getUi } from "@/i18n/ui";
@@ -30,13 +33,11 @@ export async function generateMetadata({
   };
 }
 
-const WORK_IMAGES = [
-  IMAGES.residentialHome,
-  IMAGES.interiorFinished,
-  IMAGES.construction,
-  IMAGES.apartments,
-  IMAGES.warehouse,
-  IMAGES.civil,
+/** Featured project images for the "Our Work" slider, in order. */
+const WORK_SLIDES = [
+  "/work/construction.png",
+  "/work/project-management.png",
+  "/work/renderings.png",
 ];
 
 /** Background image revealed on hover for each home service card, in order. */
@@ -55,7 +56,7 @@ const PROCESS_IMAGES = [
   IMAGES.processIntake, // 1. Submission of intake form
   IMAGES.processEstimate, // 2. Project estimate
   IMAGES.processSiteVisit, // 3. Consultation & site visit
-  IMAGES.blueprints, // 4. Design development
+  IMAGES.processDesign, // 4. Design development
   IMAGES.processSubmission, // 5. Project submission
 ];
 
@@ -163,84 +164,30 @@ export default async function HomePage({
         </Container>
       </section>
 
+      {/* ---------------- Where we work (Georgia map) ---------------- */}
+      <WhereWeWork copy={pages.services.whereWeWork} />
+
       {/* ---------------- Process (5 steps) ---------------- */}
-      <Section tone="navy">
-        <div aria-hidden className="absolute inset-0 bg-blueprint opacity-60" />
-        <Container className="relative">
-          <div className="text-center">
-            <Reveal>
-              <Eyebrow align="center" className="text-navy-200">
-                {c.process.eyebrow}
-              </Eyebrow>
-            </Reveal>
-            <Reveal delay={0.08}>
-              <h2 className="mt-5 text-display-lg text-white">{c.process.title}</h2>
-            </Reveal>
-            <Reveal delay={0.14}>
-              <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-navy-100">
-                {c.process.lead}
-              </p>
-            </Reveal>
-          </div>
+      <ProcessTimeline
+        eyebrow={c.process.eyebrow}
+        title={c.process.title}
+        lead={c.process.lead}
+        steps={c.process.steps}
+        images={PROCESS_IMAGES}
+        ctaHref={href("/contact")}
+        ctaLabel={ui.header.cta}
+      />
 
-          <ol className="mx-auto mt-16 max-w-5xl">
-            {c.process.steps.map((step, i) => (
-              <li key={step.title}>
-                <Reveal>
-                  <div className="grid grid-cols-[3rem_1fr] gap-x-5 gap-y-5 pb-12 last:pb-0 sm:gap-x-6">
-                    {/* Number + connecting line */}
-                    <div className="flex flex-col items-center">
-                      <span className="tabular inline-grid size-12 shrink-0 place-items-center rounded-full bg-gold-500 font-[family-name:var(--font-display)] text-lg font-bold text-navy-950">
-                        {i + 1}
-                      </span>
-                      {i < c.process.steps.length - 1 && (
-                        <span aria-hidden className="mt-2 w-px flex-1 bg-white/15" />
-                      )}
-                    </div>
-
-                    {/* Text + image */}
-                    <div className="grid gap-6 pt-1.5 lg:grid-cols-2 lg:items-center lg:gap-10">
-                      <div>
-                        <h3 className="text-xl text-white sm:text-2xl">
-                          {step.title}
-                        </h3>
-                        <p className="mt-3 leading-relaxed text-navy-100">
-                          {step.body}
-                        </p>
-                      </div>
-                      <div className="relative aspect-[16/10] overflow-hidden rounded-2xl border border-white/10">
-                        <Image
-                          src={PROCESS_IMAGES[i]}
-                          alt=""
-                          fill
-                          sizes="(min-width: 1024px) 40vw, 90vw"
-                          className="object-cover"
-                        />
-                        <div
-                          aria-hidden
-                          className="absolute inset-0 bg-gradient-to-t from-navy-950/30 to-transparent"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </Reveal>
-              </li>
-            ))}
-          </ol>
-
-          <Reveal delay={0.15}>
-            <div className="mt-14 flex justify-center">
-              <ButtonLink href={href("/contact")} size="lg">
-                {ui.header.cta}
-                <ArrowRight
-                  aria-hidden
-                  className="size-4 transition-transform duration-300 group-hover/btn:translate-x-1"
-                />
-              </ButtonLink>
-            </div>
-          </Reveal>
-        </Container>
-      </Section>
+      {/* ---------------- Our Work (slider) ---------------- */}
+      <OurWork
+        eyebrow={c.work.eyebrow}
+        title={c.work.title}
+        lead={c.work.lead}
+        viewAll={c.work.viewAll}
+        viewAllHref={href("/services")}
+        projects={c.work.projects}
+        images={WORK_SLIDES}
+      />
 
       {/* ---------------- Why choose (3 cards on blueprint) ---------------- */}
       <section className="relative isolate overflow-hidden bg-surface-muted py-20 sm:py-28 lg:py-32">
@@ -294,49 +241,6 @@ export default async function HomePage({
         </Container>
       </section>
 
-      {/* ---------------- Our Work ---------------- */}
-      <Section>
-        <Container>
-          <div className="flex flex-wrap items-end justify-between gap-8">
-            <SectionHeader
-              eyebrow={c.work.eyebrow}
-              title={c.work.title}
-              lead={c.work.lead}
-              maxWidth="max-w-2xl"
-            />
-            <Reveal delay={0.2}>
-              <ButtonLink href={href("/services")} variant="outline">
-                {c.work.viewAll}
-                <ArrowRight
-                  aria-hidden
-                  className="size-4 transition-transform duration-300 group-hover/btn:translate-x-1"
-                />
-              </ButtonLink>
-            </Reveal>
-          </div>
-
-          <RevealGroup className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {WORK_IMAGES.map((src, i) => (
-              <RevealItem key={i}>
-                <div className="group relative aspect-[4/3] overflow-hidden rounded-2xl">
-                  <Image
-                    src={src}
-                    alt=""
-                    fill
-                    sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw"
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                  <div
-                    aria-hidden
-                    className="absolute inset-0 bg-gradient-to-t from-navy-950/40 to-transparent"
-                  />
-                </div>
-              </RevealItem>
-            ))}
-          </RevealGroup>
-        </Container>
-      </Section>
-
       {/* ---------------- Companies Who Trust Us (constellation) ---------------- */}
       <section className="relative isolate overflow-hidden bg-navy-950 py-20 text-white sm:py-28 lg:py-32">
         <div aria-hidden className="absolute inset-0 bg-blueprint opacity-[0.06]" />
@@ -367,18 +271,18 @@ export default async function HomePage({
                 </RevealGroup>
 
                 {/* Center BT mark */}
-                <Reveal className="order-1 lg:order-2">
-                  <div className="relative grid size-40 place-items-center rounded-full bg-gradient-to-b from-sky-400 via-blue-600 to-blue-900 shadow-[0_20px_70px_-15px_rgba(37,99,235,0.6)] sm:size-52">
+                <Reveal className="order-1 lg:order-2 lg:mx-3">
+                  <div className="relative grid size-44 place-items-center rounded-full bg-gradient-to-b from-sky-400 via-blue-600 to-blue-900 shadow-[0_20px_70px_-15px_rgba(37,99,235,0.6)] sm:size-56">
                     <div
                       aria-hidden
                       className="absolute inset-0 rounded-full ring-1 ring-inset ring-white/25"
                     />
                     <Image
-                      src="/logo-mark.png"
+                      src="/logo-mark-trim.png"
                       alt="Builders Tech"
-                      width={900}
-                      height={818}
-                      className="w-24 brightness-0 invert sm:w-28"
+                      fill
+                      sizes="224px"
+                      className="object-contain p-8 brightness-0 invert sm:p-10"
                     />
                   </div>
                 </Reveal>

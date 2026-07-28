@@ -38,7 +38,7 @@ export function HomeHero({ locale }: { locale: Locale }) {
   const copy = pages.home.hero;
 
   return (
-    <section className="relative isolate flex min-h-[100svh] items-end overflow-hidden bg-navy-950 text-white">
+    <section className="relative isolate flex min-h-[100svh] items-center overflow-hidden bg-navy-950 text-white">
       {/* Poster is the video's own first frame, so there is no visible switch
           when the clip starts — it just continues from the same image. It also
           covers reduced-motion users (the video is hidden for them). */}
@@ -81,7 +81,7 @@ export function HomeHero({ locale }: { locale: Locale }) {
         className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-gold-500/50 to-transparent"
       />
 
-      <Container className="relative pb-10 pt-24 sm:pb-12 sm:pt-28">
+      <Container className="relative pb-12 pt-24 sm:pb-14 sm:pt-28">
         <div className="grid items-center gap-6 lg:grid-cols-[1.25fr_0.75fr] lg:gap-8">
           {/* ---- Left: copy ---- */}
           <div>
@@ -128,13 +128,13 @@ export function HomeHero({ locale }: { locale: Locale }) {
                 `unoptimized` keeps it animating. */}
             <Reveal className="hidden lg:block">
               <Image
-                src="/animated-loop.gif"
+                src="/animated-crop.gif"
                 alt=""
                 aria-hidden
-                width={1280}
-                height={720}
+                width={640}
+                height={560}
                 unoptimized
-                className="w-[36rem] xl:w-[44rem] 2xl:w-[48rem] [filter:drop-shadow(0_12px_45px_rgba(37,99,235,0.45))]"
+                className="w-[40rem] xl:w-[46rem] 2xl:w-[50rem] [filter:drop-shadow(0_12px_45px_rgba(37,99,235,0.45))]"
               />
             </Reveal>
           </div>
@@ -142,7 +142,7 @@ export function HomeHero({ locale }: { locale: Locale }) {
 
         {/* ---- Actions: Schedule (left) + language phone lines (right) on one line ---- */}
         <Reveal delay={0.36}>
-          <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+          <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
             <ButtonLink href={`/${locale}/contact`} size="lg">
               {site.cta}
               <ArrowRight
@@ -152,7 +152,7 @@ export function HomeHero({ locale }: { locale: Locale }) {
             </ButtonLink>
 
             <div className="flex flex-wrap items-center gap-3">
-              <ButtonLink href={`tel:${site.phoneHref}`} size="lg">
+              <ButtonLink href={`tel:${site.phoneEnHref}`} size="lg">
                 <Phone aria-hidden className="size-4" />
                 {LOCALE_LABELS.en.native}
               </ButtonLink>
