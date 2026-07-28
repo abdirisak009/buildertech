@@ -16,7 +16,7 @@ const button = cva(
     variants: {
       variant: {
         primary:
-          "bg-gold-500 text-navy-950 hover:bg-gold-300 shadow-[0_6px_24px_-8px_rgba(255,186,8,0.7)] hover:shadow-[0_10px_32px_-8px_rgba(255,186,8,0.85)]",
+          "bg-orange-500 text-white hover:bg-orange-400 shadow-[0_6px_24px_-8px_rgba(249,115,22,0.7)] hover:shadow-[0_10px_32px_-8px_rgba(249,115,22,0.85)]",
         navy: "bg-neutral-900 text-white hover:bg-neutral-800 shadow-[0_6px_24px_-10px_rgba(0,0,0,0.8)]",
         outline:
           "border-2 border-current bg-transparent hover:bg-current/10",

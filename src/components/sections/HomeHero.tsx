@@ -1,10 +1,11 @@
 import Image from "next/image";
-import { ArrowRight, Phone, Star, ChevronRight } from "lucide-react";
+import { ArrowRight, Phone, Star } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { ButtonLink } from "@/components/ui/Button";
 import { Reveal, RevealGroup, RevealItem } from "@/components/motion/Reveal";
 import { Counter } from "@/components/motion/Counter";
 import { TypeText } from "@/components/motion/TypeText";
+import { FlowCycle } from "@/components/motion/FlowCycle";
 import { getContent } from "@/content";
 import { LOCALE_LABELS, type Locale } from "@/i18n/config";
 
@@ -85,13 +86,14 @@ export function HomeHero({ locale }: { locale: Locale }) {
           {/* ---- Left: copy ---- */}
           <div>
             <Reveal>
-              <h1 className="max-w-[16ch] text-[clamp(2.5rem,5.6vw,4.75rem)] leading-[1.05]">
+              <h1 className="max-w-[16ch] text-[clamp(2.25rem,4.6vw,3.75rem)] font-bold leading-[1.05] text-white">
                 {copy.titleBefore}
                 <br />
                 <TypeText
                   text={copy.titleAccent}
                   className="text-gold-500"
                   startDelay={550}
+                  loop
                 />
               </h1>
             </Reveal>
@@ -103,31 +105,8 @@ export function HomeHero({ locale }: { locale: Locale }) {
             </Reveal>
 
             {/* Architectural → Structural → Civil */}
-            <Reveal delay={0.22}>
-              <div className="mt-5 flex flex-wrap items-center gap-x-2 gap-y-2 font-[family-name:var(--font-display)] text-sm font-semibold tracking-tight">
-                {copy.flow.map((step, i) => (
-                  <span key={step} className="flex items-center gap-2">
-                    <span className={i === 1 ? "text-gold-500" : "text-white"}>
-                      {step}
-                    </span>
-                    {i < copy.flow.length - 1 && (
-                      <ChevronRight aria-hidden className="size-4 text-navy-300" />
-                    )}
-                  </span>
-                ))}
-              </div>
-            </Reveal>
-
-            <Reveal delay={0.3}>
-              <div className="mt-7 flex flex-wrap gap-3">
-                <ButtonLink href={`/${locale}/contact`} size="lg">
-                  {site.cta}
-                  <ArrowRight
-                    aria-hidden
-                    className="size-4 transition-transform duration-300 group-hover/btn:translate-x-1"
-                  />
-                </ButtonLink>
-              </div>
+            <Reveal delay={0.22} className="mt-5">
+              <FlowCycle steps={copy.flow} />
             </Reveal>
 
             <Reveal delay={0.38}>
@@ -143,37 +122,47 @@ export function HomeHero({ locale }: { locale: Locale }) {
             </Reveal>
           </div>
 
-          {/* ---- Right: animated mark + language phone lines ---- */}
-          <div className="flex flex-col items-center gap-5 lg:items-end">
+          {/* ---- Right: animated mark ---- */}
+          <div className="flex flex-col items-center gap-5">
             {/* Animated BT circuit mark (original blue). Transparent GIF →
                 `unoptimized` keeps it animating. */}
             <Reveal className="hidden lg:block">
               <Image
-                src="/animated.gif"
+                src="/animated-loop.gif"
                 alt=""
                 aria-hidden
                 width={1280}
                 height={720}
                 unoptimized
-                className="w-[30rem] xl:w-[36rem] 2xl:w-[40rem] [filter:drop-shadow(0_12px_45px_rgba(37,99,235,0.45))]"
+                className="w-[36rem] xl:w-[44rem] 2xl:w-[48rem] [filter:drop-shadow(0_12px_45px_rgba(37,99,235,0.45))]"
               />
-            </Reveal>
-
-            {/* Language phone lines */}
-            <Reveal delay={0.36} className="w-full lg:w-auto">
-              <div className="flex flex-wrap justify-center gap-3 lg:justify-end">
-                <ButtonLink href={`tel:${site.phoneHref}`} size="lg">
-                  <Phone aria-hidden className="size-4" />
-                  {LOCALE_LABELS.en.native}
-                </ButtonLink>
-                <ButtonLink href={`tel:${site.phoneEsHref}`} size="lg">
-                  <Phone aria-hidden className="size-4" />
-                  {LOCALE_LABELS.es.native}
-                </ButtonLink>
-              </div>
             </Reveal>
           </div>
         </div>
+
+        {/* ---- Actions: Schedule (left) + language phone lines (right) on one line ---- */}
+        <Reveal delay={0.36}>
+          <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+            <ButtonLink href={`/${locale}/contact`} size="lg">
+              {site.cta}
+              <ArrowRight
+                aria-hidden
+                className="size-4 transition-transform duration-300 group-hover/btn:translate-x-1"
+              />
+            </ButtonLink>
+
+            <div className="flex flex-wrap items-center gap-3">
+              <ButtonLink href={`tel:${site.phoneHref}`} size="lg">
+                <Phone aria-hidden className="size-4" />
+                {LOCALE_LABELS.en.native}
+              </ButtonLink>
+              <ButtonLink href={`tel:${site.phoneEsHref}`} size="lg">
+                <Phone aria-hidden className="size-4" />
+                {LOCALE_LABELS.es.native}
+              </ButtonLink>
+            </div>
+          </div>
+        </Reveal>
 
         <RevealGroup
           as="div"

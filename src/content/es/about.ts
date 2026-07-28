@@ -114,7 +114,7 @@ export const TEAM: TeamMember[] = [
     bio: "La maga de la tecnología del equipo. Mantiene nuestros sistemas, herramientas de IA y flujos de trabajo funcionando sin problemas para que el resto del equipo pueda concentrarse en diseñar, calcular y atender a nuestros clientes. Formación en administración de empresas, mejora de procesos y diseño de sistemas.",
   },
   {
-    name: "Daniela A.",
+    name: "Tania A.",
     role: "Ventas y Gerente de Proyecto",
     photo: "/teams/daniela-a.jpeg",
     bio: "Su guía de referencia desde la primera conversación hasta la aprobación del permiso. Con experiencia en diseño civil y construcción residencial, ayuda a que el proceso sea simple y sin estrés.",

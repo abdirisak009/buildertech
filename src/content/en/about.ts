@@ -114,7 +114,7 @@ export const TEAM: TeamMember[] = [
     bio: "The tech wizard of the team. Keeps our systems, AI tools and workflows running smoothly so the rest of the team can focus on designing, engineering and serving our clients. Background in business management, process improvement and system design.",
   },
   {
-    name: "Daniela A.",
+    name: "Tania A.",
     role: "Sales & Project Manager",
     photo: "/teams/daniela-a.jpeg",
     bio: "Your go-to guide from the first conversation to permit approval. With a background in civil design and residential construction, she helps make the process simple and stress-free.",

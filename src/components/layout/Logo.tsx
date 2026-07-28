@@ -34,19 +34,19 @@ export function Logo({
       className={cn("inline-flex shrink-0 items-center", className)}
     >
       <Image
-        src="/logo-mark.png"
+        src="/logo-mark-trim.png"
         alt="Builders Tech"
-        width={900}
-        height={818}
+        width={228}
+        height={203}
         priority={priority}
         className={cn(
-          "h-14 w-auto sm:h-16",
+          "h-12 w-auto sm:h-14",
           variant === "onDark" && "brightness-0 invert",
           variant === "auto" && "dark:brightness-0 dark:invert",
-          // Original navy + gold mark over the hero media, with a soft halo so
-          // the navy still reads on darker frames.
+          // Solid white mark over the hero media, with a soft shadow so it lifts
+          // off the footage cleanly.
           variant === "onMedia" &&
-            "[filter:drop-shadow(0_0_7px_rgba(255,255,255,0.6))_drop-shadow(0_1px_2px_rgba(0,0,0,0.45))]",
+            "[filter:brightness(0)_invert(1)_drop-shadow(0_2px_6px_rgba(0,0,0,0.55))]",
         )}
       />
     </Link>

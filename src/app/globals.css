@@ -39,6 +39,13 @@
   --color-gold-800: #7a5400;
   --color-gold-900: #4d3500;
 
+  /* ---- Brand: orange (button / CTA accent) ---- */
+  --color-orange-100: #ffe9d5;
+  --color-orange-300: #ffb066;
+  --color-orange-400: #ff9838;
+  --color-orange-500: #f97316; /* CTA button */
+  --color-orange-600: #ea580c;
+
   /* ---- Neutrals tuned to the navy ---- */
   --color-ink-50: #f7f8fb;
   --color-ink-100: #eef0f6;

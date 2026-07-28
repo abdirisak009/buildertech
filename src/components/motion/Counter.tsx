@@ -15,7 +15,7 @@ export function Counter({
   duration?: number;
 }) {
   const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, amount: 0.4 });
+  const inView = useInView(ref, { once: false, amount: 0.4 });
   const reduced = useReducedMotion();
   const [progressValue, setProgressValue] = useState(0);
 

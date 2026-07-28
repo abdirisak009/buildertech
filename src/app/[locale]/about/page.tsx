@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { MapPin, Star } from "lucide-react";
-
 import { Container } from "@/components/ui/Container";
 import { Section, SectionHeader, Eyebrow } from "@/components/ui/Section";
 import { PageHero } from "@/components/ui/PageHero";
@@ -42,10 +40,7 @@ export default async function AboutPage({
     stats,
     story,
     philosophy,
-    whatWeOffer,
     whyChooseUs,
-    testimonials,
-    reviewPlatforms,
     team,
   } = getContent(locale);
   const d = pages.about;
@@ -146,30 +141,6 @@ export default async function AboutPage({
         </Container>
       </Section>
 
-      {/* ---------------- What we offer ---------------- */}
-      <Section tone="muted">
-        <Container>
-          <SectionHeader
-            eyebrow={d.whatWeOffer.eyebrow}
-            title={d.whatWeOffer.title}
-            lead={d.whatWeOffer.lead}
-          />
-
-          <RevealGroup className="mt-16 grid gap-5 sm:grid-cols-2">
-            {whatWeOffer.map((item) => (
-              <RevealItem key={item.title} as="article" className="h-full">
-                <div className="h-full rounded-2xl border border-border bg-surface p-8">
-                  <h3 className="text-xl">{item.title}</h3>
-                  <p className="mt-4 leading-relaxed text-muted-foreground">
-                    {item.body}
-                  </p>
-                </div>
-              </RevealItem>
-            ))}
-          </RevealGroup>
-        </Container>
-      </Section>
-
       {/* ---------------- Why choose us ---------------- */}
       <Section>
         <Container>
@@ -193,95 +164,6 @@ export default async function AboutPage({
               </RevealItem>
             ))}
           </RevealGroup>
-        </Container>
-      </Section>
-
-      {/* ---------------- Reviews ---------------- */}
-      <Section tone="muted">
-        <Container>
-          <div className="grid gap-14 lg:grid-cols-[1fr_1.2fr] lg:gap-20">
-            <div>
-              <Reveal>
-                <Eyebrow>{d.reviews.eyebrow}</Eyebrow>
-              </Reveal>
-              <Reveal delay={0.08}>
-                <h2 className="mt-5 text-display-lg">{d.reviews.title}</h2>
-              </Reveal>
-              <Reveal delay={0.14}>
-                <div className="mt-6 flex items-center gap-2">
-                  <span
-                    aria-hidden
-                    className="flex items-center gap-1 text-gold-500"
-                  >
-                    {[0, 1, 2, 3, 4].map((i) => (
-                      <Star key={i} className="size-5 fill-current" />
-                    ))}
-                  </span>
-                  <span className="text-sm text-muted-foreground">
-                    {d.reviews.average}
-                  </span>
-                </div>
-              </Reveal>
-              <Reveal delay={0.2}>
-                <ul className="mt-8 flex flex-wrap gap-2.5">
-                  {reviewPlatforms.map((platform) => (
-                    <li key={platform}>
-                      <span className="inline-flex min-h-11 items-center rounded-full border border-border-strong px-5 text-sm text-muted-foreground">
-                        {platform}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </Reveal>
-            </div>
-
-            <RevealGroup as="ul" className="space-y-5">
-              {testimonials.map((testimonial) => (
-                <RevealItem as="li" key={testimonial.quote}>
-                  <figure className="rounded-2xl border border-border bg-surface p-8">
-                    <span
-                      aria-hidden
-                      className="flex items-center gap-1 text-gold-500"
-                    >
-                      {[0, 1, 2, 3, 4].map((i) => (
-                        <Star key={i} className="size-4 fill-current" />
-                      ))}
-                    </span>
-                    <blockquote className="mt-5">
-                      <p className="text-lg leading-relaxed">
-                        &ldquo;{testimonial.quote}&rdquo;
-                      </p>
-                    </blockquote>
-                    <figcaption className="mt-6 text-sm text-subtle-foreground">
-                      {testimonial.author} — {testimonial.context}
-                    </figcaption>
-                  </figure>
-                </RevealItem>
-              ))}
-            </RevealGroup>
-          </div>
-        </Container>
-      </Section>
-
-      {/* ---------------- Service area ---------------- */}
-      <Section>
-        <Container>
-          <Reveal>
-            <div className="flex max-w-3xl flex-col gap-5 rounded-2xl border border-border bg-surface p-8 sm:flex-row sm:items-start sm:gap-6 sm:p-10">
-              <span className="inline-grid size-14 shrink-0 place-items-center rounded-xl bg-gold-500/15 text-gold-700 dark:text-gold-400">
-                <MapPin aria-hidden className="size-7" strokeWidth={1.75} />
-              </span>
-              <div>
-                <h2 className="text-display-md">{d.serviceArea.title}</h2>
-                <p className="mt-4 leading-relaxed text-muted-foreground">
-                  {site.serviceArea}
-                </p>
-                <p className="mt-4 text-sm text-subtle-foreground">
-                  {d.serviceArea.officeLabel} {site.address.full}
-                </p>
-              </div>
-            </div>
-          </Reveal>
         </Container>
       </Section>
 
@@ -309,13 +191,13 @@ export default async function AboutPage({
             {team.map((member) => (
               <RevealItem key={member.name} as="article" className="h-full">
                 <div className="flex h-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03] transition-[transform,border-color] duration-400 ease-[cubic-bezier(0.22,0.61,0.36,1)] hover:-translate-y-1.5 hover:border-gold-500/50">
-                  <div className="relative aspect-[5/4] overflow-hidden">
+                  <div className="relative aspect-[4/5] overflow-hidden">
                     <Image
                       src={member.photo}
                       alt={member.name}
                       fill
                       sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw"
-                      className="object-cover object-top"
+                      className="object-cover object-center"
                     />
                   </div>
                   <div className="flex flex-1 flex-col p-6">

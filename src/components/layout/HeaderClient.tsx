@@ -8,7 +8,6 @@ import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Container } from "@/components/ui/Container";
 import { Logo } from "./Logo";
-import { ThemeToggle } from "./ThemeToggle";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { DesktopNav } from "./DesktopNav";
 import { MobileNav } from "./MobileNav";
@@ -109,14 +108,6 @@ export function HeaderClient({
                 label={ui.language.label}
                 switchTo={ui.language.switchTo}
                 onDark={!solid}
-              />
-
-              <ThemeToggle
-                lightLabel={ui.a11y.toLightMode}
-                darkLabel={ui.a11y.toDarkMode}
-                className={cn(
-                  !solid && "border-white/25 text-white hover:bg-white/10",
-                )}
               />
 
               <button
