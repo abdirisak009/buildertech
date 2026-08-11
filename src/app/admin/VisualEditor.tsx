@@ -13,6 +13,8 @@ const routes = [
   ["Renderings","/services/renderings"],["Architectural plans","/services/architectural-plans"],["Structural plans","/services/structural-plans"],
   ["Civil plans","/services/civil-plans"],["Stop work orders","/services/stop-work-orders"],["Project management","/services/project-management"],["Design & build","/services/construction"],
   ["Products","/products"],["Stock plans","/products/stock-plans"],["Blog","/blog"],["IRC code updates","/blog/irc-code-updates"],["Design trends","/blog/design-trends"],
+  ["Article: Latest IRC cycle","/blog/irc-code-updates/what-the-latest-irc-cycle-changes-for-georgia-homes"],["Article: Reading a code comment","/blog/irc-code-updates/reading-a-code-comment-without-panicking"],
+  ["Article: Atlanta design trends","/blog/design-trends/what-atlanta-clients-are-asking-for-in-2026"],["Article: Outdoor structures","/blog/design-trends/why-outdoor-structures-are-worth-drawing-properly"],
   ["Careers","/careers"],["Open positions","/careers/open-positions"],["Internships","/careers/internships"],["Contact","/contact"],
   ["FAQ","/faq"],["Resources","/resources"],["Become a partner","/become-a-partner"],["Privacy policy","/privacy-policy"],["Terms of use","/terms-of-use"],
 ] as const;
