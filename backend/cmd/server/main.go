@@ -206,7 +206,25 @@ func (a *App) seed() error {
 			return err
 		}
 	}
-	defaults := []Setting{{Key: "site_name", Value: "BuildersTech", Group: "general", Label: "Site name"}, {Key: "contact_email", Value: "info@builderstech.com", Group: "contact", Label: "Contact email"}, {Key: "contact_phone", Value: "", Group: "contact", Label: "Contact phone"}, {Key: "seo_title", Value: "BuildersTech", Group: "seo", Label: "Default SEO title"}, {Key: "seo_description", Value: "Engineering, architecture and construction technology.", Group: "seo", Label: "SEO description"}}
+	defaults := []Setting{
+		{Key: "site_name", Value: "BuildersTech", Group: "branding", Label: "Brand name"},
+		{Key: "logo_url", Value: "/logo.png", Group: "branding", Label: "Main logo URL"},
+		{Key: "brand_primary", Value: "#0a2472", Group: "branding", Label: "Primary brand color"},
+		{Key: "brand_accent", Value: "#e87838", Group: "branding", Label: "Accent and button color"},
+		{Key: "brand_dark", Value: "#071027", Group: "branding", Label: "Dark background color"},
+		{Key: "contact_email", Value: "info@builderstech.com", Group: "contact", Label: "Contact email"},
+		{Key: "contact_phone", Value: "", Group: "contact", Label: "Primary phone number"},
+		{Key: "whatsapp_number", Value: "", Group: "contact", Label: "WhatsApp number"},
+		{Key: "office_address", Value: "Stone Mountain, Georgia", Group: "contact", Label: "Office address"},
+		{Key: "office_hours", Value: "Monday–Friday, 9:00 AM–5:00 PM", Group: "contact", Label: "Office hours"},
+		{Key: "facebook_url", Value: "", Group: "social", Label: "Facebook URL"},
+		{Key: "instagram_url", Value: "", Group: "social", Label: "Instagram URL"},
+		{Key: "linkedin_url", Value: "", Group: "social", Label: "LinkedIn URL"},
+		{Key: "youtube_url", Value: "", Group: "social", Label: "YouTube URL"},
+		{Key: "x_url", Value: "", Group: "social", Label: "X / Twitter URL"},
+		{Key: "seo_title", Value: "BuildersTech", Group: "seo", Label: "Default SEO title"},
+		{Key: "seo_description", Value: "Engineering, architecture and construction technology.", Group: "seo", Label: "SEO description"},
+	}
 	for _, s := range defaults {
 		var n int64
 		a.DB.Model(&Setting{}).Where("key = ?", s.Key).Count(&n)
@@ -516,7 +534,7 @@ func (a *App) listSettings(c *gin.Context) {
 }
 func (a *App) publicSettings(c *gin.Context) {
 	var rows []Setting
-	a.DB.Where("\"group\" IN ?", []string{"general", "contact", "social", "seo"}).Find(&rows)
+	a.DB.Where("\"group\" IN ?", []string{"general", "branding", "contact", "social", "seo"}).Find(&rows)
 	out := map[string]string{}
 	for _, x := range rows {
 		out[x.Key] = x.Value
@@ -563,7 +581,7 @@ func (a *App) upsertOverride(c *gin.Context) {
 		fail(c, 400, "Page path and content key are required")
 		return
 	}
-	if in.Kind != "image" {
+	if in.Kind != "image" && in.Kind != "background" && in.Kind != "video" {
 		in.Kind = "text"
 	}
 	var item PageOverride

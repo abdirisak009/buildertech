@@ -3,7 +3,8 @@
 import { useEffect } from "react";
 import { API_URL } from "@/lib/api/client";
 
-type Override = { id:string; path:string; key:string; kind:"text"|"image"; value:string; alt:string };
+type MediaKind = "image"|"background"|"video";
+type Override = { id:string; path:string; key:string; kind:"text"|MediaKind; value:string; alt:string };
 
 const apiOrigin = API_URL.replace(/\/api\/v1\/?$/, "");
 const blockedTags = new Set(["SCRIPT","STYLE","NOSCRIPT","TEXTAREA","INPUT","SELECT","OPTION","SVG","PATH"]);
@@ -25,6 +26,7 @@ function resolveAsset(value:string) {
   if (!value || /^(https?:|data:|blob:)/.test(value)) return value;
   return value.startsWith("/storage/") || value.startsWith("/uploads/") ? `${apiOrigin}${value}` : value;
 }
+function backgroundUrl(value:string){return value.match(/url\(["']?(.*?)["']?\)/)?.[1]||""}
 
 export function VisualContent() {
   useEffect(() => {
@@ -43,19 +45,38 @@ export function VisualContent() {
       span.appendChild(node);
     });
     Array.from(surface.querySelectorAll<HTMLImageElement>("img")).forEach((img,index) => {
-      img.dataset.cmsKey = `image:${index}`;
+      const key=`image:${index}`;
+      img.dataset.cmsKey = key;
       img.dataset.cmsKind = "image";
       img.dataset.cmsOriginal = img.getAttribute("src") || "";
+      img.dataset.cmsCurrent = img.dataset.cmsOriginal;
+      if(getComputedStyle(img).pointerEvents==="none"&&img.parentElement){img.parentElement.dataset.cmsKey=key;img.parentElement.dataset.cmsKind="image";img.parentElement.dataset.cmsCurrent=img.dataset.cmsOriginal}
+    });
+    Array.from(surface.querySelectorAll<HTMLVideoElement>("video")).forEach((video,index)=>{
+      video.dataset.cmsKey=`video:${index}`;video.dataset.cmsKind="video";video.dataset.cmsOriginal=video.currentSrc||video.getAttribute("src")||video.querySelector("source")?.getAttribute("src")||"";video.dataset.cmsCurrent=video.dataset.cmsOriginal;
+      if(video.parentElement){video.parentElement.dataset.cmsKey=video.dataset.cmsKey;video.parentElement.dataset.cmsKind="video";video.parentElement.dataset.cmsCurrent=video.dataset.cmsOriginal}
+    });
+    let backgroundIndex=0;
+    Array.from(surface.querySelectorAll<HTMLElement>("*")).forEach(element=>{
+      if(element.dataset.cmsKey||element.closest("[data-cms-ignore]"))return;
+      const url=backgroundUrl(getComputedStyle(element).backgroundImage);
+      if(!url)return;
+      element.dataset.cmsKey=`background:${backgroundIndex++}`;element.dataset.cmsKind="background";element.dataset.cmsOriginal=url;element.dataset.cmsCurrent=url;
     });
 
     const apply = (item:Override) => {
-      const target = surface.querySelector<HTMLElement>(`[data-cms-key="${item.key}"]`);
-      if (!target) return;
-      target.dataset.cmsOverrideId = item.id;
-      if (item.kind === "image" && target instanceof HTMLImageElement) {
-        target.src = resolveAsset(item.value);
-        target.alt = item.alt || target.alt;
-      } else if (item.kind === "text") target.textContent = item.value;
+      const targets = surface.querySelectorAll<HTMLElement>(`[data-cms-key="${item.key}"]`);
+      targets.forEach(target=>{
+        target.dataset.cmsOverrideId=item.id;target.dataset.cmsCurrent=item.value;
+        if(item.kind==="image"){
+          const image=target instanceof HTMLImageElement?target:target.querySelector<HTMLImageElement>("img");
+          if(image){image.src=resolveAsset(item.value);image.removeAttribute("srcset");image.alt=item.alt||image.alt;image.dataset.cmsCurrent=item.value}
+        }else if(item.kind==="background")target.style.backgroundImage=`url("${resolveAsset(item.value)}")`;
+        else if(item.kind==="video"){
+          const video=target instanceof HTMLVideoElement?target:target.querySelector<HTMLVideoElement>("video");
+          if(video){video.src=resolveAsset(item.value);video.querySelectorAll("source").forEach(source=>source.remove());video.load();video.dataset.cmsCurrent=item.value}
+        }else target.textContent=item.value;
+      });
     };
 
     fetch(`${API_URL}/overrides?path=${encodeURIComponent(path)}`)
@@ -70,13 +91,15 @@ export function VisualContent() {
     document.documentElement.classList.add("cms-editing");
     const click = (rawEvent:Event) => {
       const event = rawEvent as MouseEvent;
-      const target = (event.target as Element).closest<HTMLElement>("[data-cms-key]");
-      if (!target || !surface.contains(target)) return;
-      event.preventDefault(); event.stopPropagation();
+      let target = (event.target as Element).closest<HTMLElement>("[data-cms-key]");
+      if(!target){const clickable=(event.target as Element).closest<HTMLElement>("a,button");target=clickable?.querySelector<HTMLElement>("[data-cms-key]")||null}
+      if (!target || !surface.contains(target)){if((event.target as Element).closest("a,button,form")){event.preventDefault();event.stopPropagation()}return}
+      event.preventDefault(); event.stopPropagation();event.stopImmediatePropagation();
       document.querySelectorAll(".cms-selected").forEach(x=>x.classList.remove("cms-selected"));
       target.classList.add("cms-selected");
-      const image = target instanceof HTMLImageElement;
-      window.parent.postMessage({type:"cms:select",path,key:target.dataset.cmsKey,kind:image?"image":"text",value:image?(target.getAttribute("src")||""):(target.textContent||""),alt:image?target.alt:"",overrideId:target.dataset.cmsOverrideId||""},window.location.origin);
+      const kind=(target.dataset.cmsKind||"text") as Override["kind"];
+      const image=target instanceof HTMLImageElement?target:target.querySelector<HTMLImageElement>("img");
+      window.parent.postMessage({type:"cms:select",path,key:target.dataset.cmsKey,kind,value:kind==="text"?(target.textContent||""):(target.dataset.cmsCurrent||target.dataset.cmsOriginal||""),alt:image?.alt||"",overrideId:target.dataset.cmsOverrideId||""},window.location.origin);
     };
     const message = (event:MessageEvent) => {
       if (event.origin !== window.location.origin || event.data?.type !== "cms:apply") return;

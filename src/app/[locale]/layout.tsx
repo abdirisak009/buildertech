@@ -9,6 +9,7 @@ import { LOCALES, isLocale, type Locale } from "@/i18n/config";
 import { getContent } from "@/content";
 import { getUi } from "@/i18n/ui";
 import { VisualContent } from "@/components/cms/VisualContent";
+import { GlobalSettings } from "@/components/cms/GlobalSettings";
 
 export function generateStaticParams() {
   return LOCALES.map((locale) => ({ locale }));
@@ -83,6 +84,7 @@ export default async function LocaleLayout({
               {children}
             </main>
             <Footer locale={typedLocale} />
+            <GlobalSettings />
             <VisualContent />
         </div>
       </IntakeProvider>
