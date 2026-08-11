@@ -7,7 +7,7 @@ srv1897056.hstgr.cloud {
 		-Server
 	}
 	@admin path /admin /admin/*
-	header @admin Cache-Control "no-store, no-cache, must-revalidate"
+	header @admin >Cache-Control "no-store, no-cache, must-revalidate"
 
 	handle /api/* {
 		reverse_proxy api:8080
