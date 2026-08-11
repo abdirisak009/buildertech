@@ -1,7 +1,7 @@
 "use client";
 
 import { ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
-import { Check, ChevronDown, Loader2, Monitor, MousePointer2, RefreshCw, RotateCcw, Smartphone, Upload } from "lucide-react";
+import { Check, ChevronDown, Loader2, Maximize2, Minimize2, Monitor, MousePointer2, RefreshCw, RotateCcw, Smartphone, Upload } from "lucide-react";
 import { API_URL, apiRequest } from "@/lib/api/client";
 
 type Selection = { path:string; key:string; kind:"text"|"image"|"background"|"video"; value:string; alt:string; overrideId:string };
@@ -22,7 +22,7 @@ const routes = [
 const origin = API_URL.replace(/\/api\/v1\/?$/,"");
 function assetUrl(url:string){return /^(https?:|data:|blob:)/.test(url)?url:`${origin}${url}`}
 
-export default function VisualEditor({token,flash}:{token:string;flash:(message:string)=>void}) {
+export default function VisualEditor({token,flash,focusMode,onFocusMode}:{token:string;flash:(message:string)=>void;focusMode:boolean;onFocusMode:(value:boolean)=>void}) {
   const [locale,setLocale]=useState("en"); const [slug,setSlug]=useState("");
   const [customPath,setCustomPath]=useState(""); const [selection,setSelection]=useState<Selection|null>(null);
   const [value,setValue]=useState(""); const [alt,setAlt]=useState(""); const [saving,setSaving]=useState(false);
@@ -45,7 +45,7 @@ export default function VisualEditor({token,flash}:{token:string;flash:(message:
   async function restore(){if(!selection?.overrideId)return;await apiRequest(`/admin/overrides/${selection.overrideId}`,{method:"DELETE"},token);flash("Original content restored");iframe.current?.contentWindow?.location.reload();setSelection(null)}
   async function upload(event:ChangeEvent<HTMLInputElement>){const file=event.target.files?.[0];if(!file)return;const body=new FormData();body.append("file",file);const item=await apiRequest<Media>("/admin/media",{method:"POST",body},token);setMedia(old=>[item,...old]);setValue(item.url);flash("Image uploaded — click Save changes");event.target.value=""}
 
-  return <div className="-m-5 flex h-[calc(100vh-5rem)] flex-col bg-slate-100 sm:-m-8">
+  return <div className={`${focusMode?"h-screen":"-m-5 h-[calc(100vh-5rem)] sm:-m-8"} flex flex-col bg-slate-100`}>
     <div className="flex flex-wrap items-center gap-3 border-b border-slate-200 bg-white px-4 py-3">
       <div className="flex items-center gap-2 rounded-xl bg-orange-50 px-3 py-2 text-sm font-bold text-orange-700"><MousePointer2 className="size-4"/>Visual editor</div>
       <label className="relative"><select value={locale} onChange={e=>{setLocale(e.target.value);setCustomPath("");setSelection(null);setReady(false)}} className="h-10 appearance-none rounded-xl border border-slate-200 bg-white pl-3 pr-9 text-sm font-semibold"><option value="en">English</option><option value="es">Español</option></select><ChevronDown className="pointer-events-none absolute right-3 top-3 size-4 text-slate-400"/></label>
@@ -53,6 +53,7 @@ export default function VisualEditor({token,flash}:{token:string;flash:(message:
       <input value={customPath} onChange={e=>{setCustomPath(e.target.value);setSelection(null);setReady(false)}} placeholder="Or enter any page path…" className="hidden h-10 min-w-56 rounded-xl border border-slate-200 px-3 text-sm outline-none focus:border-orange-400 xl:block"/>
       <div className="ml-auto flex items-center rounded-xl border border-slate-200 bg-slate-50 p-1"><button onClick={()=>setMobile(false)} className={`rounded-lg p-2 ${!mobile?"bg-white shadow-sm":"text-slate-400"}`}><Monitor className="size-4"/></button><button onClick={()=>setMobile(true)} className={`rounded-lg p-2 ${mobile?"bg-white shadow-sm":"text-slate-400"}`}><Smartphone className="size-4"/></button></div>
       <button onClick={()=>iframe.current?.contentWindow?.location.reload()} className="rounded-xl border border-slate-200 bg-white p-2.5 hover:bg-slate-50"><RefreshCw className="size-4"/></button>
+      <button onClick={()=>onFocusMode(!focusMode)} className="flex h-10 items-center gap-2 rounded-xl bg-[#071027] px-3 text-xs font-bold text-white hover:bg-slate-800">{focusMode?<><Minimize2 className="size-4"/>Exit focus</>:<><Maximize2 className="size-4"/>Focus mode</>}</button>
     </div>
     <div className="flex min-h-0 flex-1 gap-4 p-4">
       <div className="relative flex min-w-0 flex-1 justify-center overflow-hidden rounded-2xl border border-slate-200 bg-slate-300/60 shadow-inner">
