@@ -10,6 +10,7 @@ import { getContent } from "@/content";
 import { getUi } from "@/i18n/ui";
 import { VisualContent } from "@/components/cms/VisualContent";
 import { GlobalSettings } from "@/components/cms/GlobalSettings";
+import { DynamicContent } from "@/components/cms/DynamicContent";
 
 export function generateStaticParams() {
   return LOCALES.map((locale) => ({ locale }));
@@ -82,6 +83,7 @@ export default async function LocaleLayout({
             <Header locale={typedLocale} />
             <main id="main" className="flex-1 overflow-x-clip">
               {children}
+              <DynamicContent locale={typedLocale} />
             </main>
             <Footer locale={typedLocale} />
             <GlobalSettings />

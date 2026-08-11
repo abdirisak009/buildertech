@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"log"
@@ -166,6 +167,7 @@ func main() {
 	api := r.Group("/api/v1")
 	api.POST("/auth/login", app.login)
 	api.POST("/leads", app.createLead)
+	api.GET("/content", app.publicContents)
 	api.GET("/content/:locale/:key", app.publicContent)
 	api.GET("/settings/public", app.publicSettings)
 	api.GET("/overrides", app.publicOverrides)
@@ -231,6 +233,29 @@ func (a *App) seed() error {
 		if n == 0 {
 			a.DB.Create(&s)
 		}
+	}
+	var imported int64
+	a.DB.Model(&Setting{}).Where("key = ?", "cms_logos_imported").Count(&imported)
+	if imported == 0 {
+		logos := []struct{ Name, Image string }{
+			{"TrustDALE Certified", "/logos/trustdale.jpg"}, {"Division 31 Construction", "/logos/division-31.jpeg"},
+			{"33 North Homes & Construction", "/logos/33-north.png"}, {"Audubon Place Properties", "/logos/audubon-place.png"},
+			{"Advanced Renovations", "/logos/advanced-renovations.png"}, {"Better Homes and Gardens Real Estate", "/logos/better-homes.png"},
+			{"BIG", "/logos/big.png"}, {"Contractors Corner of Atlanta", "/logos/contractors-corner.png"},
+			{"AM Consulting & Hauling", "/logos/am-consulting.jpg"}, {"GFS", "/logos/gfs-logo.jpg"},
+			{"Southeast Restoration", "/logos/southeast-restoration.png"}, {"Ben Hill Renovations", "/logos/ben-hill.png"},
+			{"Neil Engineering Inc.", "/logos/neil-engineering.png"}, {"MainStreet Renewal", "/logos/mainstreet-renewal.png"},
+			{"Keller Williams Georgia Communities", "/logos/keller-williams.png"}, {"eXp Realty", "/logos/exp-realty.png"},
+			{"Coldwell Banker Realty", "/logos/coldwell-banker.png"}, {"Delta Carpet & Decor", "/logos/delta-carpet.png"},
+			{"Y Studio", "/logos/y-studio.png"},
+		}
+		for _, locale := range []string{"en", "es"} {
+			for index, logo := range logos {
+				data, _ := json.Marshal(map[string]string{"image": logo.Image, "website": ""})
+				a.DB.Create(&Content{Locale: locale, Key: fmt.Sprintf("client-logo-%02d", index+1), Title: logo.Name, Type: "logo", Status: "published", Data: string(data)})
+			}
+		}
+		a.DB.Create(&Setting{Key: "cms_logos_imported", Value: "true", Group: "system", Label: "Legacy logos imported"})
 	}
 	return nil
 }
@@ -391,6 +416,18 @@ func (a *App) publicContent(c *gin.Context) {
 		return
 	}
 	respond(c, 200, x)
+}
+func (a *App) publicContents(c *gin.Context) {
+	var rows []Content
+	q := a.DB.Where("status = ?", "published")
+	if locale := c.Query("locale"); locale != "" {
+		q = q.Where("locale = ?", locale)
+	}
+	if types := strings.TrimSpace(c.Query("types")); types != "" {
+		q = q.Where("type IN ?", strings.Split(types, ","))
+	}
+	q.Order("created_at asc").Find(&rows)
+	respond(c, 200, rows)
 }
 
 func (a *App) createLead(c *gin.Context) {
