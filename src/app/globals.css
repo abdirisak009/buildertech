@@ -66,6 +66,21 @@
   --ease-brand: cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
+.cms-editing [data-cms-key] {
+  cursor: pointer !important;
+  outline: 2px dashed transparent;
+  outline-offset: 3px;
+  transition: outline-color 150ms ease, box-shadow 150ms ease;
+}
+.cms-editing [data-cms-key]:hover {
+  outline-color: #f97316;
+  box-shadow: 0 0 0 5px rgb(249 115 22 / 0.14);
+}
+.cms-editing [data-cms-key].cms-selected {
+  outline: 3px solid #f97316;
+  box-shadow: 0 0 0 7px rgb(249 115 22 / 0.2);
+}
+
 /* ------------------------------------------------------------
    Semantic tokens (light + dark)
    ------------------------------------------------------------ */

@@ -8,6 +8,7 @@ import { IntakeProvider } from "@/components/intake/IntakeProvider";
 import { LOCALES, isLocale, type Locale } from "@/i18n/config";
 import { getContent } from "@/content";
 import { getUi } from "@/i18n/ui";
+import { VisualContent } from "@/components/cms/VisualContent";
 
 export function generateStaticParams() {
   return LOCALES.map((locale) => ({ locale }));
@@ -70,7 +71,7 @@ export default async function LocaleLayout({
   return (
     <ThemeProvider>
       <IntakeProvider locale={typedLocale}>
-        <div className="flex min-h-screen flex-col bg-background text-foreground">
+        <div data-cms-surface className="flex min-h-screen flex-col bg-background text-foreground">
             <a
               href="#main"
               className="sr-only rounded-full bg-gold-500 px-6 py-3 font-semibold text-navy-950 focus:not-sr-only focus:fixed focus:left-5 focus:top-5 focus:z-[100]"
@@ -82,6 +83,7 @@ export default async function LocaleLayout({
               {children}
             </main>
             <Footer locale={typedLocale} />
+            <VisualContent />
         </div>
       </IntakeProvider>
     </ThemeProvider>

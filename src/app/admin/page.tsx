@@ -2,10 +2,11 @@
 
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import { BarChart3, Bell, ChevronRight, FileText, FolderOpen, ImagePlus, Inbox, LayoutDashboard, Loader2, LogOut, Menu, Plus, Search, Settings, Sparkles, Trash2, Upload, Users, X } from "lucide-react";
+import { BarChart3, Bell, ChevronRight, FileText, FolderOpen, Globe2, ImagePlus, Inbox, LayoutDashboard, Loader2, LogOut, Menu, Plus, Search, Settings, Sparkles, Trash2, Upload, Users, X } from "lucide-react";
 import { API_URL, apiRequest } from "@/lib/api/client";
+import VisualEditor from "./VisualEditor";
 
-type Tab = "overview" | "content" | "leads" | "media" | "settings";
+type Tab = "overview" | "pages" | "content" | "leads" | "media" | "settings";
 type Dashboard = { contents:number; leads:number; newLeads:number; media:number; recentLeads:Lead[] };
 type Content = { id:string; locale:string; key:string; title:string; type:string; status:string; data:string; updatedAt:string };
 type Lead = { id:string; name:string; email:string; phone:string; company:string; projectType:string; services:string; message:string; status:string; notes:string; createdAt:string };
@@ -14,6 +15,7 @@ type Setting = { id:string; key:string; value:string; group:string; label:string
 
 const nav = [
   ["overview", "Overview", LayoutDashboard], ["content", "Content", FileText],
+  ["pages", "Visual page editor", Globe2],
   ["leads", "Project leads", Inbox], ["media", "Media library", FolderOpen],
   ["settings", "Site settings", Settings],
 ] as const;
@@ -44,7 +46,7 @@ function Admin({token,onLogout}:{token:string;onLogout:()=>void}){
   return <div className="min-h-screen bg-[#f4f6fa] text-slate-900">
     <aside className={`fixed inset-y-0 left-0 z-40 w-72 bg-[#071027] p-5 text-white transition-transform lg:translate-x-0 ${mobile?"translate-x-0":"-translate-x-full"}`}><div className="flex h-16 items-center justify-between"><Image src="/logo.png" alt="BuildersTech" width={180} height={56} className="h-auto w-44 brightness-0 invert"/><button className="lg:hidden" onClick={()=>setMobile(false)}><X/></button></div><nav className="mt-10 space-y-2">{nav.map(([id,label,Icon])=><button key={id} onClick={()=>{setTab(id);setMobile(false)}} className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm font-semibold transition ${tab===id?"bg-orange-400 text-[#071027]":"text-slate-300 hover:bg-white/10 hover:text-white"}`}><Icon className="size-5"/>{label}</button>)}</nav><div className="absolute inset-x-5 bottom-6 rounded-2xl border border-white/10 bg-white/5 p-4"><p className="text-xs uppercase tracking-widest text-slate-500">Signed in</p><p className="mt-1 text-sm font-semibold">Website administrator</p><button onClick={onLogout} className="mt-4 flex items-center gap-2 text-sm text-slate-400 hover:text-white"><LogOut className="size-4"/>Sign out</button></div></aside>
     <main className="lg:pl-72"><header className="sticky top-0 z-20 flex h-20 items-center justify-between border-b border-slate-200 bg-white/90 px-5 backdrop-blur-xl sm:px-8"><div className="flex items-center gap-3"><button onClick={()=>setMobile(true)} className="rounded-lg p-2 hover:bg-slate-100 lg:hidden"><Menu/></button><div><p className="text-xs font-bold uppercase tracking-[.18em] text-orange-600">BuildersTech CMS</p><h1 className="text-xl font-bold capitalize">{nav.find(x=>x[0]===tab)?.[1]}</h1></div></div><div className="flex items-center gap-3"><a href="/en" target="_blank" className="hidden rounded-xl border border-slate-200 px-4 py-2 text-sm font-semibold hover:bg-slate-50 sm:block">View website</a><button className="relative rounded-xl border border-slate-200 p-2.5"><Bell className="size-5"/><i className="absolute right-2 top-2 size-2 rounded-full bg-orange-500"/></button></div></header>
-      <div className="p-5 sm:p-8">{tab==="overview"&&<Overview token={token}/>} {tab==="content"&&<Contents token={token} flash={flash}/>} {tab==="leads"&&<Leads token={token} flash={flash}/>} {tab==="media"&&<MediaLibrary token={token} flash={flash}/>} {tab==="settings"&&<SiteSettings token={token} flash={flash}/>}</div>
+      <div className="p-5 sm:p-8">{tab==="overview"&&<Overview token={token}/>} {tab==="pages"&&<VisualEditor token={token} flash={flash}/>} {tab==="content"&&<Contents token={token} flash={flash}/>} {tab==="leads"&&<Leads token={token} flash={flash}/>} {tab==="media"&&<MediaLibrary token={token} flash={flash}/>} {tab==="settings"&&<SiteSettings token={token} flash={flash}/>}</div>
     </main>{notice&&<div className="fixed bottom-6 right-6 z-50 rounded-xl bg-[#071027] px-5 py-3 text-sm font-semibold text-white shadow-xl">{notice}</div>}
   </div>
 }

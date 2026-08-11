@@ -93,6 +93,14 @@ type Setting struct {
 	Group string `json:"group" gorm:"index"`
 	Label string `json:"label"`
 }
+type PageOverride struct {
+	Base
+	Path  string `json:"path" gorm:"index:idx_page_override,unique"`
+	Key   string `json:"key" gorm:"index:idx_page_override,unique"`
+	Kind  string `json:"kind" gorm:"default:text"`
+	Value string `json:"value" gorm:"type:text"`
+	Alt   string `json:"alt" gorm:"type:text"`
+}
 
 type App struct {
 	DB        *gorm.DB
@@ -119,7 +127,7 @@ func main() {
 	if err != nil {
 		log.Fatal("database connection failed: ", err)
 	}
-	if err = db.AutoMigrate(&User{}, &Content{}, &Media{}, &Lead{}, &Setting{}); err != nil {
+	if err = db.AutoMigrate(&User{}, &Content{}, &Media{}, &Lead{}, &Setting{}, &PageOverride{}); err != nil {
 		log.Fatal(err)
 	}
 	app := &App{DB: db, JWTSecret: []byte(env("JWT_SECRET", "development-secret-change-me")), UploadDir: env("UPLOAD_DIR", "./uploads")}
@@ -160,6 +168,7 @@ func main() {
 	api.POST("/leads", app.createLead)
 	api.GET("/content/:locale/:key", app.publicContent)
 	api.GET("/settings/public", app.publicSettings)
+	api.GET("/overrides", app.publicOverrides)
 	admin := api.Group("/admin", app.auth())
 	admin.GET("/me", app.me)
 	admin.GET("/dashboard", app.dashboard)
@@ -176,6 +185,9 @@ func main() {
 	admin.DELETE("/media/:id", app.deleteMedia)
 	admin.GET("/settings", app.listSettings)
 	admin.PUT("/settings/:key", app.upsertSetting)
+	admin.GET("/overrides", app.listOverrides)
+	admin.PUT("/overrides", app.upsertOverride)
+	admin.DELETE("/overrides/:id", app.deleteOverride)
 	admin.GET("/users", app.listUsers)
 	admin.POST("/users", app.createUser)
 	admin.PATCH("/users/:id", app.updateUser)
@@ -510,6 +522,77 @@ func (a *App) publicSettings(c *gin.Context) {
 		out[x.Key] = x.Value
 	}
 	respond(c, 200, out)
+}
+
+func (a *App) publicOverrides(c *gin.Context) {
+	path := strings.TrimSpace(c.Query("path"))
+	if path == "" || !strings.HasPrefix(path, "/") {
+		fail(c, 400, "A valid page path is required")
+		return
+	}
+	var items []PageOverride
+	a.DB.Where("path = ?", path).Order("key asc").Find(&items)
+	respond(c, 200, items)
+}
+
+func (a *App) listOverrides(c *gin.Context) {
+	var items []PageOverride
+	query := a.DB.Order("path asc, key asc")
+	if path := strings.TrimSpace(c.Query("path")); path != "" {
+		query = query.Where("path = ?", path)
+	}
+	query.Find(&items)
+	respond(c, 200, items)
+}
+
+func (a *App) upsertOverride(c *gin.Context) {
+	var in struct {
+		Path  string `json:"path"`
+		Key   string `json:"key"`
+		Kind  string `json:"kind"`
+		Value string `json:"value"`
+		Alt   string `json:"alt"`
+	}
+	if c.ShouldBindJSON(&in) != nil {
+		fail(c, 400, "Invalid content update")
+		return
+	}
+	in.Path = strings.TrimSpace(in.Path)
+	in.Key = strings.TrimSpace(in.Key)
+	if in.Path == "" || !strings.HasPrefix(in.Path, "/") || in.Key == "" {
+		fail(c, 400, "Page path and content key are required")
+		return
+	}
+	if in.Kind != "image" {
+		in.Kind = "text"
+	}
+	var item PageOverride
+	result := a.DB.Where("path = ? AND key = ?", in.Path, in.Key).First(&item)
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		item = PageOverride{Path: in.Path, Key: in.Key, Kind: in.Kind, Value: in.Value, Alt: in.Alt}
+		if err := a.DB.Create(&item).Error; err != nil {
+			fail(c, 500, "Could not save page content")
+			return
+		}
+	} else if result.Error != nil {
+		fail(c, 500, "Could not load page content")
+		return
+	} else {
+		item.Kind, item.Value, item.Alt = in.Kind, in.Value, in.Alt
+		if err := a.DB.Save(&item).Error; err != nil {
+			fail(c, 500, "Could not save page content")
+			return
+		}
+	}
+	respond(c, 200, item)
+}
+
+func (a *App) deleteOverride(c *gin.Context) {
+	if result := a.DB.Delete(&PageOverride{}, "id = ?", c.Param("id")); result.Error != nil {
+		fail(c, 500, "Could not restore original content")
+		return
+	}
+	respond(c, 200, gin.H{"deleted": true})
 }
 func (a *App) upsertSetting(c *gin.Context) {
 	var in Setting
