@@ -6,6 +6,8 @@ srv1897056.hstgr.cloud {
 		Referrer-Policy strict-origin-when-cross-origin
 		-Server
 	}
+	@admin path /admin /admin/*
+	header @admin Cache-Control "no-store, no-cache, must-revalidate"
 
 	handle /api/* {
 		reverse_proxy api:8080
