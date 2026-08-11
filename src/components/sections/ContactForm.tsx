@@ -15,6 +15,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
 import { getUi, type UiDict } from "@/i18n/ui";
 import type { Locale } from "@/i18n/config";
+import { apiRequest } from "@/lib/api/client";
 
 type FieldName =
   | "language"
@@ -234,13 +235,28 @@ export function ContactForm({
 
     setStatus("sending");
 
-    // TODO: point this at your backend route or form service (Resend, Formspree…).
-    await new Promise((r) => setTimeout(r, 1100));
+    const payload: Record<string, string> = {};
+    for (const [key, value] of data.entries()) {
+      if (key !== "upload" && key !== "services") payload[key] = String(value);
+    }
+    payload.services = selectedServices;
+    payload.language = payload.language || locale;
+    if (payload.projectTypeOther) {
+      payload.projectType = `${payload.projectType}: ${payload.projectTypeOther}`;
+    }
 
-    setStatus("sent");
-    form.reset();
-    setProjectType("");
-    setFileName(null);
+    try {
+      await apiRequest("/leads", {
+        method: "POST",
+        body: JSON.stringify(payload),
+      });
+      setStatus("sent");
+      form.reset();
+      setProjectType("");
+      setFileName(null);
+    } catch {
+      setStatus("failed");
+    }
   };
 
   if (status === "sent") {
@@ -724,6 +740,17 @@ export function ContactForm({
       </SectionCard>
 
       <AnimatePresence>
+        {status === "failed" && (
+          <motion.p
+            initial={{ opacity: 0, y: -6 }}
+            animate={{ opacity: 1, y: 0 }}
+            role="alert"
+            className="flex items-center gap-2 rounded-xl border border-red-500/40 bg-red-500/8 px-4 py-3 text-sm text-red-700 dark:text-red-400"
+          >
+            <AlertCircle aria-hidden className="size-4 shrink-0" />
+            We couldn&apos;t send your request. Please try again in a moment.
+          </motion.p>
+        )}
         {Object.keys(errors).some((k) => errors[k as FieldName]) && (
           <motion.p
             initial={{ opacity: 0, y: -6 }}

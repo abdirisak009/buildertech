@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  output: "standalone",
   images: {
     // All imagery is served from /public/images — no remote hosts, so the
     // optimiser never depends on a third party being reachable or fast.

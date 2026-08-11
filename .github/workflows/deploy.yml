@@ -1,0 +1,59 @@
+name: Deploy production
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy to VPS
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure SSH
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$VPS_SSH_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H "$VPS_HOST" >> ~/.ssh/known_hosts
+
+      - name: Upload release
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+        run: |
+          rsync -az --delete \
+            --exclude='.git/' \
+            --exclude='.github/' \
+            --exclude='.env*' \
+            --exclude='node_modules/' \
+            --exclude='.next/' \
+            ./ "$VPS_USER@$VPS_HOST:/opt/builders-tech/"
+
+      - name: Rebuild and verify
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+        run: |
+          ssh "$VPS_USER@$VPS_HOST" <<'REMOTE'
+            set -euo pipefail
+            cd /opt/builders-tech
+            docker compose -f docker-compose.prod.yml up -d --build --remove-orphans
+            docker compose -f docker-compose.prod.yml ps
+            docker compose -f docker-compose.prod.yml exec -T api wget -qO- http://127.0.0.1:8080/health
+            curl --fail --retry 12 --retry-delay 5 --retry-all-errors https://srv1897056.hstgr.cloud/
+          REMOTE

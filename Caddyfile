@@ -1,0 +1,28 @@
+srv1897056.hstgr.cloud {
+	encode zstd gzip
+	header {
+		X-Content-Type-Options nosniff
+		X-Frame-Options SAMEORIGIN
+		Referrer-Policy strict-origin-when-cross-origin
+		-Server
+	}
+
+	handle /api/* {
+		reverse_proxy api:8080
+	}
+	handle /uploads/* {
+		reverse_proxy api:8080
+	}
+	handle /storage/* {
+		uri strip_prefix /storage
+		reverse_proxy minio:9000
+	}
+	handle {
+		reverse_proxy frontend:3000
+	}
+
+	log {
+		output stdout
+		format console
+	}
+}
