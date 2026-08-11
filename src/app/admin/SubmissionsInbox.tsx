@@ -9,7 +9,7 @@ const statuses=["all","new","contacted","qualified","proposal","won","lost"];
 
 export default function SubmissionsInbox({token,flash}:{token:string;flash:(s:string)=>void}){
   const [items,setItems]=useState<Lead[]>([]);const [selected,setSelected]=useState<Lead|null>(null);const [query,setQuery]=useState("");const [status,setStatus]=useState("all");
-  const load=useCallback(()=>apiRequest<{items:Lead[]}>("/admin/leads?size=100",{},token).then(x=>setItems(x.items)),[token]);useEffect(()=>{load()},[load]);
+  const load=useCallback(()=>apiRequest<{items:Lead[]}>("/admin/leads?limit=100",{},token).then(x=>setItems(x.items)),[token]);useEffect(()=>{load()},[load]);
   const shown=useMemo(()=>items.filter(x=>(status==="all"||x.status===status)&&`${x.name} ${x.email} ${x.phone} ${x.company} ${x.message}`.toLowerCase().includes(query.toLowerCase())),[items,query,status]);
   const counts={all:items.length,new:items.filter(x=>x.status==="new").length,active:items.filter(x=>["contacted","qualified","proposal"].includes(x.status)).length,won:items.filter(x=>x.status==="won").length};
   const summaryCards:[string,number,ElementType,string][]=[["All submissions",counts.all,Inbox,"bg-blue-50 text-blue-600"],["New",counts.new,Mail,"bg-orange-50 text-orange-600"],["In progress",counts.active,Clock3,"bg-violet-50 text-violet-600"],["Won",counts.won,CheckCircle2,"bg-emerald-50 text-emerald-600"]];
