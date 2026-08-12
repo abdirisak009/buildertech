@@ -164,7 +164,7 @@ func main() {
 	}
 
 	r := gin.New()
-	r.Use(gin.Logger(), gin.Recovery(), cors.New(cors.Config{AllowOrigins: []string{env("FRONTEND_URL", "http://localhost:3000")}, AllowMethods: []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"}, AllowHeaders: []string{"Origin", "Content-Type", "Authorization"}, ExposeHeaders: []string{"Content-Length"}, AllowCredentials: true, MaxAge: 12 * time.Hour}))
+	r.Use(gin.Logger(), gin.Recovery(), cors.New(cors.Config{AllowOrigins: strings.Split(env("FRONTEND_URL", "http://localhost:3000"), ","), AllowMethods: []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"}, AllowHeaders: []string{"Origin", "Content-Type", "Authorization"}, ExposeHeaders: []string{"Content-Length"}, AllowCredentials: true, MaxAge: 12 * time.Hour}))
 	r.GET("/health", func(c *gin.Context) { respond(c, 200, gin.H{"status": "ok", "time": time.Now()}) })
 	r.Static("/uploads", app.UploadDir)
 	api := r.Group("/api/v1")
