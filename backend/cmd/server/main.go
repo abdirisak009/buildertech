@@ -78,6 +78,8 @@ type Lead struct {
 	Budget      string `json:"budget"`
 	County      string `json:"county"`
 	City        string `json:"city"`
+	State       string `json:"state"`
+	PostalCode  string `json:"postalCode"`
 	Phase       string `json:"phase"`
 	ProjectType string `json:"projectType"`
 	Services    string `json:"services"`
@@ -109,6 +111,7 @@ type App struct {
 	UploadDir string
 	Minio     *minio.Client
 	Bucket    string
+	Geo       *geoService
 }
 
 func env(key, fallback string) string {
@@ -131,7 +134,7 @@ func main() {
 	if err = db.AutoMigrate(&User{}, &Content{}, &Media{}, &Lead{}, &Setting{}, &PageOverride{}); err != nil {
 		log.Fatal(err)
 	}
-	app := &App{DB: db, JWTSecret: []byte(env("JWT_SECRET", "development-secret-change-me")), UploadDir: env("UPLOAD_DIR", "./uploads")}
+	app := &App{DB: db, JWTSecret: []byte(env("JWT_SECRET", "development-secret-change-me")), UploadDir: env("UPLOAD_DIR", "./uploads"), Geo: newGeoService()}
 	if err = os.MkdirAll(app.UploadDir, 0755); err != nil {
 		log.Fatal(err)
 	}
@@ -171,6 +174,7 @@ func main() {
 	api.GET("/content/:locale/:key", app.publicContent)
 	api.GET("/settings/public", app.publicSettings)
 	api.GET("/overrides", app.publicOverrides)
+	api.GET("/geo/address", app.suggestAddresses)
 	admin := api.Group("/admin", app.auth())
 	admin.GET("/me", app.me)
 	admin.GET("/dashboard", app.dashboard)
@@ -618,7 +622,7 @@ func (a *App) upsertOverride(c *gin.Context) {
 		fail(c, 400, "Page path and content key are required")
 		return
 	}
-	if in.Kind != "image" && in.Kind != "background" && in.Kind != "video" {
+	if in.Kind != "image" && in.Kind != "background" && in.Kind != "video" && in.Kind != "section" {
 		in.Kind = "text"
 	}
 	var item PageOverride

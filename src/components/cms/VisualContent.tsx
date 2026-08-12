@@ -4,7 +4,8 @@ import { useEffect } from "react";
 import { API_URL } from "@/lib/api/client";
 
 type MediaKind = "image"|"background"|"video";
-type Override = { id:string; path:string; key:string; kind:"text"|MediaKind; value:string; alt:string };
+type Override = { id:string; path:string; key:string; kind:"text"|MediaKind|"section"; value:string; alt:string };
+type SectionInfo = { key:string; label:string; hidden:boolean };
 
 const apiOrigin = API_URL.replace(/\/api\/v1\/?$/, "");
 const blockedTags = new Set(["SCRIPT","STYLE","NOSCRIPT","TEXTAREA","INPUT","SELECT","OPTION","SVG","PATH"]);
@@ -22,6 +23,37 @@ function editableTextNodes(root: Element) {
   return nodes;
 }
 
+/**
+ * Every top-level band of a page gets a stable `section:<n>` key so an editor
+ * can switch it off without touching the code. Nested sections and the blocks
+ * rendered from the content studio are skipped — they are managed elsewhere.
+ */
+function indexSections(root: Element) {
+  const sections = Array.from(root.querySelectorAll<HTMLElement>("section,[data-cms-section]"))
+    .filter(element => !element.closest("[data-cms-ignore]"))
+    .filter(element => !element.parentElement?.closest("section"));
+  sections.forEach((element,index) => {
+    element.dataset.cmsSection = `section:${index}`;
+    element.dataset.cmsSectionLabel = sectionLabel(element,index);
+  });
+  return sections;
+}
+
+function sectionLabel(element: HTMLElement, index: number) {
+  const heading = element.querySelector("h1,h2,h3")?.textContent?.trim();
+  const fallback = element.id ? element.id.replace(/[-_]/g," ") : "";
+  const label = heading || fallback || element.textContent?.trim().slice(0,60) || "";
+  return label ? label.slice(0,60) : `Section ${index+1}`;
+}
+
+function sectionList(root: Element): SectionInfo[] {
+  return Array.from(root.querySelectorAll<HTMLElement>("[data-cms-section]")).map(element => ({
+    key: element.dataset.cmsSection || "",
+    label: element.dataset.cmsSectionLabel || "",
+    hidden: element.dataset.cmsHidden === "true",
+  }));
+}
+
 function resolveAsset(value:string) {
   if (!value || /^(https?:|data:|blob:)/.test(value)) return value;
   return value.startsWith("/storage/") || value.startsWith("/uploads/") ? `${apiOrigin}${value}` : value;
@@ -34,6 +66,7 @@ export function VisualContent() {
     if (!surface) return;
     const path = window.location.pathname.replace(/\/$/, "") || "/";
     const editMode = new URLSearchParams(window.location.search).get("cmsEdit") === "1";
+    indexSections(surface);
     const textNodes = editableTextNodes(surface);
 
     textNodes.forEach((node,index) => {
@@ -64,7 +97,26 @@ export function VisualContent() {
       element.dataset.cmsKey=`background:${backgroundIndex++}`;element.dataset.cmsKind="background";element.dataset.cmsOriginal=url;element.dataset.cmsCurrent=url;
     });
 
+    const publishSections = () => {
+      window.parent.postMessage({type:"cms:sections",path,sections:sectionList(surface)},window.location.origin);
+    };
+
+    const applyVisibility = (target:HTMLElement, hidden:boolean) => {
+      target.dataset.cmsHidden = hidden ? "true" : "false";
+      // While editing, hidden bands stay on screen (dimmed) so they can be
+      // switched back on; visitors never render them at all.
+      target.style.display = hidden && !editMode ? "none" : "";
+    };
+
     const apply = (item:Override) => {
+      if (item.kind === "section") {
+        const section = surface.querySelector<HTMLElement>(`[data-cms-section="${item.key}"]`);
+        if (section) {
+          section.dataset.cmsOverrideId = item.id;
+          applyVisibility(section, item.value === "hidden");
+        }
+        return;
+      }
       const targets = surface.querySelectorAll<HTMLElement>(`[data-cms-key="${item.key}"]`);
       targets.forEach(target=>{
         target.dataset.cmsOverrideId=item.id;target.dataset.cmsCurrent=item.value;
@@ -84,7 +136,9 @@ export function VisualContent() {
       .then(body => (body.data as Override[]).forEach(apply))
       .catch(() => undefined)
       .finally(() => {
-        if (editMode) window.parent.postMessage({type:"cms:ready",path},window.location.origin);
+        if (!editMode) return;
+        window.parent.postMessage({type:"cms:ready",path},window.location.origin);
+        publishSections();
       });
 
     if (!editMode) return;
@@ -103,7 +157,9 @@ export function VisualContent() {
     };
     const message = (event:MessageEvent) => {
       if (event.origin !== window.location.origin || event.data?.type !== "cms:apply") return;
-      apply(event.data.item as Override);
+      const item = event.data.item as Override;
+      apply(item);
+      if (item.kind === "section") publishSections();
     };
     surface.addEventListener("click",click,true);
     window.addEventListener("message",message);

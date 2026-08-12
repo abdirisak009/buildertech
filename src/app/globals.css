@@ -81,6 +81,31 @@
   box-shadow: 0 0 0 7px rgb(249 115 22 / 0.2);
 }
 
+/* A section switched off in the CMS: dimmed and labelled while editing,
+   removed entirely for visitors (handled inline in VisualContent). */
+.cms-editing [data-cms-section][data-cms-hidden="true"] {
+  position: relative;
+  opacity: 0.35;
+  filter: grayscale(1);
+  outline: 2px dashed #ef4444;
+  outline-offset: -6px;
+}
+.cms-editing [data-cms-section][data-cms-hidden="true"]::after {
+  content: "Hidden from the live website";
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  border-radius: 9999px;
+  background: #ef4444;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  pointer-events: none;
+}
+
 /* ------------------------------------------------------------
    Semantic tokens (light + dark)
    ------------------------------------------------------------ */
