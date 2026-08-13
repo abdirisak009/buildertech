@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Container } from "@/components/ui/Container";
-import { Section, SectionHeader, Eyebrow } from "@/components/ui/Section";
+import { Section, Eyebrow } from "@/components/ui/Section";
 import { PageHero } from "@/components/ui/PageHero";
 import { Reveal, RevealGroup, RevealItem } from "@/components/motion/Reveal";
 import { Counter } from "@/components/motion/Counter";
@@ -36,11 +36,8 @@ export default async function AboutPage({
 
   const {
     pages,
-    site,
     stats,
     story,
-    philosophy,
-    whyChooseUs,
     team,
   } = getContent(locale);
   const d = pages.about;
@@ -116,51 +113,6 @@ export default async function AboutPage({
                     {stat.label}
                   </dd>
                 </dl>
-              </RevealItem>
-            ))}
-          </RevealGroup>
-        </Container>
-      </Section>
-
-      {/* ---------------- Philosophy ---------------- */}
-      <Section>
-        <Container>
-          <Reveal>
-            <figure className="mx-auto max-w-4xl text-center">
-              <Eyebrow align="center">{d.philosophy.eyebrow}</Eyebrow>
-              <blockquote className="mt-8">
-                <p className="text-display-md text-balance">
-                  &ldquo;{philosophy}&rdquo;
-                </p>
-              </blockquote>
-              <figcaption className="mt-8 text-sm uppercase tracking-[0.16em] text-subtle-foreground">
-                {site.name} — {site.tagline}
-              </figcaption>
-            </figure>
-          </Reveal>
-        </Container>
-      </Section>
-
-      {/* ---------------- Why choose us ---------------- */}
-      <Section>
-        <Container>
-          <SectionHeader
-            eyebrow={d.whyChooseUs.eyebrow}
-            title={d.whyChooseUs.title}
-          />
-
-          <RevealGroup className="mt-16 grid gap-10 sm:grid-cols-3">
-            {whyChooseUs.map((item) => (
-              <RevealItem key={item.number}>
-                <div className="border-t-2 border-gold-500 pt-6">
-                  <span className="tabular font-[family-name:var(--font-display)] text-4xl font-bold text-foreground/15">
-                    {item.number}
-                  </span>
-                  <h3 className="mt-4 text-xl">{item.title}</h3>
-                  <p className="mt-3 leading-relaxed text-muted-foreground">
-                    {item.body}
-                  </p>
-                </div>
               </RevealItem>
             ))}
           </RevealGroup>
