@@ -214,10 +214,11 @@ func (a *App) seed() error {
 	}
 	defaults := []Setting{
 		{Key: "site_name", Value: "BuildersTech", Group: "branding", Label: "Brand name"},
-		{Key: "logo_url", Value: "/logo.png", Group: "branding", Label: "Main logo URL"},
+		{Key: "logo_url", Value: "/logo-mark-trim.png", Group: "branding", Label: "Main logo URL"},
+		{Key: "logo_size", Value: "100", Group: "branding", Label: "Logo size (%)"},
 		{Key: "brand_primary", Value: "#0a2472", Group: "branding", Label: "Primary brand color"},
 		{Key: "brand_accent", Value: "#e87838", Group: "branding", Label: "Accent and button color"},
-		{Key: "brand_dark", Value: "#071027", Group: "branding", Label: "Dark background color"},
+		{Key: "brand_dark", Value: "#000000", Group: "branding", Label: "Dark background color"},
 		{Key: "contact_email", Value: "info@builderstech.com", Group: "contact", Label: "Contact email"},
 		{Key: "contact_phone", Value: "", Group: "contact", Label: "Primary phone number"},
 		{Key: "whatsapp_number", Value: "", Group: "contact", Label: "WhatsApp number"},
@@ -260,6 +261,20 @@ func (a *App) seed() error {
 			}
 		}
 		a.DB.Create(&Setting{Key: "cms_logos_imported", Value: "true", Group: "system", Label: "Legacy logos imported"})
+	}
+	var teamImported int64
+	a.DB.Model(&Setting{}).Where("key = ?", "cms_team_imported").Count(&teamImported)
+	if teamImported == 0 {
+		team := []map[string]string{
+			{"firstName":"Shailesh","lastInitial":"G","credentials":"PE","role":"Civil Engineer","photo":"/teams/shailesh-g.jpg","bio":"Designs grading, drainage, utilities and site plans that move projects toward permit approval."},
+			{"firstName":"Daniela","lastInitial":"C","credentials":"RA","role":"Architect","photo":"/teams/daniela-c.jpg","bio":"Turns ideas into buildable, code-compliant designs for residential and commercial spaces."},
+			{"firstName":"Yavuz","lastInitial":"A","credentials":"PMP","role":"Operations Manager","photo":"/teams/yavuz-a.jpg","bio":"Keeps projects, people and processes coordinated and moving efficiently."},
+			{"firstName":"Elizabeth","lastInitial":"B","role":"Business Systems Manager","photo":"/teams/elizabeth-b.jpg","bio":"Leads the systems, technology and workflows that support the team and its clients."},
+			{"firstName":"Tania","lastInitial":"A","role":"Sales & Project Manager","photo":"/teams/tania-a.jpg","bio":"Guides clients from the first conversation through design coordination and permit approval."},
+			{"firstName":"Taha","lastInitial":"A","role":"Sales & Project Manager","photo":"/teams/taha-a.jpg","bio":"Helps turn challenging project requirements into clear, successful delivery plans."},
+		}
+		for _, locale := range []string{"en","es"} { for index, member := range team { data,_:=json.Marshal(member);a.DB.Create(&Content{Locale:locale,Key:fmt.Sprintf("team-%02d",index+1),Title:member["firstName"],Type:"team",Status:"published",Data:string(data)}) } }
+		a.DB.Create(&Setting{Key:"cms_team_imported",Value:"true",Group:"system",Label:"Team imported"})
 	}
 	return nil
 }
