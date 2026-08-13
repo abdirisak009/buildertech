@@ -14,6 +14,11 @@ import {
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // The CMS is locale-independent and has its own authenticated shell.
+  if (pathname === "/admin" || pathname.startsWith("/admin/")) {
+    return NextResponse.next();
+  }
+
   const hasLocale = LOCALES.some(
     (locale) => pathname === `/${locale}` || pathname.startsWith(`/${locale}/`),
   );

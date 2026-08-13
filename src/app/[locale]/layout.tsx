@@ -1,7 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
-import { Inter, Space_Grotesk } from "next/font/google";
-import "../globals.css";
 
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { Header } from "@/components/layout/Header";
@@ -10,19 +8,9 @@ import { IntakeProvider } from "@/components/intake/IntakeProvider";
 import { LOCALES, isLocale, type Locale } from "@/i18n/config";
 import { getContent } from "@/content";
 import { getUi } from "@/i18n/ui";
-
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-space-grotesk",
-  subsets: ["latin"],
-  weight: ["500", "600", "700"],
-  display: "swap",
-});
+import { VisualContent } from "@/components/cms/VisualContent";
+import { GlobalSettings } from "@/components/cms/GlobalSettings";
+import { DynamicContent } from "@/components/cms/DynamicContent";
 
 export function generateStaticParams() {
   return LOCALES.map((locale) => ({ locale }));
@@ -83,14 +71,9 @@ export default async function LocaleLayout({
   const ui = getUi(typedLocale);
 
   return (
-    <html
-      lang={locale}
-      suppressHydrationWarning
-      className={`${inter.variable} ${spaceGrotesk.variable} h-full antialiased`}
-    >
-      <body className="flex min-h-full flex-col bg-background text-foreground">
-        <ThemeProvider>
-          <IntakeProvider locale={typedLocale}>
+    <ThemeProvider>
+      <IntakeProvider locale={typedLocale}>
+        <div data-cms-surface className="flex min-h-screen flex-col bg-background text-foreground">
             <a
               href="#main"
               className="sr-only rounded-full bg-gold-500 px-6 py-3 font-semibold text-navy-950 focus:not-sr-only focus:fixed focus:left-5 focus:top-5 focus:z-[100]"
@@ -100,11 +83,13 @@ export default async function LocaleLayout({
             <Header locale={typedLocale} />
             <main id="main" className="flex-1 overflow-x-clip">
               {children}
+              <DynamicContent locale={typedLocale} />
             </main>
             <Footer locale={typedLocale} />
-          </IntakeProvider>
-        </ThemeProvider>
-      </body>
-    </html>
+            <GlobalSettings />
+            <VisualContent />
+        </div>
+      </IntakeProvider>
+    </ThemeProvider>
   );
 }

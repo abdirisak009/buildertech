@@ -13,8 +13,13 @@ import {
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
+import {
+  AddressAutocomplete,
+  type AddressSuggestion,
+} from "@/components/ui/AddressAutocomplete";
 import { getUi, type UiDict } from "@/i18n/ui";
 import type { Locale } from "@/i18n/config";
+import { apiRequest } from "@/lib/api/client";
 
 type FieldName =
   | "language"
@@ -28,6 +33,8 @@ type FieldName =
   | "budget"
   | "county"
   | "city"
+  | "state"
+  | "postalCode"
   | "phase"
   | "projectType"
   | "projectTypeOther"
@@ -186,6 +193,14 @@ export function ContactForm({
   );
   const [projectType, setProjectType] = useState("");
   const [fileName, setFileName] = useState<string | null>(null);
+  // The location block is controlled so picking an address can fill it in.
+  const [location, setLocation] = useState({
+    address: "",
+    city: "",
+    county: "",
+    state: "",
+    postalCode: "",
+  });
   const showOther = projectType === t.projectTypes[t.projectTypes.length - 1];
 
   const handleBlur = (e: React.FocusEvent<HTMLElement>) => {
@@ -234,13 +249,29 @@ export function ContactForm({
 
     setStatus("sending");
 
-    // TODO: point this at your backend route or form service (Resend, Formspree…).
-    await new Promise((r) => setTimeout(r, 1100));
+    const payload: Record<string, string> = {};
+    for (const [key, value] of data.entries()) {
+      if (key !== "upload" && key !== "services") payload[key] = String(value);
+    }
+    payload.services = selectedServices;
+    payload.language = payload.language || locale;
+    if (payload.projectTypeOther) {
+      payload.projectType = `${payload.projectType}: ${payload.projectTypeOther}`;
+    }
 
-    setStatus("sent");
-    form.reset();
-    setProjectType("");
-    setFileName(null);
+    try {
+      await apiRequest("/leads", {
+        method: "POST",
+        body: JSON.stringify(payload),
+      });
+      setStatus("sent");
+      form.reset();
+      setProjectType("");
+      setFileName(null);
+      setLocation({ address: "", city: "", county: "", state: "", postalCode: "" });
+    } catch {
+      setStatus("failed");
+    }
   };
 
   if (status === "sent") {
@@ -419,45 +450,113 @@ export function ContactForm({
       </SectionCard>
 
       <SectionCard title={t.sections.project}>
-        <div className="grid gap-5 sm:grid-cols-2">
-          <Field label={t.labels.county} name="county" requiredLabel={t.required}>
-            <select id="county" name="county" defaultValue="" className={inputClass()}>
-              <option value="">{t.placeholders.selectCounty}</option>
-              {t.counties.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
-          </Field>
-
-          <Field label={t.labels.city} name="city" requiredLabel={t.required}>
-            <select id="city" name="city" defaultValue="" className={inputClass()}>
-              <option value="">{t.placeholders.selectCity}</option>
-              {t.cities.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
-          </Field>
-        </div>
-
         <Field
           label={t.labels.address}
           name="address"
           hint={t.hints.address}
           requiredLabel={t.required}
         >
-          <input
+          <AddressAutocomplete
             id="address"
             name="address"
-            type="text"
-            autoComplete="street-address"
+            value={location.address}
             className={inputClass()}
             placeholder={t.placeholders.address}
+            strings={t.addressSearch}
+            onChange={(address) =>
+              setLocation((prev) => ({ ...prev, address }))
+            }
+            onSelect={(match: AddressSuggestion) =>
+              setLocation((prev) => ({
+                ...prev,
+                city: match.city,
+                county: match.county,
+                state: match.state,
+                postalCode: match.postalCode,
+              }))
+            }
           />
         </Field>
+
+        <div className="grid gap-5 sm:grid-cols-2">
+          <Field label={t.labels.city} name="city" requiredLabel={t.required}>
+            <input
+              id="city"
+              name="city"
+              type="text"
+              list={`${formId}-cities`}
+              autoComplete="address-level2"
+              value={location.city}
+              onChange={(e) =>
+                setLocation((prev) => ({ ...prev, city: e.target.value }))
+              }
+              className={inputClass()}
+              placeholder={t.placeholders.selectCity}
+            />
+            <datalist id={`${formId}-cities`}>
+              {t.cities.map((option) => (
+                <option key={option} value={option} />
+              ))}
+            </datalist>
+          </Field>
+
+          <Field label={t.labels.county} name="county" requiredLabel={t.required}>
+            <input
+              id="county"
+              name="county"
+              type="text"
+              list={`${formId}-counties`}
+              value={location.county}
+              onChange={(e) =>
+                setLocation((prev) => ({ ...prev, county: e.target.value }))
+              }
+              className={inputClass()}
+              placeholder={t.placeholders.selectCounty}
+            />
+            <datalist id={`${formId}-counties`}>
+              {t.counties.map((option) => (
+                <option key={option} value={option} />
+              ))}
+            </datalist>
+          </Field>
+
+          <Field label={t.labels.state} name="state" requiredLabel={t.required}>
+            <input
+              id="state"
+              name="state"
+              type="text"
+              maxLength={20}
+              autoComplete="address-level1"
+              value={location.state}
+              onChange={(e) =>
+                setLocation((prev) => ({ ...prev, state: e.target.value }))
+              }
+              className={inputClass()}
+              placeholder={t.placeholders.state}
+            />
+          </Field>
+
+          <Field
+            label={t.labels.postalCode}
+            name="postalCode"
+            requiredLabel={t.required}
+          >
+            <input
+              id="postalCode"
+              name="postalCode"
+              type="text"
+              inputMode="numeric"
+              maxLength={10}
+              autoComplete="postal-code"
+              value={location.postalCode}
+              onChange={(e) =>
+                setLocation((prev) => ({ ...prev, postalCode: e.target.value }))
+              }
+              className={inputClass()}
+              placeholder={t.placeholders.postalCode}
+            />
+          </Field>
+        </div>
 
         <Field
           label={t.labels.timeline}
@@ -724,6 +823,17 @@ export function ContactForm({
       </SectionCard>
 
       <AnimatePresence>
+        {status === "failed" && (
+          <motion.p
+            initial={{ opacity: 0, y: -6 }}
+            animate={{ opacity: 1, y: 0 }}
+            role="alert"
+            className="flex items-center gap-2 rounded-xl border border-red-500/40 bg-red-500/8 px-4 py-3 text-sm text-red-700 dark:text-red-400"
+          >
+            <AlertCircle aria-hidden className="size-4 shrink-0" />
+            We couldn&apos;t send your request. Please try again in a moment.
+          </motion.p>
+        )}
         {Object.keys(errors).some((k) => errors[k as FieldName]) && (
           <motion.p
             initial={{ opacity: 0, y: -6 }}

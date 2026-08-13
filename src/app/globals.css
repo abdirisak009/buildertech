@@ -66,6 +66,46 @@
   --ease-brand: cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
+.cms-editing [data-cms-key] {
+  cursor: pointer !important;
+  outline: 2px dashed transparent;
+  outline-offset: 3px;
+  transition: outline-color 150ms ease, box-shadow 150ms ease;
+}
+.cms-editing [data-cms-key]:hover {
+  outline-color: #f97316;
+  box-shadow: 0 0 0 5px rgb(249 115 22 / 0.14);
+}
+.cms-editing [data-cms-key].cms-selected {
+  outline: 3px solid #f97316;
+  box-shadow: 0 0 0 7px rgb(249 115 22 / 0.2);
+}
+
+/* A section switched off in the CMS: dimmed and labelled while editing,
+   removed entirely for visitors (handled inline in VisualContent). */
+.cms-editing [data-cms-section][data-cms-hidden="true"] {
+  position: relative;
+  opacity: 0.35;
+  filter: grayscale(1);
+  outline: 2px dashed #ef4444;
+  outline-offset: -6px;
+}
+.cms-editing [data-cms-section][data-cms-hidden="true"]::after {
+  content: "Hidden from the live website";
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  border-radius: 9999px;
+  background: #ef4444;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  pointer-events: none;
+}
+
 /* ------------------------------------------------------------
    Semantic tokens (light + dark)
    ------------------------------------------------------------ */
@@ -217,6 +257,22 @@
   &::-webkit-scrollbar {
     display: none;
   }
+}
+
+@utility btn-primary {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 0.75rem;
+  background: #e87838;
+  padding-inline: 1rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #071027;
+  transition: background-color 180ms ease, transform 180ms ease;
+  &:hover { background: #f1a56b; }
+  &:active { transform: translateY(1px); }
 }
 
 /* ------------------------------------------------------------

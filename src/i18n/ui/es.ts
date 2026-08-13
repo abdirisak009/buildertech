@@ -92,6 +92,8 @@ export const es: UiDict = {
       budget: "Presupuesto estimado / flujo de caja",
       county: "Condado",
       city: "Ciudad",
+      state: "Estado",
+      postalCode: "Código postal",
       phase: "Estado de la fase",
       projectType: "Tipo de proyecto",
       projectTypeOther: "Si eligió Otro, descríbalo",
@@ -107,15 +109,23 @@ export const es: UiDict = {
       company: "Opcional",
       address: "Calle, ciudad y código postal si es distinta a la ubicación anterior",
       projectTypeOther: "Describa el tipo de proyecto",
-      selectCounty: "Seleccione un condado",
-      selectCity: "Seleccione una ciudad",
+      selectCounty: "Seleccione o escriba un condado",
+      selectCity: "Seleccione o escriba una ciudad",
+      state: "GA",
+      postalCode: "30083",
       deadline: "Finalización (M/A), p. ej. 03/2027",
       message:
         "Tamaño del lote, uso previsto, condiciones del sitio y lo que ya sepa del presupuesto o plazo…",
       yourAnswer: "Su respuesta",
     },
+    addressSearch: {
+      searching: "Buscando direcciones…",
+      noResults: "No encontramos esa dirección — puede escribirla usted mismo.",
+      error: "La búsqueda de direcciones no está disponible. Escriba la dirección.",
+    },
     hints: {
-      address: "Si es distinta a la ciudad/condado seleccionados arriba.",
+      address:
+        "Busque cualquier dirección de Estados Unidos — la ciudad, el condado, el estado y el código postal se completan solos.",
       budget: "Un rango está bien — nos ayuda a responderle mejor.",
       message:
         "Describa el alcance, las condiciones del sitio, requisitos específicos y los objetivos del proyecto.",

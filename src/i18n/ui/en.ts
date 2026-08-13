@@ -94,6 +94,8 @@ export const en = {
       budget: "Estimated budget / cash flow",
       county: "County",
       city: "City",
+      state: "State",
+      postalCode: "ZIP code",
       phase: "Phase status",
       projectType: "Project type",
       projectTypeOther: "If Other, please describe",
@@ -107,17 +109,25 @@ export const en = {
       email: "you@company.com",
       phone: "(404) 555-0123",
       company: "Optional",
-      address: "Street, city, and ZIP if different from location above",
+      address: "Start typing an address, city or ZIP — anywhere in the US",
       projectTypeOther: "Describe the project type",
-      selectCounty: "Select a county",
-      selectCity: "Select a city",
+      selectCounty: "Select or type a county",
+      selectCity: "Select or type a city",
+      state: "GA",
+      postalCode: "30083",
       deadline: "Completion by (M/Y), e.g. 03/2027",
       message:
         "Lot size, intended use, site conditions, and anything you already know about the budget or timeline…",
       yourAnswer: "Your answer",
     },
+    addressSearch: {
+      searching: "Searching addresses…",
+      noResults: "No matching address — you can type it in yourself.",
+      error: "Address search is unavailable. Please type the address.",
+    },
     hints: {
-      address: "If different from the city/county selected above.",
+      address:
+        "Search any address in the United States — the city, county, state and ZIP fill in automatically.",
       budget: "A range is fine — it helps us answer usefully.",
       message:
         "Describe the scope, site conditions, specific requirements, and any goals for the project.",
