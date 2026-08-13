@@ -1,7 +1,7 @@
 "use client";
 
 import { ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
-import { Check, ChevronDown, Eye, EyeOff, Layers, Loader2, Maximize2, Minimize2, Monitor, MousePointer2, RefreshCw, RotateCcw, Smartphone, Upload } from "lucide-react";
+import { Check, ChevronDown, Eye, EyeOff, Layers, Loader2, Maximize2, Minimize2, Monitor, MousePointer2, RefreshCw, RotateCcw, Smartphone, Upload, X } from "lucide-react";
 import { API_URL, apiRequest } from "@/lib/api/client";
 
 type Selection = { path:string; key:string; kind:"text"|"image"|"background"|"video"|"section"; value:string; alt:string; overrideId:string };
@@ -29,6 +29,7 @@ export default function VisualEditor({token,flash,focusMode,onFocusMode}:{token:
   const [value,setValue]=useState(""); const [alt,setAlt]=useState(""); const [saving,setSaving]=useState(false);
   const [ready,setReady]=useState(false); const [mobile,setMobile]=useState(false); const [media,setMedia]=useState<Media[]>([]);
   const [sections,setSections]=useState<PageSection[]>([]); const [busySection,setBusySection]=useState("");
+  const [showMobileSections,setShowMobileSections]=useState(false);
   const iframe=useRef<HTMLIFrameElement>(null);
   const path=useMemo(()=>customPath.trim() || `/${locale}${slug}`,[customPath,locale,slug]);
   const preview=`${path}?cmsEdit=1`;
@@ -66,6 +67,7 @@ export default function VisualEditor({token,flash,focusMode,onFocusMode}:{token:
       <input value={customPath} onChange={e=>{setCustomPath(e.target.value);setSelection(null);setSections([]);setReady(false)}} placeholder="Or enter any page path…" className="hidden h-10 min-w-56 rounded-xl border border-slate-200 px-3 text-sm outline-none focus:border-orange-400 xl:block"/>
       <div className="ml-auto flex items-center rounded-xl border border-slate-200 bg-slate-50 p-1"><button onClick={()=>setMobile(false)} className={`rounded-lg p-2 ${!mobile?"bg-white shadow-sm":"text-slate-400"}`}><Monitor className="size-4"/></button><button onClick={()=>setMobile(true)} className={`rounded-lg p-2 ${mobile?"bg-white shadow-sm":"text-slate-400"}`}><Smartphone className="size-4"/></button></div>
       <button onClick={()=>iframe.current?.contentWindow?.location.reload()} className="rounded-xl border border-slate-200 bg-white p-2.5 hover:bg-slate-50"><RefreshCw className="size-4"/></button>
+      {!!sections.length&&<button onClick={()=>setShowMobileSections(true)} className="flex h-10 items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 text-xs font-bold text-slate-700 lg:hidden"><Layers className="size-4 text-orange-600"/>Sections <span className="rounded-full bg-orange-100 px-1.5 py-0.5 text-[10px] text-orange-700">{sections.filter(x=>!x.hidden).length}/{sections.length}</span></button>}
       <button onClick={()=>onFocusMode(!focusMode)} className="flex h-10 items-center gap-2 rounded-xl bg-[#071027] px-3 text-xs font-bold text-white hover:bg-slate-800">{focusMode?<><Minimize2 className="size-4"/>Exit focus</>:<><Maximize2 className="size-4"/>Focus mode</>}</button>
     </div>
     <div className="flex min-h-0 flex-1 gap-4 p-4">
@@ -99,5 +101,6 @@ export default function VisualEditor({token,flash,focusMode,onFocusMode}:{token:
         </div></div>}
       </aside>
     </div>
+    {showMobileSections&&<div className="fixed inset-0 z-[70] bg-[#071027]/60 backdrop-blur-sm lg:hidden" onMouseDown={event=>{if(event.target===event.currentTarget)setShowMobileSections(false)}}><section className="absolute inset-x-0 bottom-0 max-h-[82vh] overflow-y-auto rounded-t-[2rem] bg-white p-5 shadow-2xl"><div className="sticky top-0 z-10 -mx-5 -mt-5 flex items-center border-b border-slate-100 bg-white px-5 py-4"><div><p className="text-xs font-bold uppercase tracking-[.18em] text-orange-600">Page visibility</p><h3 className="mt-1 text-lg font-bold">Show or hide sections</h3></div><button onClick={()=>setShowMobileSections(false)} className="ml-auto rounded-xl bg-slate-100 p-2.5"><X className="size-5"/></button></div><p className="mt-5 text-sm leading-6 text-slate-500">Hidden sections are removed from the public website but remain safely available here.</p><ul className="mt-4 space-y-2">{sections.map((section,index)=><li key={section.key}><button onClick={()=>toggleSection(section)} disabled={busySection===section.key} className={`flex w-full items-center gap-3 rounded-2xl border p-4 text-left ${section.hidden?"border-slate-200 bg-slate-50":"border-orange-200 bg-orange-50/50"}`}><span className={`grid size-10 shrink-0 place-items-center rounded-xl ${section.hidden?"bg-slate-200 text-slate-500":"bg-orange-100 text-orange-600"}`}>{busySection===section.key?<Loader2 className="size-5 animate-spin"/>:section.hidden?<EyeOff className="size-5"/>:<Eye className="size-5"/>}</span><span className="min-w-0 flex-1"><span className={`block truncate text-sm font-bold ${section.hidden?"text-slate-500 line-through":"text-slate-800"}`}>{section.label||`Section ${index+1}`}</span><span className="mt-0.5 block text-xs text-slate-400">Tap to {section.hidden?"show on website":"hide from website"}</span></span><span className={`rounded-full px-2.5 py-1 text-[10px] font-bold uppercase ${section.hidden?"bg-slate-200 text-slate-500":"bg-emerald-100 text-emerald-700"}`}>{section.hidden?"Hidden":"Live"}</span></button></li>)}</ul></section></div>}
   </div>
 }
