@@ -47,7 +47,7 @@ export function Counter({
   });
 
   return (
-    <span ref={ref} className="tabular">
+    <span ref={ref} className="tabular" data-cms-key={`animated:counter:${value}:${suffix}`} data-cms-kind="text" data-cms-animated="true" data-cms-original={`${value}${suffix}`} data-cms-current={`${value}${suffix}`}>
       {formatted}
       {suffix}
     </span>
