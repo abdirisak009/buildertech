@@ -266,15 +266,20 @@ func (a *App) seed() error {
 	a.DB.Model(&Setting{}).Where("key = ?", "cms_team_imported").Count(&teamImported)
 	if teamImported == 0 {
 		team := []map[string]string{
-			{"firstName":"Shailesh","lastInitial":"G","credentials":"PE","role":"Civil Engineer","photo":"/teams/shailesh-g.jpg","bio":"Designs grading, drainage, utilities and site plans that move projects toward permit approval."},
-			{"firstName":"Daniela","lastInitial":"C","credentials":"RA","role":"Architect","photo":"/teams/daniela-c.jpg","bio":"Turns ideas into buildable, code-compliant designs for residential and commercial spaces."},
-			{"firstName":"Yavuz","lastInitial":"A","credentials":"PMP","role":"Operations Manager","photo":"/teams/yavuz-a.jpg","bio":"Keeps projects, people and processes coordinated and moving efficiently."},
-			{"firstName":"Elizabeth","lastInitial":"B","role":"Business Systems Manager","photo":"/teams/elizabeth-b.jpg","bio":"Leads the systems, technology and workflows that support the team and its clients."},
-			{"firstName":"Tania","lastInitial":"A","role":"Sales & Project Manager","photo":"/teams/tania-a.jpg","bio":"Guides clients from the first conversation through design coordination and permit approval."},
-			{"firstName":"Taha","lastInitial":"A","role":"Sales & Project Manager","photo":"/teams/taha-a.jpg","bio":"Helps turn challenging project requirements into clear, successful delivery plans."},
+			{"firstName": "Shailesh", "lastInitial": "G", "credentials": "PE", "role": "Civil Engineer", "photo": "/teams/shailesh-g.jpg", "bio": "Designs grading, drainage, utilities and site plans that move projects toward permit approval."},
+			{"firstName": "Daniela", "lastInitial": "C", "credentials": "RA", "role": "Architect", "photo": "/teams/daniela-c.jpg", "bio": "Turns ideas into buildable, code-compliant designs for residential and commercial spaces."},
+			{"firstName": "Yavuz", "lastInitial": "A", "credentials": "PMP", "role": "Operations Manager", "photo": "/teams/yavuz-a.jpg", "bio": "Keeps projects, people and processes coordinated and moving efficiently."},
+			{"firstName": "Elizabeth", "lastInitial": "B", "role": "Business Systems Manager", "photo": "/teams/elizabeth-b.jpg", "bio": "Leads the systems, technology and workflows that support the team and its clients."},
+			{"firstName": "Tania", "lastInitial": "A", "role": "Sales & Project Manager", "photo": "/teams/tania-a.jpg", "bio": "Guides clients from the first conversation through design coordination and permit approval."},
+			{"firstName": "Taha", "lastInitial": "A", "role": "Sales & Project Manager", "photo": "/teams/taha-a.jpg", "bio": "Helps turn challenging project requirements into clear, successful delivery plans."},
 		}
-		for _, locale := range []string{"en","es"} { for index, member := range team { data,_:=json.Marshal(member);a.DB.Create(&Content{Locale:locale,Key:fmt.Sprintf("team-%02d",index+1),Title:member["firstName"],Type:"team",Status:"published",Data:string(data)}) } }
-		a.DB.Create(&Setting{Key:"cms_team_imported",Value:"true",Group:"system",Label:"Team imported"})
+		for _, locale := range []string{"en", "es"} {
+			for index, member := range team {
+				data, _ := json.Marshal(member)
+				a.DB.Create(&Content{Locale: locale, Key: fmt.Sprintf("team-%02d", index+1), Title: member["firstName"], Type: "team", Status: "published", Data: string(data)})
+			}
+		}
+		a.DB.Create(&Setting{Key: "cms_team_imported", Value: "true", Group: "system", Label: "Team imported"})
 	}
 	return nil
 }
