@@ -1,7 +1,7 @@
 export const STORY = [
-  "Builders Tech comenzó en una pequeña oficina de sótano en Atlanta, Georgia — un escritorio, un plotter y la convicción de que los propietarios de vivienda merecían el mismo nivel de documentación que los grandes desarrolladores dan por sentado.",
-  "Desde entonces hemos crecido bastante. Hoy somos su socio dinámico para simplificar el proceso de diseño y documentación de construcción, guiando a los clientes a lo largo de sus obras y aprovechando nuestra experiencia para reducir costos.",
-  "Atendemos a una clientela diversa que abarca profesionales del sector, propietarios de vivienda, desarrolladores e inversionistas de todo el mundo — y seguimos contestando el teléfono nosotros mismos.",
+  "Builders Tech es una firma multidisciplinaria de diseño y gerencia de construcción con sede en Atlanta que atiende a propietarios, constructores, desarrolladores e inversionistas en todo Georgia.",
+  "Nuestros arquitectos, ingenieros y gerentes de proyecto trabajan como un solo equipo coordinado. Esto permite decisiones más claras, menos brechas entre disciplinas y documentación pensada para la forma en que el proyecto realmente será aprobado y construido.",
+  "Desde la viabilidad y el diseño inicial hasta los planos técnicos, la coordinación con autoridades y el apoyo durante la construcción, simplificamos requisitos complejos y ofrecemos al cliente una ruta clara. Cada proyecto se basa en comunicación ágil, entrega responsable y experiencia práctica.",
 ];
 
 export const PHILOSOPHY =

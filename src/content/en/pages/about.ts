@@ -2,22 +2,22 @@ export const about = {
   meta: {
     title: "About Us",
     description:
-      "Builders Tech started in a basement office in Atlanta with one desk and one plotter. Today we deliver permit-ready design and construction documentation across Georgia.",
+      "Meet Builders Tech, an Atlanta-based multidisciplinary team delivering coordinated design, engineering, permitting and construction support.",
   },
 
   hero: {
     breadcrumb: "About",
     eyebrow: "Who we are",
-    titleLead: "From a basement office in Atlanta to ",
-    titleAccent: "400+ projects",
+    titleLead: "One coordinated team. ",
+    titleAccent: "Built around your project",
     titleTail: ".",
-    lead: "One desk, one plotter, and a conviction that homeowners deserve the same standard of documentation large developers take for granted. That has not changed — the scale has.",
+    lead: "Builders Tech brings architecture, engineering, project management and construction expertise together to move projects from early ideas to permit-ready, buildable solutions.",
     imageAlt: "A completed residential home at dusk",
   },
 
   story: {
-    eyebrow: "Our story",
-    title: "We started where our clients start.",
+    eyebrow: "Who we are",
+    title: "A practical partner for every stage of the build.",
     imageAlt: "Architectural drawings spread across a drafting desk",
   },
 
