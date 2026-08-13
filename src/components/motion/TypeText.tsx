@@ -75,9 +75,10 @@ export function TypeText({
   // Reduced-motion users see the full text with no animation.
   const shown = reduced ? text.length : count;
   const done = shown >= text.length;
+  const cmsKey = `animated:type:${text}`;
 
   return (
-    <span className={className} aria-label={text}>
+    <span className={className} aria-label={text} data-cms-key={cmsKey} data-cms-kind="text" data-cms-animated="true" data-cms-original={text} data-cms-current={text}>
       <span aria-hidden>{text.slice(0, shown)}</span>
       <span
         aria-hidden
