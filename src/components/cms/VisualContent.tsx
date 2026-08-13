@@ -47,11 +47,12 @@ function sectionLabel(element: HTMLElement, index: number) {
 }
 
 function sectionList(root: Element): SectionInfo[] {
-  return Array.from(root.querySelectorAll<HTMLElement>("[data-cms-section]")).map(element => ({
+  const pageMode=document.getElementById("cms-coming-soon");
+  return [{key:"page:coming-soon",label:"Coming soon page mode",hidden:pageMode?.dataset.enabled!=="true"},...Array.from(root.querySelectorAll<HTMLElement>("[data-cms-section]")).map(element => ({
     key: element.dataset.cmsSection || "",
     label: element.dataset.cmsSectionLabel || "",
     hidden: element.dataset.cmsHidden === "true",
-  }));
+  }))];
 }
 
 function resolveAsset(value:string) {
@@ -59,6 +60,7 @@ function resolveAsset(value:string) {
   return value.startsWith("/storage/") || value.startsWith("/uploads/") ? `${apiOrigin}${value}` : value;
 }
 function backgroundUrl(value:string){return value.match(/url\(["']?(.*?)["']?\)/)?.[1]||""}
+function meta(value:string){try{return JSON.parse(value) as {alt?:string;fontSize?:number;width?:number;speed?:number}}catch{return {alt:value}}}
 
 export function VisualContent() {
   useEffect(() => {
@@ -110,6 +112,11 @@ export function VisualContent() {
 
     const apply = (item:Override) => {
       if (item.kind === "section") {
+        if(item.key==="page:coming-soon"){
+          let mode=document.getElementById("cms-coming-soon") as HTMLElement|null;
+          if(!mode){mode=document.createElement("section");mode.id="cms-coming-soon";mode.className="relative grid min-h-[65vh] place-items-center bg-navy-950 px-6 py-24 text-center text-white";mode.innerHTML='<div><p class="text-xs font-bold uppercase tracking-[.24em] text-gold-500">Under construction</p><h1 class="mt-5 text-5xl font-bold">Coming soon.</h1><p class="mx-auto mt-5 max-w-xl text-lg text-navy-100">We are preparing a new experience for this page. Check back soon.</p></div>';surface.prepend(mode)}
+          const enabled=item.value==="visible";mode.dataset.enabled=enabled?"true":"false";mode.style.display=enabled?"grid":"none";Array.from(surface.children).forEach(child=>{if(child!==mode)(child as HTMLElement).style.display=enabled?"none":""});return;
+        }
         const section = surface.querySelector<HTMLElement>(`[data-cms-section="${item.key}"]`);
         if (section) {
           section.dataset.cmsOverrideId = item.id;
@@ -120,14 +127,18 @@ export function VisualContent() {
       const targets = surface.querySelectorAll<HTMLElement>(`[data-cms-key="${item.key}"]`);
       targets.forEach(target=>{
         target.dataset.cmsOverrideId=item.id;target.dataset.cmsCurrent=item.value;
+        const settings=meta(item.alt||"");
+        if(settings.fontSize)target.style.fontSize=`${settings.fontSize}px`;
+        if(settings.width)target.style.width=`${settings.width}%`;
+        if(settings.speed){target.dataset.cmsSpeed=String(settings.speed);document.dispatchEvent(new CustomEvent("cms:animation-speed",{detail:{key:item.key,speed:settings.speed}}))}
         if(item.kind==="image"){
           const image=target instanceof HTMLImageElement?target:target.querySelector<HTMLImageElement>("img");
-          if(image){image.src=resolveAsset(item.value);image.removeAttribute("srcset");image.alt=item.alt||image.alt;image.dataset.cmsCurrent=item.value}
+          if(image){image.src=resolveAsset(item.value);image.removeAttribute("srcset");image.alt=settings.alt||image.alt;image.dataset.cmsCurrent=item.value;if(settings.width)image.style.width=`${settings.width}%`}
         }else if(item.kind==="background")target.style.backgroundImage=`url("${resolveAsset(item.value)}")`;
         else if(item.kind==="video"){
           const video=target instanceof HTMLVideoElement?target:target.querySelector<HTMLVideoElement>("video");
           if(video){video.src=resolveAsset(item.value);video.querySelectorAll("source").forEach(source=>source.remove());video.load();video.dataset.cmsCurrent=item.value}
-        }else target.textContent=item.value;
+        }else if(target.dataset.cmsAnimated){target.dataset.cmsCurrent=item.value;document.dispatchEvent(new CustomEvent("cms:animated-text",{detail:{key:item.key,value:item.value}}))}else target.textContent=item.value;
       });
     };
 
@@ -171,7 +182,7 @@ export function VisualContent() {
       const kind=(target.dataset.cmsKind||"text") as Override["kind"];
       const image=target instanceof HTMLImageElement?target:target.querySelector<HTMLImageElement>("img");
       const textValue = target.dataset.cmsAnimated ? (target.dataset.cmsCurrent||target.dataset.cmsOriginal||target.textContent||"") : (target.textContent||"");
-      window.parent.postMessage({type:"cms:select",path,key:target.dataset.cmsKey,kind,value:kind==="text"?textValue:(target.dataset.cmsCurrent||target.dataset.cmsOriginal||""),alt:image?.alt||"",overrideId:target.dataset.cmsOverrideId||""},window.location.origin);
+      window.parent.postMessage({type:"cms:select",path,key:target.dataset.cmsKey,kind,value:kind==="text"?textValue:(target.dataset.cmsCurrent||target.dataset.cmsOriginal||""),alt:image?.alt||"",fontSize:parseFloat(getComputedStyle(target).fontSize)||16,width:parseFloat(target.style.width)||100,speed:Number(target.dataset.cmsSpeed||1),animated:!!target.dataset.cmsAnimated,overrideId:target.dataset.cmsOverrideId||""},window.location.origin);
     };
     const message = (event:MessageEvent) => {
       if (event.origin !== window.location.origin || event.data?.type !== "cms:apply") return;

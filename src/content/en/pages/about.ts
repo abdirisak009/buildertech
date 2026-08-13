@@ -56,6 +56,16 @@ export const about = {
     title: "Meet the team.",
     lead: "Architects, engineers and project managers working under one roof — the people who will draw, coordinate and deliver your project.",
   },
+  mvv: {
+    eyebrow: "What guides us",
+    title: "Mission, vision and values.",
+    missionTitle: "Mission",
+    missionBody: "To simplify complex design and construction projects through coordinated expertise, clear communication and dependable delivery.",
+    visionTitle: "Vision",
+    visionBody: "To become the most trusted multidisciplinary project partner for communities building across Georgia and beyond.",
+    valuesTitle: "Values",
+    valuesBody: "Integrity in every decision. Accountability in every commitment. Collaboration across every discipline. Practical excellence in every detail.",
+  },
 };
 
 export type AboutCopy = typeof about;

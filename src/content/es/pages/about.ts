@@ -59,4 +59,14 @@ export const about: AboutCopy = {
     title: "Conozca al equipo.",
     lead: "Arquitectos, ingenieros y gerentes de proyecto bajo un mismo techo — las personas que dibujarán, coordinarán y entregarán su proyecto.",
   },
+  mvv: {
+    eyebrow: "Lo que nos guía",
+    title: "Misión, visión y valores.",
+    missionTitle: "Misión",
+    missionBody: "Simplificar proyectos complejos de diseño y construcción mediante experiencia coordinada, comunicación clara y entregas confiables.",
+    visionTitle: "Visión",
+    visionBody: "Ser el socio multidisciplinario de mayor confianza para las comunidades que construyen en Georgia y más allá.",
+    valuesTitle: "Valores",
+    valuesBody: "Integridad en cada decisión. Responsabilidad en cada compromiso. Colaboración entre disciplinas. Excelencia práctica en cada detalle.",
+  },
 };

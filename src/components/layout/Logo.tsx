@@ -40,7 +40,7 @@ export function Logo({
         height={203}
         priority={priority}
         className={cn(
-          "h-12 w-auto sm:h-14",
+          "h-12 w-auto sm:h-14 [transform:scale(var(--cms-logo-scale,1))]",
           variant === "onDark" && "brightness-0 invert",
           variant === "auto" && "dark:brightness-0 dark:invert",
           // Solid white mark over the hero media, with a soft shadow so it lifts

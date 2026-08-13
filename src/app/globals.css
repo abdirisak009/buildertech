@@ -66,6 +66,11 @@
   --ease-brand: cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
+@keyframes ww-marquee { from { transform:translateX(0) } to { transform:translateX(-50%) } }
+.ww-marquee { animation:ww-marquee 35s linear infinite; }
+.ww-marquee:hover { animation-play-state:paused; }
+@media (prefers-reduced-motion:reduce){.ww-marquee{animation:none;flex-wrap:wrap;width:auto}}
+
 .cms-editing [data-cms-key] {
   cursor: pointer !important;
   outline: 2px dashed transparent;
