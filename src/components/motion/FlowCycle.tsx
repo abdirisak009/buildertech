@@ -75,9 +75,10 @@ export function FlowCycle({
   let activeWord = steps.findIndex((s, i) => shownPerWord[i] < s.length);
   if (activeWord === -1) activeWord = steps.length - 1;
   const done = count >= total;
+  const original = steps.join(" → ");
 
   return (
-    <div className="flex flex-wrap items-center gap-x-2 gap-y-2 font-[family-name:var(--font-display)] text-sm font-semibold tracking-tight">
+    <div className="flex flex-wrap items-center gap-x-2 gap-y-2 font-[family-name:var(--font-display)] text-sm font-semibold tracking-tight" data-cms-key={`animated:flow:${original}`} data-cms-kind="text" data-cms-animated="true" data-cms-original={original} data-cms-current={original}>
       {steps.map((step, i) => {
         const shown = shownPerWord[i];
         const complete = shown >= step.length;

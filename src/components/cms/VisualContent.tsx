@@ -14,7 +14,7 @@ function editableTextNodes(root: Element) {
   const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
     acceptNode(node) {
       const parent = node.parentElement;
-      if (!parent || blockedTags.has(parent.tagName) || parent.closest("[data-cms-ignore]")) return NodeFilter.FILTER_REJECT;
+      if (!parent || blockedTags.has(parent.tagName) || parent.closest("[data-cms-ignore],[data-cms-key]")) return NodeFilter.FILTER_REJECT;
       return node.textContent?.trim() ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
     },
   });
@@ -131,9 +131,26 @@ export function VisualContent() {
       });
     };
 
+    // Animated components can re-render their text after an override has been
+    // applied. Keep an explicit CMS value authoritative; restoring the
+    // override removes it and lets the original animation run again.
+    const animatedTextOverrides = new Map<string,string>();
+    const keepAnimatedOverrides = new MutationObserver(() => {
+      animatedTextOverrides.forEach((value,key) => {
+        const target = surface.querySelector<HTMLElement>(`[data-cms-key="${CSS.escape(key)}"]`);
+        if (target && target.textContent !== value) target.textContent = value;
+      });
+    });
+    keepAnimatedOverrides.observe(surface,{subtree:true,childList:true,characterData:true});
+
     fetch(`${API_URL}/overrides?path=${encodeURIComponent(path)}`)
       .then(r => r.ok ? r.json() : Promise.reject())
-      .then(body => (body.data as Override[]).forEach(apply))
+      .then(body => (body.data as Override[]).forEach(item => {
+        if (item.kind === "text" && surface.querySelector(`[data-cms-key="${CSS.escape(item.key)}"][data-cms-animated]`)) {
+          animatedTextOverrides.set(item.key,item.value);
+        }
+        apply(item);
+      }))
       .catch(() => undefined)
       .finally(() => {
         if (!editMode) return;
@@ -141,7 +158,7 @@ export function VisualContent() {
         publishSections();
       });
 
-    if (!editMode) return;
+    if (!editMode) return () => keepAnimatedOverrides.disconnect();
     document.documentElement.classList.add("cms-editing");
     const click = (rawEvent:Event) => {
       const event = rawEvent as MouseEvent;
@@ -153,17 +170,19 @@ export function VisualContent() {
       target.classList.add("cms-selected");
       const kind=(target.dataset.cmsKind||"text") as Override["kind"];
       const image=target instanceof HTMLImageElement?target:target.querySelector<HTMLImageElement>("img");
-      window.parent.postMessage({type:"cms:select",path,key:target.dataset.cmsKey,kind,value:kind==="text"?(target.textContent||""):(target.dataset.cmsCurrent||target.dataset.cmsOriginal||""),alt:image?.alt||"",overrideId:target.dataset.cmsOverrideId||""},window.location.origin);
+      const textValue = target.dataset.cmsAnimated ? (target.dataset.cmsCurrent||target.dataset.cmsOriginal||target.textContent||"") : (target.textContent||"");
+      window.parent.postMessage({type:"cms:select",path,key:target.dataset.cmsKey,kind,value:kind==="text"?textValue:(target.dataset.cmsCurrent||target.dataset.cmsOriginal||""),alt:image?.alt||"",overrideId:target.dataset.cmsOverrideId||""},window.location.origin);
     };
     const message = (event:MessageEvent) => {
       if (event.origin !== window.location.origin || event.data?.type !== "cms:apply") return;
       const item = event.data.item as Override;
+      if(item.kind==="text"&&surface.querySelector(`[data-cms-key="${CSS.escape(item.key)}"][data-cms-animated]`))animatedTextOverrides.set(item.key,item.value);
       apply(item);
       if (item.kind === "section") publishSections();
     };
     surface.addEventListener("click",click,true);
     window.addEventListener("message",message);
-    return () => { surface.removeEventListener("click",click,true); window.removeEventListener("message",message); document.documentElement.classList.remove("cms-editing"); };
+    return () => { keepAnimatedOverrides.disconnect(); surface.removeEventListener("click",click,true); window.removeEventListener("message",message); document.documentElement.classList.remove("cms-editing"); };
   },[]);
   return null;
 }
