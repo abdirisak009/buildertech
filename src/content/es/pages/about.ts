@@ -4,22 +4,22 @@ export const about: AboutCopy = {
   meta: {
     title: "Quiénes somos",
     description:
-      "Builders Tech comenzó en una oficina de sótano en Atlanta con un escritorio y un plotter. Hoy entregamos documentación de diseño y construcción lista para permiso en todo Georgia.",
+      "Conozca Builders Tech, un equipo multidisciplinario con sede en Atlanta que ofrece diseño, ingeniería, permisos y apoyo de construcción coordinados.",
   },
 
   hero: {
     breadcrumb: "Quiénes somos",
     eyebrow: "Quiénes somos",
-    titleLead: "De una oficina de sótano en Atlanta a ",
-    titleAccent: "más de 400 proyectos",
+    titleLead: "Un equipo coordinado. ",
+    titleAccent: "Creado alrededor de su proyecto",
     titleTail: ".",
-    lead: "Un escritorio, un plotter y la convicción de que los propietarios merecen el mismo estándar de documentación que los grandes desarrolladores dan por sentado. Eso no ha cambiado; la escala sí.",
+    lead: "Builders Tech reúne arquitectura, ingeniería, gerencia de proyectos y experiencia en construcción para llevar cada proyecto desde la idea inicial hasta una solución construible y lista para permisos.",
     imageAlt: "Una vivienda residencial terminada al anochecer",
   },
 
   story: {
-    eyebrow: "Nuestra historia",
-    title: "Empezamos donde empiezan nuestros clientes.",
+    eyebrow: "Quiénes somos",
+    title: "Un socio práctico para cada etapa de la construcción.",
     imageAlt: "Planos arquitectónicos extendidos sobre una mesa de dibujo",
   },
 
