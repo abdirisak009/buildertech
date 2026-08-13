@@ -21,24 +21,22 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      - name: Install deployment tools
-        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends sshpass
-
       - name: Configure SSH
         env:
           VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
         run: |
           install -m 700 -d ~/.ssh
+          printf '%s\n' "$VPS_SSH_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -H "$VPS_HOST" >> ~/.ssh/known_hosts
 
       - name: Upload release
         env:
           VPS_HOST: ${{ secrets.VPS_HOST }}
           VPS_USER: ${{ secrets.VPS_USER }}
-          SSHPASS: ${{ secrets.VPS_PASSWORD }}
         run: |
-          sshpass -e rsync -az --delete \
-            -e 'ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no' \
+          rsync -az --delete \
             --exclude='.git/' \
             --exclude='.github/' \
             --exclude='.env*' \
@@ -50,12 +48,8 @@ jobs:
         env:
           VPS_HOST: ${{ secrets.VPS_HOST }}
           VPS_USER: ${{ secrets.VPS_USER }}
-          SSHPASS: ${{ secrets.VPS_PASSWORD }}
         run: |
-          sshpass -e ssh \
-            -o PreferredAuthentications=password \
-            -o PubkeyAuthentication=no \
-            "$VPS_USER@$VPS_HOST" <<'REMOTE'
+          ssh "$VPS_USER@$VPS_HOST" <<'REMOTE'
             set -euo pipefail
             cd /opt/builders-tech
             docker compose -f docker-compose.prod.yml up -d --build --remove-orphans
