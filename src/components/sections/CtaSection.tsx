@@ -57,7 +57,7 @@ export function CtaSection({
                 {lead ?? d.lead}
               </p>
 
-              <div className="mt-10 flex flex-wrap gap-3">
+              <div className="mt-10 flex flex-col items-start gap-4">
                 {isScheduleCta ? (
                   <ScheduleCta
                     locale={locale}
@@ -70,12 +70,12 @@ export function CtaSection({
                   </ButtonLink>
                 )}
                 {showPhone && (
-                  <>
+                  <div className="flex flex-col gap-3">
                     <ButtonLink
                       href={`tel:${site.phoneEnHref}`}
                       variant="outline"
                       size="lg"
-                      className="text-white"
+                      className="justify-start text-white"
                     >
                       <Phone aria-hidden className="size-4" />
                       {site.phoneEn}
@@ -87,7 +87,7 @@ export function CtaSection({
                       href={`tel:${site.phoneEsHref}`}
                       variant="outline"
                       size="lg"
-                      className="text-white"
+                      className="justify-start text-white"
                     >
                       <Phone aria-hidden className="size-4" />
                       {site.phoneEs}
@@ -95,7 +95,7 @@ export function CtaSection({
                         ES
                       </span>
                     </ButtonLink>
-                  </>
+                  </div>
                 )}
               </div>
             </div>

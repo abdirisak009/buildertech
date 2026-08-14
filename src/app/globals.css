@@ -67,9 +67,14 @@
 }
 
 @keyframes ww-marquee { from { transform:translateX(0) } to { transform:translateX(-50%) } }
-.ww-marquee { animation:ww-marquee 35s linear infinite; }
+.ww-marquee { animation:ww-marquee 60s linear infinite; }
 .ww-marquee:hover { animation-play-state:paused; }
 @media (prefers-reduced-motion:reduce){.ww-marquee{animation:none;flex-wrap:wrap;width:auto}}
+
+/* Our Work — continuous slow marquee (reuses the ww-marquee keyframe). */
+.work-marquee { animation:ww-marquee 55s linear infinite; }
+.marquee-pause:hover .work-marquee { animation-play-state:paused; }
+@media (prefers-reduced-motion:reduce){.work-marquee{animation:none}}
 
 .cms-editing [data-cms-key] {
   cursor: pointer !important;
