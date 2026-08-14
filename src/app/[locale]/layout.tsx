@@ -11,6 +11,7 @@ import { getUi } from "@/i18n/ui";
 import { VisualContent } from "@/components/cms/VisualContent";
 import { GlobalSettings } from "@/components/cms/GlobalSettings";
 import { DynamicContent } from "@/components/cms/DynamicContent";
+import { MotionPrefsProvider } from "@/components/motion/MotionPrefs";
 
 export function generateStaticParams() {
   return LOCALES.map((locale) => ({ locale }));
@@ -72,8 +73,12 @@ export default async function LocaleLayout({
 
   return (
     <ThemeProvider>
-      <IntakeProvider locale={typedLocale}>
-        <div data-cms-surface className="flex min-h-screen flex-col bg-background text-foreground">
+      <MotionPrefsProvider>
+        <IntakeProvider locale={typedLocale}>
+          <div
+            data-cms-surface
+            className="flex min-h-screen flex-col bg-background text-foreground"
+          >
             <a
               href="#main"
               className="sr-only rounded-full bg-gold-500 px-6 py-3 font-semibold text-navy-950 focus:not-sr-only focus:fixed focus:left-5 focus:top-5 focus:z-[100]"
@@ -88,8 +93,9 @@ export default async function LocaleLayout({
             <Footer locale={typedLocale} />
             <GlobalSettings />
             <VisualContent />
-        </div>
-      </IntakeProvider>
+          </div>
+        </IntakeProvider>
+      </MotionPrefsProvider>
     </ThemeProvider>
   );
 }

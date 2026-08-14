@@ -228,6 +228,12 @@ func (a *App) seed() error {
 		{Key: "linkedin_url", Value: "", Group: "social", Label: "LinkedIn URL"},
 		{Key: "youtube_url", Value: "", Group: "social", Label: "YouTube URL"},
 		{Key: "x_url", Value: "", Group: "social", Label: "X / Twitter URL"},
+		{Key: "animations_enabled", Value: "true", Group: "animations", Label: "Animations on the website"},
+		{Key: "animation_speed", Value: "normal", Group: "animations", Label: "Animation speed"},
+		{Key: "animation_reveal", Value: "true", Group: "animations", Label: "Fade in sections while scrolling"},
+		{Key: "animation_typing", Value: "true", Group: "animations", Label: "Typewriter effect in headlines"},
+		{Key: "animation_counters", Value: "true", Group: "animations", Label: "Counting numbers and statistics"},
+		{Key: "animation_hover", Value: "true", Group: "animations", Label: "Hover effects on cards and buttons"},
 		{Key: "seo_title", Value: "BuildersTech", Group: "seo", Label: "Default SEO title"},
 		{Key: "seo_description", Value: "Engineering, architecture and construction technology.", Group: "seo", Label: "SEO description"},
 	}
@@ -575,7 +581,7 @@ func (a *App) listSettings(c *gin.Context) {
 }
 func (a *App) publicSettings(c *gin.Context) {
 	var rows []Setting
-	a.DB.Where("\"group\" IN ?", []string{"general", "branding", "contact", "social", "seo"}).Find(&rows)
+	a.DB.Where("\"group\" IN ?", []string{"general", "branding", "contact", "social", "seo", "animations"}).Find(&rows)
 	out := map[string]string{}
 	for _, x := range rows {
 		out[x.Key] = x.Value

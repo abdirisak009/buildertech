@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useInView, useReducedMotion } from "motion/react";
+import { useMotionPrefs } from "./MotionPrefs";
 
 export function Counter({
   value,
@@ -16,7 +17,8 @@ export function Counter({
 }) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: false, amount: 0.4 });
-  const reduced = useReducedMotion();
+  const prefs = useMotionPrefs();
+  const reduced = useReducedMotion() || !prefs.counters;
   const [progressValue, setProgressValue] = useState(0);
 
   // With reduced motion we never animate — render the final value directly.
@@ -30,7 +32,7 @@ export function Counter({
 
     const step = (ts: number) => {
       if (start === null) start = ts;
-      const progress = Math.min((ts - start) / duration, 1);
+      const progress = Math.min((ts - start) / (duration * prefs.factor), 1);
       // easeOutCubic
       const eased = 1 - Math.pow(1 - progress, 3);
       setProgressValue(value * eased);
@@ -39,7 +41,7 @@ export function Counter({
 
     frame = requestAnimationFrame(step);
     return () => cancelAnimationFrame(frame);
-  }, [inView, reduced, value, duration]);
+  }, [inView, reduced, value, duration, prefs.factor]);
 
   const formatted = display.toLocaleString("en-US", {
     minimumFractionDigits: decimals,

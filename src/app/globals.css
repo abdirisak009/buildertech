@@ -239,6 +239,29 @@
   }
 }
 
+/* ------------------------------------------------------------
+   Marquee — a seamless, continuously scrolling strip. The track
+   holds two identical copies of its content; translating it by
+   -50% lands the second copy exactly where the first began, so
+   the loop is invisible. Speed is set per-instance via
+   --marquee-duration (larger = slower). Pauses on hover, and is
+   disabled by the reduced-motion / CMS "motion off" rules above.
+   ------------------------------------------------------------ */
+@keyframes bt-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+@utility animate-marquee {
+  animation: bt-marquee var(--marquee-duration, 40s) linear infinite;
+}
+.marquee-pause:hover .animate-marquee {
+  animation-play-state: paused;
+}
+
 /* Fluid display sizes */
 @utility text-display-xl {
   font-size: clamp(2.75rem, 7.2vw, 6.5rem);
@@ -273,6 +296,29 @@
   transition: background-color 180ms ease, transform 180ms ease;
   &:hover { background: #f1a56b; }
   &:active { transform: translateY(1px); }
+}
+
+/* ------------------------------------------------------------
+   Animations switched off from the CMS (Site settings → Animations).
+   Mirrors the reduced-motion rules below for plain CSS animations.
+   ------------------------------------------------------------ */
+html[data-motion="off"] {
+  scroll-behavior: auto;
+}
+html[data-motion="off"] *,
+html[data-motion="off"] *::before,
+html[data-motion="off"] *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+}
+html[data-motion="off"] .animate-caret {
+  animation: none;
+  opacity: 0;
+}
+/* Hover effects off: keep colour changes, drop movement and scaling. */
+html[data-motion-hover="off"] *:hover {
+  transform: none !important;
 }
 
 /* ------------------------------------------------------------

@@ -277,25 +277,46 @@ export function WhereWeWork({ copy }: { copy: Copy }) {
           </div>
         </div>
 
-        {/* ---- Cities (full-width card grid) ---- */}
+        {/* ---- Cities (slow, seamless marquee) ---- */}
         <Reveal delay={0.1}>
           <div className="mt-14 rounded-3xl border border-white/10 bg-white/[0.02] p-6 sm:p-8">
-            <h3 className="text-sm font-semibold uppercase tracking-[0.16em] text-navy-200">
+            <h3 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.16em] text-navy-200">
+              <MapPin aria-hidden className="size-4 text-gold-400" />
               {copy.citiesLabel}
             </h3>
-            <ul className="mt-5 flex flex-wrap gap-2.5">
-              {SERVICE_CITIES_ALL.map((city) => (
-                <li key={city}>
-                  <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-2 text-sm text-navy-100 transition-colors hover:border-gold-500/50 hover:bg-white/[0.08] hover:text-white">
-                    <span
-                      aria-hidden
-                      className="size-1.5 shrink-0 rounded-full bg-gold-500"
-                    />
-                    {city}
-                  </span>
-                </li>
-              ))}
-            </ul>
+            <div className="marquee-pause relative mt-5 overflow-hidden">
+              {/* Soft fades at both edges */}
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-navy-950 to-transparent"
+              />
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-navy-950 to-transparent"
+              />
+              <ul
+                className="animate-marquee flex w-max gap-2.5"
+                style={{ ["--marquee-duration" as string]: "60s" }}
+              >
+                {/* Two identical copies for the seamless loop */}
+                {[...SERVICE_CITIES_ALL, ...SERVICE_CITIES_ALL].map(
+                  (city, i) => (
+                    <li
+                      key={i}
+                      aria-hidden={i >= SERVICE_CITIES_ALL.length}
+                    >
+                      <span className="inline-flex items-center gap-2 whitespace-nowrap rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-2 text-sm text-navy-100 transition-colors hover:border-gold-500/50 hover:bg-white/[0.08] hover:text-white">
+                        <span
+                          aria-hidden
+                          className="size-1.5 shrink-0 rounded-full bg-gold-500"
+                        />
+                        {city}
+                      </span>
+                    </li>
+                  ),
+                )}
+              </ul>
+            </div>
           </div>
         </Reveal>
       </Container>

@@ -2,15 +2,36 @@
 
 import { useEffect } from "react";
 import { API_URL } from "@/lib/api/client";
+import { SPEED_FACTORS, setMotionPrefs } from "@/components/motion/MotionPrefs";
 
 type Settings = Record<string,string>;
 const apiOrigin = API_URL.replace(/\/api\/v1\/?$/,"");
 function asset(value:string){return /^(https?:|data:|blob:)/.test(value)?value:`${apiOrigin}${value}`}
+const on=(value:string|undefined)=>value===undefined||value===""||value==="true";
+
+/** Animation settings drive both the React motion components and plain CSS. */
+function applyMotion(values:Settings){
+  const enabled=on(values.animations_enabled);
+  const factor=SPEED_FACTORS[values.animation_speed]??1;
+  setMotionPrefs({
+    enabled,
+    factor,
+    reveal:on(values.animation_reveal),
+    typing:on(values.animation_typing),
+    counters:on(values.animation_counters),
+    hover:on(values.animation_hover),
+  });
+  const root=document.documentElement;
+  root.dataset.motion=enabled?"on":"off";
+  root.dataset.motionHover=enabled&&on(values.animation_hover)?"on":"off";
+  root.style.setProperty("--motion-factor",String(factor));
+}
 
 export function GlobalSettings(){
   useEffect(()=>{
     fetch(`${API_URL}/settings/public`).then(r=>r.ok?r.json():Promise.reject()).then(body=>{
       const values=body.data as Settings;
+      applyMotion(values);
       const root=document.documentElement;
       if(values.brand_primary)root.style.setProperty("--color-navy-700",values.brand_primary);
       if(values.brand_accent){root.style.setProperty("--color-gold-500",values.brand_accent);root.style.setProperty("--color-orange-500",values.brand_accent)}

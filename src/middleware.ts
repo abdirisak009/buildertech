@@ -22,7 +22,12 @@ export function middleware(request: NextRequest) {
   const hasLocale = LOCALES.some(
     (locale) => pathname === `/${locale}` || pathname.startsWith(`/${locale}/`),
   );
-  if (hasLocale) return NextResponse.next();
+  if (hasLocale) {
+    // Expose the active locale to the root layout so <html lang> is correct.
+    const headers = new Headers(request.headers);
+    headers.set("x-locale", pathname.split("/")[1]);
+    return NextResponse.next({ request: { headers } });
+  }
 
   const cookieLocale = request.cookies.get(LOCALE_COOKIE)?.value;
   const locale =

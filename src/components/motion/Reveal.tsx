@@ -2,6 +2,7 @@
 
 import { motion, useReducedMotion, type Variants } from "motion/react";
 import { cn } from "@/lib/utils";
+import { useMotionPrefs } from "./MotionPrefs";
 
 type Direction = "up" | "down" | "left" | "right" | "none";
 
@@ -26,7 +27,8 @@ export function Reveal({
   direction?: Direction;
   as?: "div" | "section" | "li" | "article" | "span";
 }) {
-  const reduced = useReducedMotion();
+  const prefs = useMotionPrefs();
+  const reduced = useReducedMotion() || !prefs.reveal;
   const { x, y } = reduced ? OFFSET.none : OFFSET[direction];
   const MotionTag = motion[as];
 
@@ -37,8 +39,8 @@ export function Reveal({
       whileInView={{ opacity: 1, x: 0, y: 0 }}
       viewport={{ once: true, margin: "-10% 0px -8% 0px" }}
       transition={{
-        duration: reduced ? 0 : 0.7,
-        delay: reduced ? 0 : delay,
+        duration: reduced ? 0 : 0.7 * prefs.factor,
+        delay: reduced ? 0 : delay * prefs.factor,
         ease: [0.22, 0.61, 0.36, 1],
       }}
     >
@@ -61,15 +63,16 @@ export function RevealGroup({
   delay?: number;
   as?: "div" | "ul" | "ol" | "section";
 }) {
-  const reduced = useReducedMotion();
+  const prefs = useMotionPrefs();
+  const reduced = useReducedMotion() || !prefs.reveal;
   const MotionTag = motion[as];
 
   const variants: Variants = {
     hidden: {},
     show: {
       transition: {
-        staggerChildren: reduced ? 0 : stagger,
-        delayChildren: reduced ? 0 : delay,
+        staggerChildren: reduced ? 0 : stagger * prefs.factor,
+        delayChildren: reduced ? 0 : delay * prefs.factor,
       },
     },
   };
@@ -96,7 +99,8 @@ export function RevealItem({
   className?: string;
   as?: "div" | "li" | "article";
 }) {
-  const reduced = useReducedMotion();
+  const prefs = useMotionPrefs();
+  const reduced = useReducedMotion() || !prefs.reveal;
   const MotionTag = motion[as];
 
   const variants: Variants = {
@@ -105,7 +109,7 @@ export function RevealItem({
       opacity: 1,
       y: 0,
       transition: {
-        duration: reduced ? 0 : 0.6,
+        duration: reduced ? 0 : 0.6 * prefs.factor,
         ease: [0.22, 0.61, 0.36, 1],
       },
     },

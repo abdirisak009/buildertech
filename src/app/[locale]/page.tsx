@@ -15,7 +15,7 @@ import { ProcessTimeline } from "@/components/sections/ProcessTimeline";
 import { OurWork } from "@/components/sections/OurWork";
 import { VideoShowcase } from "@/components/sections/VideoShowcase";
 
-import { getContent, type TrustLogo } from "@/content";
+import { getContent } from "@/content";
 import { getUi } from "@/i18n/ui";
 import { isLocale } from "@/i18n/config";
 import { IMAGES } from "@/content/images";
@@ -79,7 +79,7 @@ export default async function HomePage({
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
 
-  const { homeServices, trustLogos, testimonials, reviewPlatforms, pages } =
+  const { homeServices, testimonials, reviewPlatforms, pages } =
     getContent(locale);
   const ui = getUi(locale);
   const c = pages.home;
@@ -240,67 +240,6 @@ export default async function HomePage({
         </Container>
       </section>
 
-      {/* ---------------- Companies Who Trust Us (constellation) ---------------- */}
-      <section className="relative isolate overflow-hidden bg-navy-950 py-20 text-white sm:py-28 lg:py-32">
-        <div aria-hidden className="absolute inset-0 bg-blueprint opacity-[0.06]" />
-        <Container className="relative">
-          <Reveal>
-            <h2 className="text-center text-display-lg text-white">
-              {c.trust.title}
-            </h2>
-          </Reveal>
-
-          {(() => {
-            const half = Math.ceil(trustLogos.length / 2);
-            const left = trustLogos.slice(0, half);
-            const right = trustLogos.slice(half);
-            return (
-              <div className="mt-16 flex flex-col items-center gap-10 lg:flex-row lg:justify-between lg:gap-8">
-                {/* Left cluster */}
-                <RevealGroup
-                  as="ul"
-                  stagger={0.05}
-                  className="order-2 grid grid-cols-3 gap-5 sm:gap-6 lg:order-1"
-                >
-                  {left.map((logo) => (
-                    <RevealItem as="li" key={logo.src}>
-                      <LogoBadge logo={logo} />
-                    </RevealItem>
-                  ))}
-                </RevealGroup>
-
-                {/* Center TrustDale seal */}
-                <Reveal className="order-1 shrink-0 lg:order-2 lg:mx-4">
-                  <div className="relative size-56 sm:size-72 lg:size-80">
-                    <Image
-                      src="/trustdale-seal.png"
-                      alt="TrustDale Certified — Investigated, Certified, Guaranteed"
-                      fill
-                      sizes="320px"
-                      className="object-contain"
-                      priority
-                    />
-                  </div>
-                </Reveal>
-
-                {/* Right cluster */}
-                <RevealGroup
-                  as="ul"
-                  stagger={0.05}
-                  className="order-3 grid grid-cols-3 gap-5 sm:gap-6"
-                >
-                  {right.map((logo) => (
-                    <RevealItem as="li" key={logo.src}>
-                      <LogoBadge logo={logo} />
-                    </RevealItem>
-                  ))}
-                </RevealGroup>
-              </div>
-            );
-          })()}
-        </Container>
-      </section>
-
       {/* ---------------- Video showcase ---------------- */}
       <VideoShowcase
         eyebrow={c.video.eyebrow}
@@ -408,23 +347,5 @@ export default async function HomePage({
 
       <CtaSection locale={locale} />
     </>
-  );
-}
-
-/** A partner logo in a white circular badge. */
-function LogoBadge({ logo }: { logo: TrustLogo }) {
-  return (
-    <div
-      title={logo.name}
-      className="relative grid size-24 place-items-center overflow-hidden rounded-full bg-white shadow-[0_8px_24px_-8px_rgba(0,0,0,0.5)] transition-transform duration-300 hover:scale-105 sm:size-28"
-    >
-      <Image
-        src={logo.src}
-        alt={logo.name}
-        fill
-        sizes="112px"
-        className="object-contain p-4"
-      />
-    </div>
   );
 }

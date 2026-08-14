@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { ChevronRight } from "lucide-react";
 import { useReducedMotion } from "motion/react";
 import { cn } from "@/lib/utils";
+import { useMotionPrefs } from "./MotionPrefs";
 
 /**
  * The Architectural → Structural → Civil flow, revealed with a typewriter
@@ -22,13 +23,17 @@ export function FlowCycle({
   holdTime?: number;
   deleteSpeed?: number;
 }) {
-  const reduced = useReducedMotion();
+  const prefs = useMotionPrefs();
+  const reduced = useReducedMotion() || !prefs.typing;
   const total = steps.reduce((sum, s) => sum + s.length, 0);
-  const [count, setCount] = useState(reduced ? total : 0);
+  const [typed, setTyped] = useState(0);
+  // With motion off the whole line is shown at once, no timers involved.
+  const count = reduced ? total : typed;
 
   useEffect(() => {
     if (reduced) return;
 
+    const scale = prefs.factor;
     let i = 0;
     let phase: "typing" | "holding" | "deleting" = "typing";
     let timer: ReturnType<typeof setTimeout>;
@@ -36,31 +41,31 @@ export function FlowCycle({
     const tick = () => {
       if (phase === "typing") {
         i += 1;
-        setCount(i);
+        setTyped(i);
         if (i >= total) {
           phase = "holding";
-          timer = setTimeout(tick, holdTime);
+          timer = setTimeout(tick, holdTime * scale);
           return;
         }
-        timer = setTimeout(tick, speed);
+        timer = setTimeout(tick, speed * scale);
       } else if (phase === "holding") {
         phase = "deleting";
-        timer = setTimeout(tick, deleteSpeed);
+        timer = setTimeout(tick, deleteSpeed * scale);
       } else {
         i -= 1;
-        setCount(i);
+        setTyped(i);
         if (i <= 0) {
           phase = "typing";
-          timer = setTimeout(tick, speed);
+          timer = setTimeout(tick, speed * scale);
           return;
         }
-        timer = setTimeout(tick, deleteSpeed);
+        timer = setTimeout(tick, deleteSpeed * scale);
       }
     };
 
-    timer = setTimeout(tick, speed);
+    timer = setTimeout(tick, speed * scale);
     return () => clearTimeout(timer);
-  }, [reduced, total, speed, holdTime, deleteSpeed]);
+  }, [reduced, total, speed, holdTime, deleteSpeed, prefs.factor]);
 
   // How many characters of each word are visible for the current count.
   const shownPerWord = steps.map((s, i) => {
