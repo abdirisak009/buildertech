@@ -1,14 +1,25 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useReducedMotion } from "motion/react";
 import { cn } from "@/lib/utils";
 
 /**
- * Typewriter effect — types `text` out one character at a time with a blinking
- * caret. Reduced-motion users get the full text immediately. The full string is
- * always exposed to assistive tech via aria-label.
+ * Typewriter effect. Types `text` out one character at a time with a blinking
+ * caret. Reduced-motion users get the full text immediately, exposed to
+ * assistive tech via aria-label.
+ *
+ * `text` (and any CMS override) may contain MULTIPLE phrases separated by a
+ * newline or an arrow (→). When more than one phrase is given, they rotate:
+ * each is typed, held, deleted, then the next one is typed — forever. A single
+ * phrase behaves as before (types once, or loops if `loop` is set).
  */
+const PHRASE_SPLIT = /\s*(?:→|\r?\n)\s*/;
+function parsePhrases(raw: string): string[] {
+  const list = raw.split(PHRASE_SPLIT).map((s) => s.trim()).filter(Boolean);
+  return list.length ? list : [raw];
+}
+
 export function TypeText({
   text,
   className,
@@ -22,21 +33,46 @@ export function TypeText({
   className?: string;
   startDelay?: number;
   speed?: number;
-  /** When true, the text types out, pauses, deletes, and repeats forever. */
+  /** When true, a single phrase types out, pauses, deletes, and repeats. */
   loop?: boolean;
-  /** How long the finished word stays on screen before deleting (ms). */
+  /** How long a finished phrase stays on screen before deleting (ms). */
   holdTime?: number;
   /** Per-character deletion speed (ms). */
   deleteSpeed?: number;
 }) {
   const reduced = useReducedMotion();
   const [count, setCount] = useState(0);
-  const [speedFactor,setSpeedFactor]=useState(1);
-  const [displayText,setDisplayText]=useState(text);
+  const [speedFactor, setSpeedFactor] = useState(1);
+  // `source` is the raw value (may hold several phrases); `index` is which one
+  // is currently on screen.
+  const [source, setSource] = useState(text);
+  const [index, setIndex] = useState(0);
   const cmsKey = `animated:type:${text}`;
 
-  useEffect(()=>{const update=(event:Event)=>{const detail=(event as CustomEvent<{key:string;speed:number}>).detail;if(detail?.key===cmsKey)setSpeedFactor(detail.speed>0?detail.speed:1)};document.addEventListener("cms:animation-speed",update);return()=>document.removeEventListener("cms:animation-speed",update)},[cmsKey]);
-  useEffect(()=>{const update=(event:Event)=>{const detail=(event as CustomEvent<{key:string;value:string}>).detail;if(detail?.key===cmsKey){setDisplayText(detail.value);setCount(0)}};document.addEventListener("cms:animated-text",update);return()=>document.removeEventListener("cms:animated-text",update)},[cmsKey]);
+  const phrases = useMemo(() => parsePhrases(source), [source]);
+  const multi = phrases.length > 1;
+  const current = phrases[index % phrases.length] || "";
+
+  useEffect(() => {
+    const update = (event: Event) => {
+      const detail = (event as CustomEvent<{ key: string; speed: number }>).detail;
+      if (detail?.key === cmsKey) setSpeedFactor(detail.speed > 0 ? detail.speed : 1);
+    };
+    document.addEventListener("cms:animation-speed", update);
+    return () => document.removeEventListener("cms:animation-speed", update);
+  }, [cmsKey]);
+  useEffect(() => {
+    const update = (event: Event) => {
+      const detail = (event as CustomEvent<{ key: string; value: string }>).detail;
+      if (detail?.key === cmsKey) {
+        setSource(detail.value);
+        setIndex(0);
+        setCount(0);
+      }
+    };
+    document.addEventListener("cms:animated-text", update);
+    return () => document.removeEventListener("cms:animated-text", update);
+  }, [cmsKey]);
 
   useEffect(() => {
     if (reduced) return;
@@ -49,42 +85,58 @@ export function TypeText({
       if (phase === "typing") {
         i += 1;
         setCount(i);
-        if (i >= displayText.length) {
-          if (!loop) return;
+        if (i >= current.length) {
+          // A single, non-looping phrase stops fully typed. Multiple phrases
+          // always rotate (looping is implied).
+          if (!loop && !multi) return;
           phase = "holding";
-          timer = setTimeout(tick, holdTime/speedFactor);
+          timer = setTimeout(tick, holdTime / speedFactor);
           return;
         }
-        timer = setTimeout(tick, speed/speedFactor);
+        timer = setTimeout(tick, speed / speedFactor);
       } else if (phase === "holding") {
         phase = "deleting";
-        timer = setTimeout(tick, deleteSpeed/speedFactor);
+        timer = setTimeout(tick, deleteSpeed / speedFactor);
       } else {
         i -= 1;
         setCount(i);
         if (i <= 0) {
+          if (multi) {
+            // Advance to the next phrase; changing `index` restarts this effect
+            // which types the next one from the start.
+            setIndex((x) => (x + 1) % phrases.length);
+            return;
+          }
           phase = "typing";
-          timer = setTimeout(tick, speed/speedFactor);
+          timer = setTimeout(tick, speed / speedFactor);
           return;
         }
-        timer = setTimeout(tick, deleteSpeed/speedFactor);
+        timer = setTimeout(tick, deleteSpeed / speedFactor);
       }
     };
 
-    const start = setTimeout(tick, startDelay/speedFactor);
+    const start = setTimeout(tick, startDelay / speedFactor);
     return () => {
       clearTimeout(start);
       clearTimeout(timer);
     };
-  }, [reduced, displayText.length, speed, startDelay, loop, holdTime, deleteSpeed,speedFactor]);
+  }, [reduced, current, index, phrases.length, multi, speed, startDelay, loop, holdTime, deleteSpeed, speedFactor]);
 
-  // Reduced-motion users see the full text with no animation.
-  const shown = reduced ? displayText.length : count;
-  const done = shown >= displayText.length;
+  // Reduced-motion users see the first phrase in full, no animation.
+  const shown = reduced ? current.length : count;
+  const done = shown >= current.length;
 
   return (
-    <span className={className} aria-label={displayText} data-cms-key={cmsKey} data-cms-kind="text" data-cms-animated="true" data-cms-original={text} data-cms-current={displayText}>
-      <span aria-hidden>{displayText.slice(0, shown)}</span>
+    <span
+      className={className}
+      aria-label={current}
+      data-cms-key={cmsKey}
+      data-cms-kind="text"
+      data-cms-animated="true"
+      data-cms-original={text}
+      data-cms-current={source}
+    >
+      <span aria-hidden>{current.slice(0, shown)}</span>
       <span
         aria-hidden
         className={cn(
