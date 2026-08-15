@@ -645,8 +645,12 @@ func (a *App) upsertOverride(c *gin.Context) {
 	if in.Kind != "image" && in.Kind != "background" && in.Kind != "video" && in.Kind != "section" {
 		in.Kind = "text"
 	}
+	// Look up including soft-deleted rows. The (path,key) unique index still
+	// covers a soft-deleted override, so a plain Create after a "restore"
+	// would hit a unique-constraint violation. Reviving the existing row
+	// (clearing DeletedAt) keeps the upsert working across edit/restore cycles.
 	var item PageOverride
-	result := a.DB.Where("path = ? AND key = ?", in.Path, in.Key).First(&item)
+	result := a.DB.Unscoped().Where("path = ? AND key = ?", in.Path, in.Key).First(&item)
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		item = PageOverride{Path: in.Path, Key: in.Key, Kind: in.Kind, Value: in.Value, Alt: in.Alt}
 		if err := a.DB.Create(&item).Error; err != nil {
@@ -658,7 +662,8 @@ func (a *App) upsertOverride(c *gin.Context) {
 		return
 	} else {
 		item.Kind, item.Value, item.Alt = in.Kind, in.Value, in.Alt
-		if err := a.DB.Save(&item).Error; err != nil {
+		item.DeletedAt = gorm.DeletedAt{} // revive if it was previously restored
+		if err := a.DB.Unscoped().Save(&item).Error; err != nil {
 			fail(c, 500, "Could not save page content")
 			return
 		}
@@ -667,7 +672,9 @@ func (a *App) upsertOverride(c *gin.Context) {
 }
 
 func (a *App) deleteOverride(c *gin.Context) {
-	if result := a.DB.Delete(&PageOverride{}, "id = ?", c.Param("id")); result.Error != nil {
+	// Hard-delete so the (path,key) slot is freed. A soft delete would leave a
+	// row behind that blocks re-saving the same field (unique index collision).
+	if result := a.DB.Unscoped().Delete(&PageOverride{}, "id = ?", c.Param("id")); result.Error != nil {
 		fail(c, 500, "Could not restore original content")
 		return
 	}
