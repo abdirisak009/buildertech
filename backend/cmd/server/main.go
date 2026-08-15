@@ -262,9 +262,13 @@ func (a *App) seed() error {
 		}
 		a.DB.Create(&Setting{Key: "cms_logos_imported", Value: "true", Group: "system", Label: "Legacy logos imported"})
 	}
-	var teamImported int64
-	a.DB.Model(&Setting{}).Where("key = ?", "cms_team_imported").Count(&teamImported)
-	if teamImported == 0 {
+	// Team seed. Uses a versioned guard so that adding members to this list
+	// backfills existing databases (older installs were seeded with only four).
+	// FirstOrCreate per member is idempotent: it adds any missing member without
+	// duplicating or overwriting rows an admin may have already edited.
+	var teamSeeded int64
+	a.DB.Model(&Setting{}).Where("key = ?", "cms_team_seed_v2").Count(&teamSeeded)
+	if teamSeeded == 0 {
 		team := []map[string]string{
 			{"firstName": "Shailesh", "lastInitial": "G", "credentials": "PE", "role": "Civil Engineer", "photo": "/teams/shailesh-g.jpg", "bio": "Designs grading, drainage, utilities and site plans that move projects toward permit approval."},
 			{"firstName": "Daniela", "lastInitial": "C", "credentials": "RA", "role": "Architect", "photo": "/teams/daniela-c.jpg", "bio": "Turns ideas into buildable, code-compliant designs for residential and commercial spaces."},
@@ -276,10 +280,14 @@ func (a *App) seed() error {
 		for _, locale := range []string{"en", "es"} {
 			for index, member := range team {
 				data, _ := json.Marshal(member)
-				a.DB.Create(&Content{Locale: locale, Key: fmt.Sprintf("team-%02d", index+1), Title: member["firstName"], Type: "team", Status: "published", Data: string(data)})
+				key := fmt.Sprintf("team-%02d", index+1)
+				a.DB.
+					Where(Content{Locale: locale, Key: key, Type: "team"}).
+					Attrs(Content{Title: member["firstName"], Status: "published", Data: string(data)}).
+					FirstOrCreate(&Content{})
 			}
 		}
-		a.DB.Create(&Setting{Key: "cms_team_imported", Value: "true", Group: "system", Label: "Team imported"})
+		a.DB.Create(&Setting{Key: "cms_team_seed_v2", Value: "true", Group: "system", Label: "Team seed v2"})
 	}
 	return nil
 }
