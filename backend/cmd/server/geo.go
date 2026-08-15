@@ -78,19 +78,6 @@ func (g *geoService) lookup(ctx context.Context, query string) ([]AddressSuggest
 		g.mu.Unlock()
 		return hit.items, nil
 	}
-	if g.mapboxToken == "" {
-		if wait := time.Second - time.Since(g.lastCall); wait > 0 {
-			timer := time.NewTimer(wait)
-			select {
-			case <-timer.C:
-			case <-ctx.Done():
-				timer.Stop()
-				g.mu.Unlock()
-				return nil, ctx.Err()
-			}
-		}
-	}
-	g.lastCall = time.Now()
 	g.mu.Unlock()
 
 	var (
@@ -100,7 +87,15 @@ func (g *geoService) lookup(ctx context.Context, query string) ([]AddressSuggest
 	if g.mapboxToken != "" {
 		items, err = g.mapbox(ctx, query)
 	} else {
-		items, err = g.nominatim(ctx, query)
+		// Photon (Komoot) is a free, key-less geocoder built for address
+		// autocomplete that, unlike Nominatim, permits server-side use from
+		// datacenter IPs. Nominatim is kept only as a best-effort fallback.
+		items, err = g.photon(ctx, query)
+		if err != nil || len(items) == 0 {
+			if alt, altErr := g.nominatim(ctx, query); altErr == nil && len(alt) > 0 {
+				items, err = alt, nil
+			}
+		}
 	}
 	if err != nil {
 		return nil, err
@@ -179,6 +174,55 @@ func (g *geoService) nominatim(ctx context.Context, query string) ([]AddressSugg
 			item.Line1 = firstNonEmpty(address.Road, address.Neighbourhood, firstSegment(row.DisplayName))
 		}
 		item.Label = addressLabel(item, row.DisplayName)
+		out = append(out, item)
+	}
+	return out, nil
+}
+
+func (g *geoService) photon(ctx context.Context, query string) ([]AddressSuggestion, error) {
+	endpoint := "https://photon.komoot.io/api/?" + url.Values{
+		"q":     {query},
+		"limit": {"6"},
+		"lang":  {"en"},
+	}.Encode()
+
+	var body struct {
+		Features []struct {
+			Properties struct {
+				HouseNumber string `json:"housenumber"`
+				Street      string `json:"street"`
+				Name        string `json:"name"`
+				City        string `json:"city"`
+				District    string `json:"district"`
+				Locality    string `json:"locality"`
+				County      string `json:"county"`
+				State       string `json:"state"`
+				Postcode    string `json:"postcode"`
+				CountryCode string `json:"countrycode"`
+			} `json:"properties"`
+		} `json:"features"`
+	}
+	if err := g.get(ctx, endpoint, &body); err != nil {
+		return nil, err
+	}
+
+	out := make([]AddressSuggestion, 0, len(body.Features))
+	for _, feature := range body.Features {
+		p := feature.Properties
+		if p.CountryCode != "" && !strings.EqualFold(p.CountryCode, "us") {
+			continue // United States addresses only
+		}
+		item := AddressSuggestion{
+			Line1:      strings.TrimSpace(p.HouseNumber + " " + p.Street),
+			City:       firstNonEmpty(p.City, p.Locality, p.District),
+			County:     strings.TrimSpace(strings.TrimSuffix(p.County, " County")),
+			State:      stateCode(p.State),
+			PostalCode: p.Postcode,
+		}
+		if item.Line1 == "" {
+			item.Line1 = firstNonEmpty(p.Name, p.Street, p.Locality, p.District)
+		}
+		item.Label = addressLabel(item, firstNonEmpty(p.Name, item.Line1))
 		out = append(out, item)
 	}
 	return out, nil
