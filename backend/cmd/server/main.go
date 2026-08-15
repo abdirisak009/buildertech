@@ -300,6 +300,14 @@ func (a *App) seed() error {
 		}
 		a.DB.Create(&Setting{Key: "cms_team_seed_v4", Value: "true", Group: "system", Label: "Team seed v4"})
 	}
+	// The team is a single canonical (English) list. Remove the duplicate
+	// non-English rows that made every member appear twice in the dashboard.
+	var teamConsolidated int64
+	a.DB.Model(&Setting{}).Where("key = ?", "cms_team_consolidate_v5").Count(&teamConsolidated)
+	if teamConsolidated == 0 {
+		a.DB.Unscoped().Where("type = ? AND locale <> ?", "team", "en").Delete(&Content{})
+		a.DB.Create(&Setting{Key: "cms_team_consolidate_v5", Value: "true", Group: "system", Label: "Team consolidated to English"})
+	}
 	return nil
 }
 
