@@ -189,6 +189,7 @@ func (g *geoService) photon(ctx context.Context, query string) ([]AddressSuggest
 	var body struct {
 		Features []struct {
 			Properties struct {
+				Type        string `json:"type"`
 				HouseNumber string `json:"housenumber"`
 				Street      string `json:"street"`
 				Name        string `json:"name"`
@@ -218,6 +219,18 @@ func (g *geoService) photon(ctx context.Context, query string) ([]AddressSuggest
 			County:     strings.TrimSpace(strings.TrimSuffix(p.County, " County")),
 			State:      stateCode(p.State),
 			PostalCode: p.Postcode,
+		}
+		// Place/ZIP-level results carry the value in `name` rather than in the
+		// city/postcode fields — map it so those inputs still auto-fill.
+		switch p.Type {
+		case "city", "locality", "district":
+			if item.City == "" {
+				item.City = p.Name
+			}
+		case "postcode":
+			if item.PostalCode == "" {
+				item.PostalCode = p.Name
+			}
 		}
 		if item.Line1 == "" {
 			item.Line1 = firstNonEmpty(p.Name, p.Street, p.Locality, p.District)
