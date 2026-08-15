@@ -267,7 +267,7 @@ func (a *App) seed() error {
 	// FirstOrCreate per member is idempotent: it adds any missing member without
 	// duplicating or overwriting rows an admin may have already edited.
 	var teamSeeded int64
-	a.DB.Model(&Setting{}).Where("key = ?", "cms_team_seed_v3").Count(&teamSeeded)
+	a.DB.Model(&Setting{}).Where("key = ?", "cms_team_seed_v4").Count(&teamSeeded)
 	if teamSeeded == 0 {
 		team := []map[string]string{
 			{"firstName": "Shailesh", "lastInitial": "G", "credentials": "PE", "role": "Civil Engineer", "photo": "/teams/shailesh-g.jpg", "bio": "Designs grading, drainage, utilities and site plans that move projects toward permit approval."},
@@ -298,7 +298,7 @@ func (a *App) seed() error {
 				}
 			}
 		}
-		a.DB.Create(&Setting{Key: "cms_team_seed_v3", Value: "true", Group: "system", Label: "Team seed v3"})
+		a.DB.Create(&Setting{Key: "cms_team_seed_v4", Value: "true", Group: "system", Label: "Team seed v4"})
 	}
 	return nil
 }
