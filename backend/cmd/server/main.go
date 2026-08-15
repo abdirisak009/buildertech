@@ -267,7 +267,7 @@ func (a *App) seed() error {
 	// FirstOrCreate per member is idempotent: it adds any missing member without
 	// duplicating or overwriting rows an admin may have already edited.
 	var teamSeeded int64
-	a.DB.Model(&Setting{}).Where("key = ?", "cms_team_seed_v2").Count(&teamSeeded)
+	a.DB.Model(&Setting{}).Where("key = ?", "cms_team_seed_v3").Count(&teamSeeded)
 	if teamSeeded == 0 {
 		team := []map[string]string{
 			{"firstName": "Shailesh", "lastInitial": "G", "credentials": "PE", "role": "Civil Engineer", "photo": "/teams/shailesh-g.jpg", "bio": "Designs grading, drainage, utilities and site plans that move projects toward permit approval."},
@@ -281,13 +281,24 @@ func (a *App) seed() error {
 			for index, member := range team {
 				data, _ := json.Marshal(member)
 				key := fmt.Sprintf("team-%02d", index+1)
-				a.DB.
-					Where(Content{Locale: locale, Key: key, Type: "team"}).
-					Attrs(Content{Title: member["firstName"], Status: "published", Data: string(data)}).
-					FirstOrCreate(&Content{})
+				// Look up including soft-deleted rows: the (locale,key) unique
+				// index still covers a soft-deleted "ghost", so a plain insert
+				// would collide and silently fail. Revive a ghost, create when
+				// truly missing, and leave an admin-edited live row untouched.
+				var row Content
+				res := a.DB.Unscoped().Where("locale = ? AND key = ? AND type = ?", locale, key, "team").First(&row)
+				if errors.Is(res.Error, gorm.ErrRecordNotFound) {
+					a.DB.Create(&Content{Locale: locale, Key: key, Type: "team", Title: member["firstName"], Status: "published", Data: string(data)})
+				} else if res.Error == nil && row.DeletedAt.Valid {
+					row.DeletedAt = gorm.DeletedAt{}
+					row.Status = "published"
+					row.Title = member["firstName"]
+					row.Data = string(data)
+					a.DB.Unscoped().Save(&row)
+				}
 			}
 		}
-		a.DB.Create(&Setting{Key: "cms_team_seed_v2", Value: "true", Group: "system", Label: "Team seed v2"})
+		a.DB.Create(&Setting{Key: "cms_team_seed_v3", Value: "true", Group: "system", Label: "Team seed v3"})
 	}
 	return nil
 }
