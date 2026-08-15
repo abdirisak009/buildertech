@@ -35,7 +35,7 @@ export function TypeText({
   const [displayText,setDisplayText]=useState(text);
   const cmsKey = `animated:type:${text}`;
 
-  useEffect(()=>{const update=(event:Event)=>{const detail=(event as CustomEvent<{key:string;speed:number}>).detail;if(detail?.key===cmsKey)setSpeedFactor(detail.speed)};document.addEventListener("cms:animation-speed",update);return()=>document.removeEventListener("cms:animation-speed",update)},[cmsKey]);
+  useEffect(()=>{const update=(event:Event)=>{const detail=(event as CustomEvent<{key:string;speed:number}>).detail;if(detail?.key===cmsKey)setSpeedFactor(detail.speed>0?detail.speed:1)};document.addEventListener("cms:animation-speed",update);return()=>document.removeEventListener("cms:animation-speed",update)},[cmsKey]);
   useEffect(()=>{const update=(event:Event)=>{const detail=(event as CustomEvent<{key:string;value:string}>).detail;if(detail?.key===cmsKey){setDisplayText(detail.value);setCount(0)}};document.addEventListener("cms:animated-text",update);return()=>document.removeEventListener("cms:animated-text",update)},[cmsKey]);
 
   useEffect(() => {

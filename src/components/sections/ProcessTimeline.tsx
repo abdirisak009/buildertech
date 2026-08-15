@@ -42,7 +42,7 @@ export function ProcessTimeline({
   });
 
   return (
-    <Section tone="navy">
+    <Section tone="navy" className="pt-12 sm:pt-14 lg:pt-16">
       <div aria-hidden className="absolute inset-0 bg-blueprint opacity-60" />
       <Container className="relative">
         <div className="text-center">

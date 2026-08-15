@@ -142,26 +142,14 @@ export function VisualContent() {
       });
     };
 
-    // Animated components can re-render their text after an override has been
-    // applied. Keep an explicit CMS value authoritative; restoring the
-    // override removes it and lets the original animation run again.
-    const animatedTextOverrides = new Map<string,string>();
-    const keepAnimatedOverrides = new MutationObserver(() => {
-      animatedTextOverrides.forEach((value,key) => {
-        const target = surface.querySelector<HTMLElement>(`[data-cms-key="${CSS.escape(key)}"]`);
-        if (target && target.textContent !== value) target.textContent = value;
-      });
-    });
-    keepAnimatedOverrides.observe(surface,{subtree:true,childList:true,characterData:true});
-
+    // Animated components (TypeText, FlowCycle, Counter) keep their own state
+    // and update themselves from the `cms:animated-text` / `cms:animation-speed`
+    // events dispatched in `apply`, so no DOM-forcing observer is needed here.
+    // A previous MutationObserver rewrote textContent on every mutation, which
+    // fought the typewriter's per-character updates and froze the animation.
     fetch(`${API_URL}/overrides?path=${encodeURIComponent(path)}`)
       .then(r => r.ok ? r.json() : Promise.reject())
-      .then(body => (body.data as Override[]).forEach(item => {
-        if (item.kind === "text" && surface.querySelector(`[data-cms-key="${CSS.escape(item.key)}"][data-cms-animated]`)) {
-          animatedTextOverrides.set(item.key,item.value);
-        }
-        apply(item);
-      }))
+      .then(body => (body.data as Override[]).forEach(apply))
       .catch(() => undefined)
       .finally(() => {
         if (!editMode) return;
@@ -169,7 +157,7 @@ export function VisualContent() {
         publishSections();
       });
 
-    if (!editMode) return () => keepAnimatedOverrides.disconnect();
+    if (!editMode) return;
     document.documentElement.classList.add("cms-editing");
     const click = (rawEvent:Event) => {
       const event = rawEvent as MouseEvent;
@@ -187,13 +175,12 @@ export function VisualContent() {
     const message = (event:MessageEvent) => {
       if (event.origin !== window.location.origin || event.data?.type !== "cms:apply") return;
       const item = event.data.item as Override;
-      if(item.kind==="text"&&surface.querySelector(`[data-cms-key="${CSS.escape(item.key)}"][data-cms-animated]`))animatedTextOverrides.set(item.key,item.value);
       apply(item);
       if (item.kind === "section") publishSections();
     };
     surface.addEventListener("click",click,true);
     window.addEventListener("message",message);
-    return () => { keepAnimatedOverrides.disconnect(); surface.removeEventListener("click",click,true); window.removeEventListener("message",message); document.documentElement.classList.remove("cms-editing"); };
+    return () => { surface.removeEventListener("click",click,true); window.removeEventListener("message",message); document.documentElement.classList.remove("cms-editing"); };
   },[]);
   return null;
 }
