@@ -130,7 +130,7 @@ function ProcessStep({
   return (
     <li>
       <Reveal>
-        <div className="grid grid-cols-[3rem_1fr] gap-x-5 gap-y-5 pb-16 last:pb-0 sm:gap-x-6">
+        <div className="grid grid-cols-[3rem_1fr] gap-x-5 gap-y-5 pb-8 last:pb-0 sm:gap-x-6">
           <div className="relative z-10 flex justify-center">
             <motion.span
               style={{ backgroundColor: background, color, scale: dotScale }}

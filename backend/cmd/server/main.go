@@ -230,6 +230,10 @@ func (a *App) seed() error {
 		{Key: "youtube_url", Value: "", Group: "social", Label: "YouTube URL"},
 		{Key: "x_url", Value: "", Group: "social", Label: "X / Twitter URL"},
 		{Key: "our_work_speed", Value: "55", Group: "general", Label: "Our Work scroll speed (seconds — higher is slower)"},
+		{Key: "service_area_speed", Value: "60", Group: "general", Label: "Counties/Cities scroll speed (seconds — higher is slower)"},
+		{Key: "service_area_size", Value: "100", Group: "general", Label: "Counties/Cities chip size (%)"},
+		{Key: "service_counties", Value: "Fulton, DeKalb, Cobb, Gwinnett, Clayton, Douglas, Fayette, Cherokee, Henry, Rockdale, Paulding", Group: "general", Label: "Counties we serve (comma-separated — add or remove)"},
+		{Key: "service_cities", Value: "Atlanta, Alpharetta, Sandy Springs, Roswell, Johns Creek, Brookhaven, Dunwoody, Decatur, Tucker, Stone Mountain, Clarkston, Chamblee, Doraville, Marietta, Smyrna, Mableton, Kennesaw, Peachtree Corners, Norcross, Duluth, Lilburn, Lawrenceville, Snellville, Douglasville, Fayetteville, Peachtree City, Woodstock, Stockbridge, Conyers, East Point, College Park, Hapeville, South Fulton, Forest Park, Jonesboro", Group: "general", Label: "Cities we serve (comma-separated — add or remove)"},
 		{Key: "seo_title", Value: "BuildersTech", Group: "seo", Label: "Default SEO title"},
 		{Key: "seo_description", Value: "Engineering, architecture and construction technology.", Group: "seo", Label: "SEO description"},
 	}

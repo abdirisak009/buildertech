@@ -377,11 +377,12 @@ export default async function HomePage({
       </section>
 
       {/* ---------------- Other Places You Can Find Us ---------------- */}
-      <section className="relative isolate overflow-hidden bg-navy-950 pb-20 text-white sm:pb-28 lg:pb-32">
-        <div aria-hidden className="absolute inset-0 bg-blueprint opacity-[0.06]" />
+      <section className="relative isolate overflow-hidden py-20 sm:py-28 lg:py-32">
+        <div aria-hidden className="absolute inset-0 bg-[url('/back.jpeg')] bg-cover bg-center" />
+        <div aria-hidden className="absolute inset-0 bg-white/70" />
         <Container className="relative">
           <Reveal>
-            <h2 className="text-center text-display-md text-white">
+            <h2 className="text-center text-display-md text-navy-900">
               {c.findUs.title}
             </h2>
           </Reveal>

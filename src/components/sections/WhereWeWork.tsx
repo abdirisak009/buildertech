@@ -1,15 +1,18 @@
 "use client";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { MapPin } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { Reveal } from "@/components/motion/Reveal";
 import { SERVICE_CITIES_ALL, SERVICE_COUNTIES } from "@/content/georgiaMap";
+import { API_URL } from "@/lib/api/client";
 
 type Copy = { eyebrow: string; title: string; lead: string; countiesLabel: string; citiesLabel: string };
 
 /** A glassy, edge-fading marquee row of place pills that floats over the video. */
-function RotatingLine({ items, label }: { items: string[]; label: string }) {
+function RotatingLine({ items, label, speed, size }: { items: string[]; label: string; speed: number; size: number }) {
   const line = [...items, ...items];
+  const scale = size / 100;
   return (
     <div className="overflow-hidden rounded-2xl border border-white/15 bg-white/[0.06] py-5 shadow-[0_24px_70px_-35px_rgba(0,0,0,0.95)] backdrop-blur-md">
       <div className="mb-3 flex items-center gap-2 px-6 text-xs font-bold uppercase tracking-[0.2em] text-gold-400">
@@ -17,11 +20,12 @@ function RotatingLine({ items, label }: { items: string[]; label: string }) {
         {label}
       </div>
       <div className="[mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)]">
-        <div className="ww-marquee flex w-max gap-3 px-6">
+        <div className="ww-marquee flex w-max gap-3 px-6" style={{ animationDuration: `${speed}s` }}>
           {line.map((item, i) => (
             <span
               key={`${item}-${i}`}
-              className="whitespace-nowrap rounded-full border border-white/15 bg-white/[0.08] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:border-gold-500/60 hover:bg-gold-500/15 hover:text-gold-100"
+              style={{ fontSize: `${0.875 * scale}rem`, paddingInline: `${1.25 * scale}rem`, paddingBlock: `${0.625 * scale}rem` }}
+              className="whitespace-nowrap rounded-full border border-white/15 bg-white/[0.08] font-semibold text-white shadow-sm transition-colors hover:border-gold-500/60 hover:bg-gold-500/15 hover:text-gold-100"
             >
               {item}
             </span>
@@ -33,6 +37,24 @@ function RotatingLine({ items, label }: { items: string[]; label: string }) {
 }
 
 export function WhereWeWork({ copy }: { copy: Copy }) {
+  const [counties, setCounties] = useState<string[]>(SERVICE_COUNTIES);
+  const [cities, setCities] = useState<string[]>(SERVICE_CITIES_ALL);
+  const [speed, setSpeed] = useState(60);
+  const [size, setSize] = useState(100);
+  // Lists, scroll speed and chip size are managed from Site settings.
+  useEffect(() => {
+    fetch(`${API_URL}/settings/public`)
+      .then((r) => (r.ok ? r.json() : Promise.reject()))
+      .then((b) => {
+        const s = b.data || {};
+        const parse = (v: unknown) => String(v || "").split(/[,\n]/).map((x) => x.trim()).filter(Boolean);
+        const c = parse(s.service_counties); if (c.length) setCounties(c);
+        const ci = parse(s.service_cities); if (ci.length) setCities(ci);
+        const sp = Number(s.service_area_speed); if (sp > 0) setSpeed(sp);
+        const sz = Number(s.service_area_size); if (sz > 0) setSize(sz);
+      })
+      .catch(() => undefined);
+  }, []);
   return (
     <section className="relative isolate overflow-hidden bg-navy-950 text-white">
       {/* Full-section background video (falls back to its poster on load and for
@@ -84,8 +106,8 @@ export function WhereWeWork({ copy }: { copy: Copy }) {
 
         <Reveal delay={0.12}>
           <div className="mx-auto mt-16 max-w-6xl space-y-5">
-            <RotatingLine label={copy.countiesLabel} items={SERVICE_COUNTIES} />
-            <RotatingLine label={copy.citiesLabel} items={SERVICE_CITIES_ALL} />
+            <RotatingLine label={copy.countiesLabel} items={counties} speed={speed} size={size} />
+            <RotatingLine label={copy.citiesLabel} items={cities} speed={speed} size={size} />
           </div>
         </Reveal>
       </Container>
