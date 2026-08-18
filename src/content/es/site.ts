@@ -128,7 +128,7 @@ export const NAV: NavItem[] = [
         icon: Box,
       },
       {
-        href: "/contact",
+        href: "/services/reserve-study",
         label: "Estudio de reserva",
         description: "Estudios de reserva para HOAs y asociaciones de condominios",
         icon: Calculator,

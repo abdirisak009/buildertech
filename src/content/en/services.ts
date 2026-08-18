@@ -210,6 +210,28 @@ export const SERVICES: Service[] = [
       { title: "ADUs", body: "Garage apartments, basement suites and backyard cottages." },
     ],
   },
+  {
+    slug: "reserve-study",
+    title: "Reserve Study",
+    short:
+      "Reserve studies for HOAs and condo associations — component inventory, condition assessment and a long-range funding plan.",
+    headline: "Reserve Studies for HOAs & Condo Associations",
+    lead:
+      "A reserve study tells your association what it owns, what condition it is in, and how much to set aside each year — so major repairs never turn into surprise special assessments.",
+    icon: Calculator,
+    image: IMAGES.blueprints,
+    items: [
+      { title: "Component inventory", body: "A full list of the common-area assets your reserves must eventually replace." },
+      { title: "Condition assessment", body: "On-site evaluation of each component's age, wear and remaining useful life." },
+      { title: "30-year funding plan", body: "A long-range funding schedule that keeps reserves healthy and dues predictable." },
+      { title: "Board-ready reporting", body: "Clear reports your board can share with owners, lenders and auditors." },
+    ],
+    proof: [
+      { value: "30-yr", label: "Funding outlook so boards plan repairs without surprise assessments" },
+      { value: "HOA & condo", label: "Associations served with component inventories and reserve plans" },
+      { value: "Board-ready", label: "Reports formatted for owners, lenders and annual meetings" },
+    ],
+  },
 ];
 
 export function getService(slug: string) {

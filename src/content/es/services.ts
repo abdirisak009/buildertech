@@ -210,6 +210,28 @@ export const SERVICES: Service[] = [
       { title: "ADUs", body: "Apartamentos sobre garaje, suites en sótano y casitas de traspatio." },
     ],
   },
+  {
+    slug: "reserve-study",
+    title: "Estudio de Reservas",
+    short:
+      "Estudios de reservas para HOAs y asociaciones de condominios: inventario de componentes, evaluación de condición y un plan de financiamiento a largo plazo.",
+    headline: "Estudios de Reservas para HOAs y Condominios",
+    lead:
+      "Un estudio de reservas le dice a su asociación qué posee, en qué estado está y cuánto apartar cada año — para que las reparaciones grandes nunca se conviertan en cuotas especiales por sorpresa.",
+    icon: Calculator,
+    image: IMAGES.blueprints,
+    items: [
+      { title: "Inventario de componentes", body: "Una lista completa de los activos de áreas comunes que las reservas deberán reemplazar." },
+      { title: "Evaluación de condición", body: "Evaluación en sitio de la edad, el desgaste y la vida útil restante de cada componente." },
+      { title: "Plan de financiamiento a 30 años", body: "Un calendario de financiamiento a largo plazo que mantiene sanas las reservas y previsibles las cuotas." },
+      { title: "Informes para la junta", body: "Informes claros que su junta puede compartir con propietarios, prestamistas y auditores." },
+    ],
+    proof: [
+      { value: "30 años", label: "Perspectiva de financiamiento para planificar reparaciones sin sorpresas" },
+      { value: "HOA y condominios", label: "Asociaciones atendidas con inventarios y planes de reservas" },
+      { value: "Lista para junta", label: "Informes formateados para propietarios, prestamistas y asambleas" },
+    ],
+  },
 ];
 
 export function getService(slug: string) {
