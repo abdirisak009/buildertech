@@ -230,6 +230,9 @@ func (a *App) seed() error {
 		{Key: "youtube_url", Value: "", Group: "social", Label: "YouTube URL"},
 		{Key: "x_url", Value: "", Group: "social", Label: "X / Twitter URL"},
 		{Key: "our_work_speed", Value: "55", Group: "general", Label: "Our Work scroll speed (seconds — higher is slower)"},
+		{Key: "hero_logo_x", Value: "0", Group: "general", Label: "Hero logo — move left/right (px, negative = left)"},
+		{Key: "hero_logo_y", Value: "0", Group: "general", Label: "Hero logo — move up/down (px, negative = up)"},
+		{Key: "hero_logo_size", Value: "100", Group: "general", Label: "Hero logo size (%)"},
 		{Key: "service_area_speed", Value: "60", Group: "general", Label: "Counties/Cities scroll speed (seconds — higher is slower)"},
 		{Key: "service_area_size", Value: "100", Group: "general", Label: "Counties/Cities chip size (%)"},
 		{Key: "service_counties", Value: "Fulton, DeKalb, Cobb, Gwinnett, Clayton, Douglas, Fayette, Cherokee, Henry, Rockdale, Paulding", Group: "general", Label: "Counties we serve (comma-separated — add or remove)"},
@@ -312,6 +315,24 @@ func (a *App) seed() error {
 	if teamConsolidated == 0 {
 		a.DB.Unscoped().Where("type = ? AND locale <> ?", "team", "en").Delete(&Content{})
 		a.DB.Create(&Setting{Key: "cms_team_consolidate_v5", Value: "true", Group: "system", Label: "Team consolidated to English"})
+	}
+	// Our Process steps — seed the existing five so they can be edited, resized
+	// and reordered from Content Studio.
+	var processSeeded int64
+	a.DB.Model(&Setting{}).Where("key = ?", "cms_process_seed_v1").Count(&processSeeded)
+	if processSeeded == 0 {
+		process := []struct{ Title, Body, Image string }{
+			{"Submission of Intake Form", "Once the intake form is submitted, a dedicated project manager will contact you within 24 hours to discuss the scope of your project.", "/process/intake.png"},
+			{"Project Estimate", "Expect a detailed project estimate within 24 hours of your scope call — no guesswork, no open-ended pricing.", "/process/estimate.png"},
+			{"Consultation & Site Visit", "After the estimate is approved, a project manager will schedule your on-site consultation or a virtual call.", "/process/consultation.png"},
+			{"Design Development", "Design development is a two-step process: conceptual design brings your ideas, requests and sketches to life; then floor plans and elevations are finalized and approved.", "/process/design.png"},
+			{"Project Submission", "Once your project is complete, we deliver the final plans, invoice the balance, and address all city comments if needed.", "/process/submission.png"},
+		}
+		for i, p := range process {
+			data, _ := json.Marshal(map[string]any{"body": p.Body, "image": p.Image, "photoSize": "100", "order": i})
+			a.DB.Create(&Content{Locale: "en", Key: fmt.Sprintf("process-%02d", i+1), Title: p.Title, Type: "process", Status: "published", Data: string(data)})
+		}
+		a.DB.Create(&Setting{Key: "cms_process_seed_v1", Value: "true", Group: "system", Label: "Process seeded"})
 	}
 	return nil
 }

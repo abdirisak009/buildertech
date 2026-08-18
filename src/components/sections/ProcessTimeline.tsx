@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import {
   motion,
@@ -14,8 +14,11 @@ import { Section, Eyebrow } from "@/components/ui/Section";
 import { ScheduleCta } from "@/components/intake/ScheduleCta";
 import { Reveal } from "@/components/motion/Reveal";
 import type { Locale } from "@/i18n/config";
+import { API_URL } from "@/lib/api/client";
 
 type Step = { title: string; body: string };
+type Resolved = { title: string; body: string; image: string; photoSize: number };
+function asset(v: string) { const o = API_URL.replace(/\/api\/v1\/?$/, ""); return /^(https?:|data:|blob:)/.test(v) ? v : `${o}${v}`; }
 
 export function ProcessTimeline({
   locale,
@@ -40,6 +43,24 @@ export function ProcessTimeline({
     target: listRef,
     offset: ["start 75%", "end 60%"],
   });
+
+  // Steps are managed from Content Studio → Our Process (title, text, image,
+  // size, order). Falls back to the built-in steps until the CMS responds.
+  const [cms, setCms] = useState<Resolved[] | null>(null);
+  useEffect(() => {
+    fetch(`${API_URL}/content?types=process`)
+      .then((r) => (r.ok ? r.json() : Promise.reject()))
+      .then((x) => {
+        const rows = x.data as { key: string; title: string; data: string }[];
+        const list = rows
+          .map((it) => { try { const d = JSON.parse(it.data); return { title: it.title, body: d.body || "", image: d.image || "", photoSize: Number(d.photoSize) || 100, order: typeof d.order === "number" ? d.order : parseInt(String(it.key).replace(/\D/g, ""), 10) || 0 }; } catch { return null; } })
+          .filter((s) => !!s && !!s.image) as (Resolved & { order: number })[];
+        list.sort((a, b) => a.order - b.order);
+        if (list.length) setCms(list);
+      })
+      .catch(() => undefined);
+  }, []);
+  const resolved: Resolved[] = cms ?? steps.map((s, i) => ({ title: s.title, body: s.body, image: images[i], photoSize: 100 }));
 
   return (
     <Section tone="navy" className="pt-12 sm:pt-14 lg:pt-16">
@@ -74,13 +95,14 @@ export function ProcessTimeline({
             className="absolute bottom-6 left-6 top-6 w-0.5 origin-top -translate-x-1/2 bg-gold-500"
           />
 
-          {steps.map((step, i) => (
+          {resolved.map((step, i) => (
             <ProcessStep
-              key={step.title}
+              key={`${step.title}-${i}`}
               index={i}
-              total={steps.length}
+              total={resolved.length}
               step={step}
-              image={images[i]}
+              image={step.image}
+              photoSize={step.photoSize}
               progress={scrollYProgress}
             />
           ))}
@@ -101,12 +123,14 @@ function ProcessStep({
   total,
   step,
   image,
+  photoSize = 100,
   progress,
 }: {
   index: number;
   total: number;
   step: Step;
   image: string;
+  photoSize?: number;
   progress: MotionValue<number>;
 }) {
   const threshold = total > 1 ? index / (total - 1) : 0;
@@ -147,10 +171,11 @@ function ProcessStep({
             </div>
             <div className="relative aspect-[16/10] overflow-hidden rounded-2xl border border-white/10">
               <Image
-                src={image}
+                src={asset(image)}
                 alt=""
                 fill
                 sizes="(min-width: 1024px) 40vw, 90vw"
+                style={{ transform: `scale(${photoSize / 100})` }}
                 className="object-cover"
               />
               <div
