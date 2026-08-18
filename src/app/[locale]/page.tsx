@@ -194,15 +194,20 @@ export default async function HomePage({
         images={WORK_SLIDES}
       />
 
-      {/* ---------------- Why choose (3 cards on black) ---------------- */}
-      <section className="relative isolate overflow-hidden bg-black py-20 text-white sm:py-28 lg:py-32">
+      {/* ---------------- Why choose (blueprint background) ---------------- */}
+      <section className="relative isolate overflow-hidden py-20 sm:py-28 lg:py-32">
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-[url('/back.jpeg')] bg-cover bg-center"
+        />
+        <div aria-hidden className="absolute inset-0 bg-white/70" />
         <Container className="relative">
           <div className="mx-auto max-w-3xl text-center">
             <Reveal>
-              <h2 className="text-display-lg text-white">{c.why.title}</h2>
+              <h2 className="text-display-lg text-navy-900">{c.why.title}</h2>
             </Reveal>
             <Reveal delay={0.1}>
-              <p className="mt-6 leading-relaxed text-navy-100">
+              <p className="mt-6 leading-relaxed text-navy-700">
                 {c.why.lead}
               </p>
             </Reveal>
@@ -211,7 +216,7 @@ export default async function HomePage({
           <RevealGroup className="mt-16 grid gap-5 lg:grid-cols-3">
             {c.why.cards.map((card) => (
               <RevealItem key={card.title} className="h-full">
-                <div className="flex h-full flex-col rounded-2xl border border-white/10 bg-white/[0.04] p-8 backdrop-blur-sm">
+                <div className="flex h-full flex-col rounded-2xl border border-white/10 bg-navy-950 p-8 shadow-xl">
                   <h3 className="text-xl text-white">{card.title}</h3>
                   <p className="mt-4 flex-1 leading-relaxed text-navy-100">
                     {card.body}
@@ -226,7 +231,7 @@ export default async function HomePage({
           </RevealGroup>
 
           <Reveal delay={0.15}>
-            <p className="mx-auto mt-14 max-w-2xl text-center text-lg text-navy-100">
+            <p className="mx-auto mt-14 max-w-2xl text-center text-lg text-navy-700">
               {c.why.closing}
             </p>
             <div className="mt-8 flex justify-center">
