@@ -229,6 +229,7 @@ func (a *App) seed() error {
 		{Key: "linkedin_url", Value: "", Group: "social", Label: "LinkedIn URL"},
 		{Key: "youtube_url", Value: "", Group: "social", Label: "YouTube URL"},
 		{Key: "x_url", Value: "", Group: "social", Label: "X / Twitter URL"},
+		{Key: "our_work_speed", Value: "55", Group: "general", Label: "Our Work scroll speed (seconds — higher is slower)"},
 		{Key: "seo_title", Value: "BuildersTech", Group: "seo", Label: "Default SEO title"},
 		{Key: "seo_description", Value: "Engineering, architecture and construction technology.", Group: "seo", Label: "SEO description"},
 	}
