@@ -194,19 +194,15 @@ export default async function HomePage({
         images={WORK_SLIDES}
       />
 
-      {/* ---------------- Why choose (3 cards on blueprint) ---------------- */}
-      <section className="relative isolate overflow-hidden bg-surface-muted py-20 sm:py-28 lg:py-32">
-        <div
-          aria-hidden
-          className="absolute inset-0 bg-blueprint opacity-[0.06] dark:opacity-[0.1]"
-        />
+      {/* ---------------- Why choose (3 cards on black) ---------------- */}
+      <section className="relative isolate overflow-hidden bg-black py-20 text-white sm:py-28 lg:py-32">
         <Container className="relative">
           <div className="mx-auto max-w-3xl text-center">
             <Reveal>
-              <h2 className="text-display-lg">{c.why.title}</h2>
+              <h2 className="text-display-lg text-white">{c.why.title}</h2>
             </Reveal>
             <Reveal delay={0.1}>
-              <p className="mt-6 leading-relaxed text-muted-foreground">
+              <p className="mt-6 leading-relaxed text-navy-100">
                 {c.why.lead}
               </p>
             </Reveal>
@@ -215,12 +211,12 @@ export default async function HomePage({
           <RevealGroup className="mt-16 grid gap-5 lg:grid-cols-3">
             {c.why.cards.map((card) => (
               <RevealItem key={card.title} className="h-full">
-                <div className="flex h-full flex-col rounded-2xl border border-border bg-surface/80 p-8 backdrop-blur-sm">
-                  <h3 className="text-xl">{card.title}</h3>
-                  <p className="mt-4 flex-1 leading-relaxed text-muted-foreground">
+                <div className="flex h-full flex-col rounded-2xl border border-white/10 bg-white/[0.04] p-8 backdrop-blur-sm">
+                  <h3 className="text-xl text-white">{card.title}</h3>
+                  <p className="mt-4 flex-1 leading-relaxed text-navy-100">
                     {card.body}
                   </p>
-                  <span className="mt-7 inline-flex items-center gap-2 self-start rounded-full border border-gold-500/40 bg-gold-500/10 px-4 py-2 text-sm font-medium text-gold-700 dark:text-gold-300">
+                  <span className="mt-7 inline-flex items-center gap-2 self-start rounded-full border border-gold-500/40 bg-gold-500/10 px-4 py-2 text-sm font-medium text-gold-300">
                     <Check aria-hidden className="size-4" strokeWidth={2.5} />
                     {card.pill}
                   </span>
@@ -230,7 +226,7 @@ export default async function HomePage({
           </RevealGroup>
 
           <Reveal delay={0.15}>
-            <p className="mx-auto mt-14 max-w-2xl text-center text-lg text-muted-foreground">
+            <p className="mx-auto mt-14 max-w-2xl text-center text-lg text-navy-100">
               {c.why.closing}
             </p>
             <div className="mt-8 flex justify-center">
