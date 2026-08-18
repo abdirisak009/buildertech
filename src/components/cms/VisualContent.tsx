@@ -169,7 +169,7 @@ export function VisualContent() {
       target.classList.add("cms-selected");
       const kind=(target.dataset.cmsKind||"text") as Override["kind"];
       const image=target instanceof HTMLImageElement?target:target.querySelector<HTMLImageElement>("img");
-      const textValue = target.dataset.cmsAnimated ? (target.dataset.cmsCurrent||target.dataset.cmsOriginal||target.textContent||"") : (target.textContent||"");
+      const textValue = target.dataset.cmsAnimated ? (target.dataset.cmsCurrent||target.dataset.cmsOriginal||target.textContent||"") : (target.dataset.cmsField ? (target.dataset.cmsCurrent||"") : (target.textContent||""));
       window.parent.postMessage({type:"cms:select",path,key:target.dataset.cmsKey,kind,value:kind==="text"?textValue:(target.dataset.cmsCurrent||target.dataset.cmsOriginal||""),alt:image?.alt||"",fontSize:parseFloat(getComputedStyle(target).fontSize)||16,width:parseFloat(target.style.width)||100,speed:Number(target.dataset.cmsSpeed||1),animated:!!target.dataset.cmsAnimated,overrideId:target.dataset.cmsOverrideId||""},window.location.origin);
     };
     const message = (event:MessageEvent) => {

@@ -76,6 +76,11 @@
 .marquee-pause:hover .work-marquee { animation-play-state:paused; }
 @media (prefers-reduced-motion:reduce){.work-marquee{animation:none}}
 
+/* "Add email" placeholder on team cards: hidden on the live site, shown only
+   inside the Visual Editor so an email can be added inline. */
+.team-add-email { display: none; }
+.cms-editing .team-add-email { display: inline-flex; }
+
 .cms-editing [data-cms-key] {
   cursor: pointer !important;
   outline: 2px dashed transparent;
