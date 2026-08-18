@@ -39,7 +39,7 @@ export function CtaSection({
     <section className="py-20 sm:py-28">
       <Container>
         <Reveal>
-          <div className="relative isolate overflow-hidden rounded-3xl bg-navy-900 px-6 py-16 text-white sm:px-12 sm:py-20 lg:px-16 lg:py-24">
+          <div className="relative isolate overflow-hidden rounded-3xl bg-black px-6 py-16 text-white sm:px-12 sm:py-20 lg:px-16 lg:py-24">
             <div aria-hidden className="absolute inset-0 bg-blueprint opacity-60" />
             <div
               aria-hidden

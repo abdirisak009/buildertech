@@ -61,6 +61,16 @@ export default async function AboutPage({
         imageAlt={d.hero.imageAlt}
       />
 
+      {/* ---------------- Mission, vision & values (first) ---------------- */}
+      <Section>
+        <Container>
+          <SectionHeader eyebrow={d.mvv.eyebrow} title={d.mvv.title}/>
+          <RevealGroup className="mt-14 grid gap-5 lg:grid-cols-3">
+            {[[d.mvv.missionTitle,d.mvv.missionBody],[d.mvv.visionTitle,d.mvv.visionBody],[d.mvv.valuesTitle,d.mvv.valuesBody]].map(([title,body],index)=><RevealItem key={title} className="h-full"><article className="h-full rounded-3xl border border-border bg-surface p-8 shadow-sm"><span className="text-sm font-bold text-gold-500">0{index+1}</span><h3 className="mt-5 text-2xl">{title}</h3><p className="mt-4 leading-7 text-muted-foreground">{body}</p></article></RevealItem>)}
+          </RevealGroup>
+        </Container>
+      </Section>
+
       {/* ---------------- Story ---------------- */}
       <Section>
         <Container>
@@ -143,15 +153,6 @@ export default async function AboutPage({
           <EditableTeam locale={locale} fallback={team}/>
         </Container>
       </section>
-
-      <Section>
-        <Container>
-          <SectionHeader eyebrow={d.mvv.eyebrow} title={d.mvv.title}/>
-          <RevealGroup className="mt-14 grid gap-5 lg:grid-cols-3">
-            {[[d.mvv.missionTitle,d.mvv.missionBody],[d.mvv.visionTitle,d.mvv.visionBody],[d.mvv.valuesTitle,d.mvv.valuesBody]].map(([title,body],index)=><RevealItem key={title} className="h-full"><article className="h-full rounded-3xl border border-border bg-surface p-8 shadow-sm"><span className="text-sm font-bold text-gold-500">0{index+1}</span><h3 className="mt-5 text-2xl">{title}</h3><p className="mt-4 leading-7 text-muted-foreground">{body}</p></article></RevealItem>)}
-          </RevealGroup>
-        </Container>
-      </Section>
 
       <CtaSection locale={locale} />
     </>

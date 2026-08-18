@@ -42,8 +42,8 @@ export function EditableTeam({ locale, fallback }: { locale: string; fallback: M
               <Image src={asset(member.photo)} alt={name} fill sizes="(min-width:1024px) 28vw,(min-width:640px) 45vw,100vw" style={{ transform: `scale(${zoom})` }} className="object-cover object-center transition-transform duration-500" />
             </div>
             <div className="flex flex-1 flex-col p-6">
-              <h3 className="text-xl text-white">{name}</h3>
-              <p className="mt-1.5 text-sm font-medium text-gold-400">{member.role}</p>
+              <h3 data-cms-key={member.id ? `teamfield:${member.id}:name` : undefined} data-cms-kind="text" data-cms-field="1" data-cms-current={name} data-cms-original={name} className="text-xl text-white">{name}</h3>
+              <p data-cms-key={member.id ? `teamfield:${member.id}:role` : undefined} data-cms-kind="text" data-cms-field="1" data-cms-current={member.role} data-cms-original={member.role} className="mt-1.5 text-sm font-medium text-gold-400">{member.role}</p>
               {member.email ? (
                 <a href={`mailto:${member.email}`} data-cms-key={emailKey} data-cms-kind="text" data-cms-field="1" data-cms-current={member.email} data-cms-original={member.email} className="mt-3 inline-flex items-center gap-1.5 break-all text-sm font-medium text-gold-300 transition-colors hover:text-gold-200 hover:underline">
                   <Mail aria-hidden className="size-4 shrink-0" />
