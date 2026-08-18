@@ -1,8 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { Mail } from "lucide-react";
 import { API_URL } from "@/lib/api/client";
-type Member = { firstName: string; lastInitial: string; credentials?: string; role: string; photo: string; bio: string; photoSize?: number; order?: number };
+type Member = { firstName: string; lastInitial: string; credentials?: string; role: string; photo: string; bio: string; email?: string; photoSize?: number; order?: number };
 type Item = { id: string; locale: string; key: string; title: string; data: string };
 function asset(v: string) { const origin = API_URL.replace(/\/api\/v1\/?$/, ""); return /^(https?:|data:|blob:)/.test(v) ? v : `${origin}${v}`; }
 export function EditableTeam({ locale, fallback }: { locale: string; fallback: Member[] }) {
@@ -18,7 +19,7 @@ export function EditableTeam({ locale, fallback }: { locale: string; fallback: M
         const byKey = new Map<string, Item>();
         for (const r of rows) { const cur = byKey.get(r.key); if (!cur || (r.locale === "en" && cur.locale !== "en")) byKey.set(r.key, r); }
         const parsed = Array.from(byKey.values())
-          .map((item) => { try { const d = JSON.parse(item.data); return { firstName: d.firstName || item.title, lastInitial: d.lastInitial || "", credentials: d.credentials || "", role: d.role || "", photo: d.photo || "", bio: d.bio || "", photoSize: Number(d.photoSize) || 100, order: typeof d.order === "number" ? d.order : parseInt(String(item.key).replace(/\D/g, ""), 10) || 0 } as Member; } catch { return null; } })
+          .map((item) => { try { const d = JSON.parse(item.data); return { firstName: d.firstName || item.title, lastInitial: d.lastInitial || "", credentials: d.credentials || "", role: d.role || "", photo: d.photo || "", bio: d.bio || "", email: d.email || "", photoSize: Number(d.photoSize) || 100, order: typeof d.order === "number" ? d.order : parseInt(String(item.key).replace(/\D/g, ""), 10) || 0 } as Member; } catch { return null; } })
           .filter(Boolean) as Member[];
         parsed.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
         if (parsed.length) setMembers(parsed);
@@ -38,6 +39,12 @@ export function EditableTeam({ locale, fallback }: { locale: string; fallback: M
             <div className="flex flex-1 flex-col p-6">
               <h3 className="text-xl text-white">{name}</h3>
               <p className="mt-1.5 text-sm font-medium text-gold-400">{member.role}</p>
+              {member.email && (
+                <a href={`mailto:${member.email}`} className="mt-3 inline-flex items-center gap-1.5 break-all text-sm font-medium text-gold-300 transition-colors hover:text-gold-200 hover:underline">
+                  <Mail aria-hidden className="size-4 shrink-0" />
+                  {member.email}
+                </a>
+              )}
               <p className="mt-3 text-sm leading-relaxed text-navy-100">{member.bio}</p>
             </div>
           </article>

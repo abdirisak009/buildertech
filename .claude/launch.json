@@ -2,11 +2,11 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "builderstech-dev",
+      "name": "builderstech-3200",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
-      "port": 3100,
-      "autoPort": true
+      "runtimeArgs": ["run", "dev", "--", "--port", "3200"],
+      "port": 3200,
+      "autoPort": false
     }
   ]
 }
