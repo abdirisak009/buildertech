@@ -623,60 +623,6 @@ export function ContactForm({
       {/* ---------------- Project Specific Information ---------------- */}
       <SectionCard title={t.sections.project}>
         <Field
-          label={t.labels.upload}
-          name="upload"
-          hint={t.hints.upload}
-          requiredLabel={t.required}
-        >
-          <label
-            htmlFor={`${formId}-upload`}
-            className={cn(
-              choiceClass(),
-              "min-h-12 cursor-pointer items-center justify-center border-dashed",
-            )}
-          >
-            <Paperclip aria-hidden className="size-4 shrink-0 text-gold-600" />
-            <span className="text-sm font-medium">{fileName ?? t.addFile}</span>
-            <input
-              id={`${formId}-upload`}
-              name="upload"
-              type="file"
-              accept="image/*,.pdf,.doc,.docx"
-              multiple
-              className="sr-only"
-              onChange={(e) => {
-                const files = e.target.files;
-                if (!files?.length) {
-                  setFileName(null);
-                  return;
-                }
-                setFileName(
-                  files.length === 1
-                    ? files[0].name
-                    : t.filesSelected(files.length),
-                );
-              }}
-            />
-          </label>
-          {fileName && (
-            <button
-              type="button"
-              className="mt-2 inline-flex items-center gap-1.5 text-xs text-muted-foreground underline-offset-2 hover:underline"
-              onClick={() => {
-                setFileName(null);
-                const input = document.getElementById(
-                  `${formId}-upload`,
-                ) as HTMLInputElement | null;
-                if (input) input.value = "";
-              }}
-            >
-              <X aria-hidden className="size-3.5" />
-              {t.clearFiles}
-            </button>
-          )}
-        </Field>
-
-        <Field
           label={t.labels.timeline}
           name="timeline"
           requiredLabel={t.required}
@@ -779,6 +725,60 @@ export function ContactForm({
             className={cn(inputClass(!!errors.message), "min-h-40 resize-y")}
             placeholder={t.placeholders.message}
           />
+        </Field>
+
+        <Field
+          label={t.labels.upload}
+          name="upload"
+          hint={t.hints.upload}
+          requiredLabel={t.required}
+        >
+          <label
+            htmlFor={`${formId}-upload`}
+            className={cn(
+              choiceClass(),
+              "min-h-12 cursor-pointer items-center justify-center border-dashed",
+            )}
+          >
+            <Paperclip aria-hidden className="size-4 shrink-0 text-gold-600" />
+            <span className="text-sm font-medium">{fileName ?? t.addFile}</span>
+            <input
+              id={`${formId}-upload`}
+              name="upload"
+              type="file"
+              accept="image/*,.pdf,.doc,.docx"
+              multiple
+              className="sr-only"
+              onChange={(e) => {
+                const files = e.target.files;
+                if (!files?.length) {
+                  setFileName(null);
+                  return;
+                }
+                setFileName(
+                  files.length === 1
+                    ? files[0].name
+                    : t.filesSelected(files.length),
+                );
+              }}
+            />
+          </label>
+          {fileName && (
+            <button
+              type="button"
+              className="mt-2 inline-flex items-center gap-1.5 text-xs text-muted-foreground underline-offset-2 hover:underline"
+              onClick={() => {
+                setFileName(null);
+                const input = document.getElementById(
+                  `${formId}-upload`,
+                ) as HTMLInputElement | null;
+                if (input) input.value = "";
+              }}
+            >
+              <X aria-hidden className="size-3.5" />
+              {t.clearFiles}
+            </button>
+          )}
         </Field>
       </SectionCard>
 
