@@ -623,26 +623,6 @@ export function ContactForm({
       {/* ---------------- Project Specific Information ---------------- */}
       <SectionCard title={t.sections.project}>
         <Field
-          label={t.labels.message}
-          name="message"
-          error={errors.message}
-          required
-          requiredLabel={t.required}
-          hint={t.hints.message}
-        >
-          <textarea
-            id="message"
-            name="message"
-            rows={6}
-            aria-required="true"
-            aria-invalid={!!errors.message}
-            aria-describedby={errors.message ? "message-error" : undefined}
-            className={cn(inputClass(!!errors.message), "min-h-40 resize-y")}
-            placeholder={t.placeholders.message}
-          />
-        </Field>
-
-        <Field
           label={t.labels.upload}
           name="upload"
           hint={t.hints.upload}
@@ -756,43 +736,49 @@ export function ContactForm({
           error={errors.services}
           required
           requiredLabel={t.required}
-          hint={t.hints.services}
         >
-          <div
-            className="grid gap-2"
-            role="group"
+          <select
+            id="services"
+            name="services"
+            defaultValue=""
             aria-required="true"
             aria-invalid={!!errors.services}
             aria-describedby={errors.services ? "services-error" : undefined}
+            className={inputClass(!!errors.services)}
+            onChange={() => {
+              if (errors.services)
+                setErrors((prev) => ({ ...prev, services: undefined }));
+            }}
           >
+            <option value="" disabled>
+              {t.placeholders.select}
+            </option>
             {t.services.map((option) => (
-              <label key={option} className={choiceClass(!!errors.services)}>
-                <input
-                  type="checkbox"
-                  name="services"
-                  value={option}
-                  className="mt-0.5 size-4 rounded accent-orange-500"
-                  onChange={() => {
-                    if (!errors.services) return;
-                    const form = formRef.current;
-                    if (!form) return;
-                    const selected = Array.from(
-                      form.querySelectorAll<HTMLInputElement>(
-                        'input[name="services"]:checked',
-                      ),
-                    )
-                      .map((el) => el.value)
-                      .join(", ");
-                    setErrors((prev) => ({
-                      ...prev,
-                      services: validateField("services", selected),
-                    }));
-                  }}
-                />
-                <span>{option}</span>
-              </label>
+              <option key={option} value={option}>
+                {option}
+              </option>
             ))}
-          </div>
+          </select>
+        </Field>
+
+        <Field
+          label={t.labels.message}
+          name="message"
+          error={errors.message}
+          required
+          requiredLabel={t.required}
+          hint={t.hints.message}
+        >
+          <textarea
+            id="message"
+            name="message"
+            rows={6}
+            aria-required="true"
+            aria-invalid={!!errors.message}
+            aria-describedby={errors.message ? "message-error" : undefined}
+            className={cn(inputClass(!!errors.message), "min-h-40 resize-y")}
+            placeholder={t.placeholders.message}
+          />
         </Field>
       </SectionCard>
 
