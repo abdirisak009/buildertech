@@ -24,8 +24,8 @@
   /* Dark surfaces are pure black rather than deep navy, matching the reference
      site. navy-800/900/950 are used only as dark backgrounds. */
   --color-navy-800: #161618;
-  --color-navy-900: #0a0a0b;
-  --color-navy-950: #000000;
+  --color-navy-900: #0A2540; /* brand dark */
+  --color-navy-950: #0A2540; /* brand dark */
 
   /* ---- Brand: accent (orange) ---- */
   --color-gold-50: #fdf3ec;
@@ -33,7 +33,7 @@
   --color-gold-200: #f6c39c;
   --color-gold-300: #f1a56b;
   --color-gold-400: #ed8f4d;
-  --color-gold-500: #e87838; /* brand accent */
+  --color-gold-500: #F8A908; /* brand accent */
   --color-gold-600: #d16320;
   --color-gold-700: #a54e19;
   --color-gold-800: #793a13;
@@ -43,7 +43,7 @@
   --color-orange-100: #fbe0cd;
   --color-orange-300: #f1a56b;
   --color-orange-400: #ed8f4d;
-  --color-orange-500: #e87838; /* CTA button */
+  --color-orange-500: #F8A908; /* CTA button */
   --color-orange-600: #d16320;
 
   /* ---- Neutrals tuned to the navy ---- */
