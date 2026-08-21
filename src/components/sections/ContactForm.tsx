@@ -30,28 +30,26 @@ type FieldName =
   | "referral"
   | "address"
   | "timeline"
-  | "budget"
   | "county"
   | "city"
   | "state"
   | "postalCode"
-  | "phase"
   | "projectType"
-  | "projectTypeOther"
   | "services"
   | "message"
-  | "deadline"
   | "upload";
 
 type Errors = Partial<Record<FieldName, string>>;
 
+const OTHER = "__other__";
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const REQUIRED: FieldName[] = [
   "name",
   "phone",
   "email",
+  "referral",
+  "address",
   "projectType",
-  "phase",
   "services",
   "message",
 ];
@@ -73,11 +71,14 @@ function makeValidator(t: UiDict["form"]) {
         if (!v) return t.errors.emailRequired;
         if (!EMAIL_RE.test(v)) return t.errors.emailInvalid;
         return;
+      case "referral":
+        if (!v) return t.errors.referral;
+        return;
+      case "address":
+        if (!v) return t.errors.address;
+        return;
       case "projectType":
         if (!v) return t.errors.projectType;
-        return;
-      case "phase":
-        if (!v) return t.errors.phase;
         return;
       case "services":
         if (!v) return t.errors.services;
@@ -191,7 +192,6 @@ export function ContactForm({
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "failed">(
     "idle",
   );
-  const [projectType, setProjectType] = useState("");
   const [fileName, setFileName] = useState<string | null>(null);
   // The location block is controlled so picking an address can fill it in.
   const [location, setLocation] = useState({
@@ -201,7 +201,11 @@ export function ContactForm({
     state: "",
     postalCode: "",
   });
-  const showOther = projectType === t.projectTypes[t.projectTypes.length - 1];
+  const [cityOther, setCityOther] = useState(false);
+  const [countyOther, setCountyOther] = useState(false);
+
+  const cityIsOther = cityOther || (!!location.city && !t.cities.includes(location.city));
+  const countyIsOther = countyOther || (!!location.county && !t.counties.includes(location.county));
 
   const handleBlur = (e: React.FocusEvent<HTMLElement>) => {
     const target = e.target as HTMLInputElement;
@@ -228,7 +232,9 @@ export function ContactForm({
       const raw =
         name === "services"
           ? selectedServices
-          : String(data.get(name) ?? "");
+          : name === "address"
+            ? location.address
+            : String(data.get(name) ?? "");
       const error = validateField(name, raw);
       if (error) next[name] = error;
     }
@@ -255,9 +261,6 @@ export function ContactForm({
     }
     payload.services = selectedServices;
     payload.language = payload.language || locale;
-    if (payload.projectTypeOther) {
-      payload.projectType = `${payload.projectType}: ${payload.projectTypeOther}`;
-    }
 
     try {
       await apiRequest("/leads", {
@@ -266,9 +269,10 @@ export function ContactForm({
       });
       setStatus("sent");
       form.reset();
-      setProjectType("");
       setFileName(null);
       setLocation({ address: "", city: "", county: "", state: "", postalCode: "" });
+      setCityOther(false);
+      setCountyOther(false);
     } catch {
       setStatus("failed");
     }
@@ -327,6 +331,7 @@ export function ContactForm({
         </div>
       )}
 
+      {/* ---------------- Client Information ---------------- */}
       <SectionCard title={t.sections.basic}>
         <Field
           label={t.labels.language}
@@ -431,41 +436,58 @@ export function ContactForm({
         <Field
           label={t.labels.referral}
           name="referral"
+          error={errors.referral}
+          required
           requiredLabel={t.required}
         >
-          <div className="grid gap-2 sm:grid-cols-2" role="radiogroup">
+          <select
+            id="referral"
+            name="referral"
+            defaultValue=""
+            aria-required="true"
+            aria-invalid={!!errors.referral}
+            aria-describedby={errors.referral ? "referral-error" : undefined}
+            className={inputClass(!!errors.referral)}
+            onChange={() => {
+              if (errors.referral)
+                setErrors((prev) => ({ ...prev, referral: undefined }));
+            }}
+          >
+            <option value="" disabled>
+              {t.placeholders.select}
+            </option>
             {t.referrals.map((option) => (
-              <label key={option} className={choiceClass()}>
-                <input
-                  type="radio"
-                  name="referral"
-                  value={option}
-                  className="mt-0.5 size-4 accent-orange-500"
-                />
-                <span>{option}</span>
-              </label>
+              <option key={option} value={option}>
+                {option}
+              </option>
             ))}
-          </div>
+          </select>
         </Field>
-      </SectionCard>
 
-      <SectionCard title={t.sections.project}>
         <Field
           label={t.labels.address}
           name="address"
-          hint={t.hints.address}
+          error={errors.address}
+          required
           requiredLabel={t.required}
+          hint={t.hints.address}
         >
           <AddressAutocomplete
             id="address"
             name="address"
             value={location.address}
-            className={inputClass()}
+            invalid={!!errors.address}
+            className={inputClass(!!errors.address)}
             placeholder={t.placeholders.address}
             strings={t.addressSearch}
-            onChange={(address) =>
-              setLocation((prev) => ({ ...prev, address }))
-            }
+            onChange={(address) => {
+              setLocation((prev) => ({ ...prev, address }));
+              if (errors.address)
+                setErrors((prev) => ({
+                  ...prev,
+                  address: validateField("address", address),
+                }));
+            }}
             onSelect={(match: AddressSuggestion) =>
               setLocation((prev) => ({
                 ...prev,
@@ -480,44 +502,83 @@ export function ContactForm({
 
         <div className="grid gap-5 sm:grid-cols-2">
           <Field label={t.labels.city} name="city" requiredLabel={t.required}>
-            <input
+            <select
               id="city"
-              name="city"
-              type="text"
-              list={`${formId}-cities`}
-              autoComplete="address-level2"
-              value={location.city}
-              onChange={(e) =>
-                setLocation((prev) => ({ ...prev, city: e.target.value }))
-              }
+              value={cityIsOther ? OTHER : location.city}
+              aria-label={t.labels.city}
               className={inputClass()}
-              placeholder={t.placeholders.selectCity}
-            />
-            <datalist id={`${formId}-cities`}>
+              onChange={(e) => {
+                const v = e.target.value;
+                if (v === OTHER) {
+                  setCityOther(true);
+                  setLocation((prev) => ({ ...prev, city: "" }));
+                } else {
+                  setCityOther(false);
+                  setLocation((prev) => ({ ...prev, city: v }));
+                }
+              }}
+            >
+              <option value="">{t.placeholders.selectCity}</option>
               {t.cities.map((option) => (
-                <option key={option} value={option} />
+                <option key={option} value={option}>
+                  {option}
+                </option>
               ))}
-            </datalist>
+              <option value={OTHER}>Other</option>
+            </select>
+            {cityIsOther && (
+              <input
+                type="text"
+                aria-label={t.placeholders.otherCity}
+                value={location.city}
+                onChange={(e) =>
+                  setLocation((prev) => ({ ...prev, city: e.target.value }))
+                }
+                className={cn(inputClass(), "mt-2")}
+                placeholder={t.placeholders.otherCity}
+              />
+            )}
+            <input type="hidden" name="city" value={location.city} />
           </Field>
 
           <Field label={t.labels.county} name="county" requiredLabel={t.required}>
-            <input
+            <select
               id="county"
-              name="county"
-              type="text"
-              list={`${formId}-counties`}
-              value={location.county}
-              onChange={(e) =>
-                setLocation((prev) => ({ ...prev, county: e.target.value }))
-              }
+              value={countyIsOther ? OTHER : location.county}
+              aria-label={t.labels.county}
               className={inputClass()}
-              placeholder={t.placeholders.selectCounty}
-            />
-            <datalist id={`${formId}-counties`}>
+              onChange={(e) => {
+                const v = e.target.value;
+                if (v === OTHER) {
+                  setCountyOther(true);
+                  setLocation((prev) => ({ ...prev, county: "" }));
+                } else {
+                  setCountyOther(false);
+                  setLocation((prev) => ({ ...prev, county: v }));
+                }
+              }}
+            >
+              <option value="">{t.placeholders.selectCounty}</option>
               {t.counties.map((option) => (
-                <option key={option} value={option} />
+                <option key={option} value={option}>
+                  {option}
+                </option>
               ))}
-            </datalist>
+              <option value={OTHER}>Other</option>
+            </select>
+            {countyIsOther && (
+              <input
+                type="text"
+                aria-label={t.placeholders.otherCounty}
+                value={location.county}
+                onChange={(e) =>
+                  setLocation((prev) => ({ ...prev, county: e.target.value }))
+                }
+                className={cn(inputClass(), "mt-2")}
+                placeholder={t.placeholders.otherCounty}
+              />
+            )}
+            <input type="hidden" name="county" value={location.county} />
           </Field>
 
           <Field label={t.labels.state} name="state" requiredLabel={t.required}>
@@ -557,76 +618,102 @@ export function ContactForm({
             />
           </Field>
         </div>
+      </SectionCard>
+
+      {/* ---------------- Project Specific Information ---------------- */}
+      <SectionCard title={t.sections.project}>
+        <Field
+          label={t.labels.message}
+          name="message"
+          error={errors.message}
+          required
+          requiredLabel={t.required}
+          hint={t.hints.message}
+        >
+          <textarea
+            id="message"
+            name="message"
+            rows={6}
+            aria-required="true"
+            aria-invalid={!!errors.message}
+            aria-describedby={errors.message ? "message-error" : undefined}
+            className={cn(inputClass(!!errors.message), "min-h-40 resize-y")}
+            placeholder={t.placeholders.message}
+          />
+        </Field>
+
+        <Field
+          label={t.labels.upload}
+          name="upload"
+          hint={t.hints.upload}
+          requiredLabel={t.required}
+        >
+          <label
+            htmlFor={`${formId}-upload`}
+            className={cn(
+              choiceClass(),
+              "min-h-12 cursor-pointer items-center justify-center border-dashed",
+            )}
+          >
+            <Paperclip aria-hidden className="size-4 shrink-0 text-gold-600" />
+            <span className="text-sm font-medium">{fileName ?? t.addFile}</span>
+            <input
+              id={`${formId}-upload`}
+              name="upload"
+              type="file"
+              accept="image/*,.pdf,.doc,.docx"
+              multiple
+              className="sr-only"
+              onChange={(e) => {
+                const files = e.target.files;
+                if (!files?.length) {
+                  setFileName(null);
+                  return;
+                }
+                setFileName(
+                  files.length === 1
+                    ? files[0].name
+                    : t.filesSelected(files.length),
+                );
+              }}
+            />
+          </label>
+          {fileName && (
+            <button
+              type="button"
+              className="mt-2 inline-flex items-center gap-1.5 text-xs text-muted-foreground underline-offset-2 hover:underline"
+              onClick={() => {
+                setFileName(null);
+                const input = document.getElementById(
+                  `${formId}-upload`,
+                ) as HTMLInputElement | null;
+                if (input) input.value = "";
+              }}
+            >
+              <X aria-hidden className="size-3.5" />
+              {t.clearFiles}
+            </button>
+          )}
+        </Field>
 
         <Field
           label={t.labels.timeline}
           name="timeline"
           requiredLabel={t.required}
         >
-          <div className="grid gap-2" role="radiogroup">
-            {t.timelines.map((option) => (
-              <label key={option} className={choiceClass()}>
-                <input
-                  type="radio"
-                  name="timeline"
-                  value={option}
-                  className="mt-0.5 size-4 accent-orange-500"
-                />
-                <span>{option}</span>
-              </label>
-            ))}
-          </div>
-        </Field>
-
-        <Field
-          label={t.labels.budget}
-          name="budget"
-          hint={t.hints.budget}
-          requiredLabel={t.required}
-        >
-          <div className="grid gap-2 sm:grid-cols-2" role="radiogroup">
-            {t.budgets.map((option) => (
-              <label key={option} className={choiceClass()}>
-                <input
-                  type="radio"
-                  name="budget"
-                  value={option}
-                  className="mt-0.5 size-4 accent-orange-500"
-                />
-                <span>{option}</span>
-              </label>
-            ))}
-          </div>
-        </Field>
-      </SectionCard>
-
-      <SectionCard title={t.sections.phase}>
-        <Field
-          label={t.labels.phase}
-          name="phase"
-          error={errors.phase}
-          required
-          requiredLabel={t.required}
-        >
-          <div
-            className="grid gap-2 sm:grid-cols-3"
-            role="radiogroup"
-            aria-required="true"
-            aria-invalid={!!errors.phase}
-            aria-describedby={errors.phase ? "phase-error" : undefined}
+          <select
+            id="timeline"
+            name="timeline"
+            defaultValue=""
+            className={inputClass()}
           >
-            {t.phases.map((option) => (
-              <label key={option} className={choiceClass(!!errors.phase)}>
-                <input
-                  type="radio"
-                  name="phase"
-                  value={option}
-                  className="mt-0.5 size-4 accent-orange-500"
-                />
-                <span>{option}</span>
-              </label>
+            <option value="">{t.placeholders.select}</option>
+            {t.timelines.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
             ))}
-          </div>
+          </select>
         </Field>
 
         <Field
@@ -653,13 +740,8 @@ export function ContactForm({
                   value={option}
                   className="mt-0.5 size-4 accent-orange-500"
                   onChange={() => {
-                    setProjectType(option);
-                    if (errors.projectType) {
-                      setErrors((prev) => ({
-                        ...prev,
-                        projectType: undefined,
-                      }));
-                    }
+                    if (errors.projectType)
+                      setErrors((prev) => ({ ...prev, projectType: undefined }));
                   }}
                 />
                 <span>{option}</span>
@@ -668,24 +750,6 @@ export function ContactForm({
           </div>
         </Field>
 
-        {showOther && (
-          <Field
-            label={t.labels.projectTypeOther}
-            name="projectTypeOther"
-            requiredLabel={t.required}
-          >
-            <input
-              id="projectTypeOther"
-              name="projectTypeOther"
-              type="text"
-              className={inputClass()}
-              placeholder={t.placeholders.projectTypeOther}
-            />
-          </Field>
-        )}
-      </SectionCard>
-
-      <SectionCard title={t.sections.services}>
         <Field
           label={t.labels.services}
           name="services"
@@ -729,96 +793,6 @@ export function ContactForm({
               </label>
             ))}
           </div>
-        </Field>
-
-        <Field
-          label={t.labels.message}
-          name="message"
-          error={errors.message}
-          required
-          requiredLabel={t.required}
-          hint={t.hints.message}
-        >
-          <textarea
-            id="message"
-            name="message"
-            rows={6}
-            aria-required="true"
-            aria-invalid={!!errors.message}
-            aria-describedby={errors.message ? "message-error" : undefined}
-            className={cn(inputClass(!!errors.message), "min-h-40 resize-y")}
-            placeholder={t.placeholders.message}
-          />
-        </Field>
-
-        <Field
-          label={t.labels.upload}
-          name="upload"
-          hint={t.hints.upload}
-          requiredLabel={t.required}
-        >
-          <label
-            htmlFor={`${formId}-upload`}
-            className={cn(
-              choiceClass(),
-              "min-h-12 cursor-pointer items-center justify-center border-dashed",
-            )}
-          >
-            <Paperclip aria-hidden className="size-4 shrink-0 text-gold-600" />
-            <span className="text-sm font-medium">
-              {fileName ?? t.addFile}
-            </span>
-            <input
-              id={`${formId}-upload`}
-              name="upload"
-              type="file"
-              accept="image/*,.pdf,.doc,.docx"
-              multiple
-              className="sr-only"
-              onChange={(e) => {
-                const files = e.target.files;
-                if (!files?.length) {
-                  setFileName(null);
-                  return;
-                }
-                setFileName(
-                  files.length === 1
-                    ? files[0].name
-                    : t.filesSelected(files.length),
-                );
-              }}
-            />
-          </label>
-          {fileName && (
-            <button
-              type="button"
-              className="mt-2 inline-flex items-center gap-1.5 text-xs text-muted-foreground underline-offset-2 hover:underline"
-              onClick={() => {
-                setFileName(null);
-                const input = document.getElementById(
-                  `${formId}-upload`,
-                ) as HTMLInputElement | null;
-                if (input) input.value = "";
-              }}
-            >
-              <X aria-hidden className="size-3.5" />
-              {t.clearFiles}
-            </button>
-          )}
-        </Field>
-
-        <Field
-          label={t.labels.deadline}
-          name="deadline"
-          requiredLabel={t.required}
-        >
-          <input
-            id="deadline"
-            name="deadline"
-            type="text"
-            className={inputClass()}
-            placeholder={t.placeholders.deadline}
-          />
         </Field>
       </SectionCard>
 
