@@ -334,6 +334,22 @@ func (a *App) seed() error {
 		}
 		a.DB.Create(&Setting{Key: "cms_process_seed_v1", Value: "true", Group: "system", Label: "Process seeded"})
 	}
+	// Our Work projects — seed the current three so they can be edited, resized
+	// and reordered from Content Studio (the "Our Work" tab).
+	var workSeeded int64
+	a.DB.Model(&Setting{}).Where("key = ?", "cms_work_seed_v1").Count(&workSeeded)
+	if workSeeded == 0 {
+		work := []struct{ Title, Category, Body, Image string }{
+			{"Ground-Up Construction", "Construction Management", "Foundations, footings and site work managed on the ground — coordinated from the first pour to inspection.", "/work/construction.png"},
+			{"Project Management", "Planning & Delivery", "Quality control, problem solving, communication and scheduling that keep every project on track from day one.", "/work/project-management.png"},
+			{"Design & Renderings", "Architecture & Visualization", "Townhomes, single-family homes and interiors brought to life with photoreal renderings across metro Atlanta.", "/work/renderings.png"},
+		}
+		for i, w := range work {
+			data, _ := json.Marshal(map[string]any{"description": w.Body, "category": w.Category, "image": w.Image, "path": "/", "photoSize": "100", "order": i})
+			a.DB.Create(&Content{Locale: "en", Key: fmt.Sprintf("work-%02d", i+1), Title: w.Title, Type: "project", Status: "published", Data: string(data)})
+		}
+		a.DB.Create(&Setting{Key: "cms_work_seed_v1", Value: "true", Group: "system", Label: "Our Work seeded"})
+	}
 	return nil
 }
 
