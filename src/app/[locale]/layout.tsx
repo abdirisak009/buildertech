@@ -4,7 +4,6 @@ import { notFound } from "next/navigation";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { IntakeProvider } from "@/components/intake/IntakeProvider";
 import { LOCALES, isLocale, type Locale } from "@/i18n/config";
 import { getContent } from "@/content";
 import { getUi } from "@/i18n/ui";
@@ -72,7 +71,6 @@ export default async function LocaleLayout({
 
   return (
     <ThemeProvider>
-      <IntakeProvider locale={typedLocale}>
         <div data-cms-surface className="flex min-h-screen flex-col bg-background text-foreground">
             <a
               href="#main"
@@ -89,7 +87,6 @@ export default async function LocaleLayout({
             <GlobalSettings />
             <VisualContent />
         </div>
-      </IntakeProvider>
     </ThemeProvider>
   );
 }
